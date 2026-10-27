@@ -26,6 +26,14 @@
 @media (hover:hover){ .w a:hover .t{ text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:.18em; text-decoration-color:var(--hair); } }
 .w a:active{ opacity:.6; }
 
+/* code box for unlisted artifacts */
+.unlock{ display:flex; flex-direction:column; gap:12px; margin-top:12px; }
+#code{ -webkit-appearance:none; appearance:none; width:100%; max-width:420px; font:inherit; font-size:16px; color:var(--ink);
+  background:var(--wall); border:0; border-radius:10px; padding:10px 14px; }
+#code::placeholder{ color:var(--muted); }
+.unlock .err{ margin:0; font-size:15px; font-weight:500; color:var(--ink); }
+.unlock [hidden]{ display:none; }
+
 .none{ font-size:clamp(17px, 1.05vw, 20px); color:var(--ink-soft); margin:0; }
 .none[hidden]{ display:none; }
 </style>
@@ -37,6 +45,11 @@
     <div class="side">
       <input type="search" id="q" placeholder="Search" aria-label="Search artifacts" autocomplete="off">
       <div id="subjects"></div>
+      <form class="unlock" id="unlock" autocomplete="off">
+        <input id="code" type="text" placeholder="Code" aria-label="Code for an unlisted artifact" spellcheck="false" autocapitalize="off">
+        <div class="loading" id="ring" hidden role="status" aria-label="Checking code"></div>
+        <p class="err" id="codeMsg" hidden>That code didn&rsquo;t match.</p>
+      </form>
     </div>
   </nav>
   <main class="pane-r">
@@ -129,6 +142,28 @@
   });
   q.addEventListener('input', apply);
 
+  // Unlisted artifacts: the code derives the folder; nothing on the site lists them.
+  var unlock = document.getElementById('unlock');
+  var codeIn = document.getElementById('code');
+  var ring = document.getElementById('ring');
+  var codeMsg = document.getElementById('codeMsg');
+  unlock.addEventListener('submit', async function(e){
+    e.preventDefault();
+    var code = codeIn.value;
+    if (!code.trim() || !window.ADNM) return;
+    ring.hidden = false; codeMsg.hidden = true;
+    try {
+      var d = await window.ADNM.derive(code);
+      var r = await fetch('/u/' + d.id + '/', { method:'HEAD', cache:'no-cache' });
+      if (!r.ok) throw new Error(r.status);
+      window.ADNM.remember(d.id, code);
+      location.href = '/u/' + d.id + '/';
+    } catch (err) {
+      ring.hidden = true; codeMsg.hidden = false; codeIn.select();
+    }
+  });
+  codeIn.addEventListener('input', function(){ codeMsg.hidden = true; });
+
   fetch('/artifacts.json', { cache:'no-cache' })
     .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(function(items){ loading.remove(); build(Array.isArray(items) ? items : []); })
@@ -139,6 +174,7 @@
     });
 })();
 </script>
+<script src="/assets/locked.js"></script>
 <script src="/assets/minimono.js"></script>
 <script src="/assets/smooth-scroll.js"></script>
 </body>
