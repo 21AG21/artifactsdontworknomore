@@ -1,0 +1,1238 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>AP Chem Unit 3 Test</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+/* minimono.css — the house style's base: tokens, type, the two-pane layout,
+   the windowed overlay, and flat native controls.
+   Targets two screens: MacBook Air 15" (1710×1107, 2×) and Dell P2423D
+   (2560×1440, 1×). Every line is 1px — half-pixels vanish on the Dell.     */
+
+/* ── Tokens ─────────────────────────────────────────────────────────────── */
+:root{
+  color-scheme: light dark;            /* native controls + scrollbars follow the theme */
+  --ground:#EEF1F4; --wall:#ffffff;
+  --ink:#0a0a0b; --ink-soft:#5F6368; --muted:#9c9ca3;
+  --hair:rgba(10,10,12,.13); --hair-soft:rgba(10,10,12,.08);
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",system-ui,sans-serif;
+  --pane-l:25%;                        /* the left pane is one quarter, always */
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --ground:#000000; --wall:#161618; --ink:#f6f6f8; --ink-soft:#a0a0a8; --muted:#67676f;
+  --hair:rgba(255,255,255,.16); --hair-soft:rgba(255,255,255,.09);
+}}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#000000; --wall:#161618; --ink:#f6f6f8; --ink-soft:#a0a0a8; --muted:#67676f;
+  --hair:rgba(255,255,255,.16); --hair-soft:rgba(255,255,255,.09);
+}
+:root[data-theme="light"]{ color-scheme: light; }
+
+/* ── Base ───────────────────────────────────────────────────────────────── */
+*,*::before,*::after{ box-sizing:border-box; }
+html,body{ margin:0; height:100%; overflow:hidden; }
+body{
+  background:var(--ground); color:var(--ink);
+  font:16px/1.5 var(--sans); -webkit-font-smoothing:antialiased;
+  font-variant-numeric:tabular-nums;
+}
+:focus, :focus-visible{ outline:none; }
+/* focus shows only after Tab (minimono.js sets .kbd-nav; any click clears it),
+   as a thin grey line — never a bright ring, never from Shift or a click */
+html.kbd-nav :focus-visible{ outline:1px solid var(--muted); outline-offset:3px; border-radius:6px; }
+/* text selection keeps the system highlight — never restyle ::selection */
+a{ color:inherit; text-decoration:none; }
+/* scrollbars: left to macOS — overlay, thin, shown while scrolling. Never hidden. */
+
+/* ── Type (tuned for 1710 and 2560 wide). Weights: 300 · 400 · 500, never more ─ */
+.hero { font-size:clamp(64px, 4.6vw, 112px); font-weight:300; line-height:1.02; letter-spacing:-.035em; margin:0; }
+.h2   { font-size:clamp(28px, 1.9vw, 40px);  font-weight:500; line-height:1.15; letter-spacing:-.02em; margin:0; }
+.text { font-size:clamp(17px, 1.05vw, 20px); line-height:1.55; max-width:68ch; }
+.label{ font-size:13px; font-weight:500; color:var(--ink-soft); letter-spacing:.005em; }
+.num  { font-weight:400; letter-spacing:-.02em; }
+
+/* ── Layout: two panes, left ¼ · right ¾, each its own scroller ─────────── */
+#app{ display:flex; height:100dvh; }
+.pane-l{
+  flex:0 0 var(--pane-l); height:100%; overflow-y:auto; overscroll-behavior:contain;
+  border-right:1px solid var(--hair-soft); background:var(--ground);
+  padding:48px 32px 64px;
+}
+.pane-r{ flex:1 1 auto; min-width:0; height:100%; overflow-y:auto; overscroll-behavior:contain; }
+.pane-r .body{ max-width:1120px; padding:56px clamp(48px, 5vw, 120px) 120px; }
+
+/* the list in the left pane */
+.row{
+  display:block; width:100%; padding:14px 0; border-bottom:1px solid var(--hair-soft);
+  font-size:clamp(17px, 1.15vw, 22px); color:var(--ink-soft); cursor:pointer;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.row:last-child{ border-bottom:0; }
+@media (hover:hover){ .row:hover{ color:var(--ink); } }
+.row[aria-current="true"]{ color:var(--ink); font-weight:500; }
+.row:active{ opacity:.6; }
+
+/* ── One-pane mode: windowed, or the person hid the left pane ────────────
+   The left pane leaves the layout; it comes back as an overlay (the SAME
+   element, moved) when the pointer enters the top-left zone — the left
+   quarter of the width, the top sixth of the height — or on `.           */
+.pane-hide{
+  border:0; background:none; padding:4px 0; margin:0;
+  font:inherit; font-size:13px; color:var(--ink-soft); cursor:pointer; text-align:left;
+}
+.pane-hide kbd{ font:inherit; color:var(--muted); margin-left:6px; }
+.pane-hide .keep{ display:none; }
+html.is-single .pane-hide .hide{ display:none; }
+html.is-single .pane-hide .keep{ display:inline; }
+html.is-windowed .pane-hide{ display:none; }        /* windowed: the overlay is the only way it shows */
+@media (hover:hover){ .pane-hide:hover{ color:var(--ink); } }
+.menu-hint{ display:none; }
+/* one-pane mode: the link sits in the top-left zone, invisible until the
+   pointer enters that zone (or it takes keyboard focus); always shown on touch */
+html.is-single .menu-hint{
+  display:block; position:fixed; z-index:15;
+  top:calc(env(safe-area-inset-top, 0px) + 18px); left:max(16px, env(safe-area-inset-left, 0px), 2vw);
+  padding:6px 10px; margin:0; border-radius:8px; background:var(--ground);
+  font-size:13px; color:var(--ink-soft); cursor:pointer;
+  opacity:0; pointer-events:none; transition:opacity .14s ease;
+}
+html.is-single .menu-hint kbd{ font:inherit; color:var(--muted); margin-left:6px; }
+html.is-single.hint-on .menu-hint,
+html.kbd-nav.is-single .menu-hint:focus-visible{ opacity:1; pointer-events:auto; }
+@media (hover:none){ html.is-single .menu-hint{ opacity:1; pointer-events:auto; } }
+@media (hover:hover){ html.is-single .menu-hint:hover{ color:var(--ink); } }
+
+html.is-single .pane-l{
+  position:fixed; z-index:20; inset:0 auto 0 0; width:clamp(280px, 25vw, 640px);
+  transform:translateX(-100%); visibility:hidden;
+  transition:transform .22s cubic-bezier(.32,.72,0,1), visibility 0s linear .22s;
+}
+html.is-single.menu-open .pane-l{
+  transform:none; visibility:visible; border-right:1px solid var(--hair);
+  transition:transform .22s cubic-bezier(.32,.72,0,1), visibility 0s;
+}
+
+/* ── Controls: native elements, flat ────────────────────────────────────── */
+/* slider + checkbox + radio take ink through accent-color, natively */
+input[type="range"], input[type="checkbox"], input[type="radio"]{ accent-color:var(--ink); }
+input[type="range"]{ width:100%; max-width:420px; cursor:pointer; }
+
+/* toggle: a checkbox with role="switch", drawn flat */
+input[type="checkbox"][role="switch"]{
+  -webkit-appearance:none; appearance:none; margin:0; flex:none; cursor:pointer;
+  position:relative; width:40px; height:24px; border-radius:999px;
+  background:var(--hair); transition:background .16s ease;
+}
+input[type="checkbox"][role="switch"]::before{
+  content:""; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:999px;
+  background:var(--ground); transition:transform .18s cubic-bezier(.32,.72,0,1);
+}
+input[type="checkbox"][role="switch"]:checked{ background:var(--ink); }
+input[type="checkbox"][role="switch"]:checked::before{ transform:translateX(16px); }
+
+/* segmented choice: a radio group; the chosen one is heavier ink + a 2px mark */
+.seg{ display:inline-flex; gap:28px; border:0; padding:0; margin:0; }
+.seg label{ position:relative; cursor:pointer; padding:6px 0; color:var(--ink-soft); font-weight:400; }
+.seg input{ position:absolute; opacity:0; width:1px; height:1px; }
+.seg input:checked + span{ color:var(--ink); font-weight:500; }
+.seg input:checked + span::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:2px; background:var(--ink); border-radius:2px;
+}
+html.kbd-nav .seg input:focus-visible + span{ outline:1px solid var(--muted); outline-offset:4px; border-radius:6px; }
+@media (hover:hover){ .seg label:hover span{ color:var(--ink); } }
+
+/* search */
+input[type="search"]{
+  -webkit-appearance:none; appearance:none; width:100%; max-width:420px;
+  font:inherit; font-size:16px; color:var(--ink);
+  background:var(--wall); border:0; border-radius:10px; padding:10px 14px;
+}
+input[type="search"]::placeholder{ color:var(--muted); }
+
+/* buttons: only for real actions — navigation is text */
+button{ font:inherit; cursor:pointer; }
+.btn{ border:0; border-radius:10px; padding:10px 18px; font-weight:500; background:var(--wall); color:var(--ink); }
+.btn.primary{ background:var(--ink); color:var(--ground); }
+.btn:active{ opacity:.6; }
+
+/* ── Multiple-choice questions (quiz.js builds them from JSON) ─────────────
+   State without color: the right answer gets an ink bar and Medium weight,
+   a wrong pick is struck through, everything else recedes to grey. */
+.mcq-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:44px; max-width:760px; }
+.mcq-q{ display:grid; grid-template-columns:2em minmax(0, 1fr); column-gap:10px; outline-offset:8px; }
+.mcq-n{ font-size:clamp(19px, 1.25vw, 24px); line-height:1.45; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+.mcq-body{ display:flex; flex-direction:column; gap:12px; min-width:0; }
+.mcq-text{ margin:0; font-size:clamp(19px, 1.25vw, 24px); line-height:1.45; color:var(--ink); }
+.mcq-text mjx-container[display="true"]{ margin:.5em 0 !important; }
+.mcq-opts{ display:flex; flex-direction:column; gap:2px; }
+.mcq-opt{
+  display:grid; grid-template-columns:1.5em minmax(0, 1fr); align-items:baseline; gap:8px;
+  width:calc(100% + 20px); margin:0 -10px; padding:9px 10px; border:0; border-radius:8px;
+  background:none; text-align:left; font:inherit; font-size:clamp(17px, 1.05vw, 20px); line-height:1.45;
+  color:var(--ink); cursor:pointer;
+}
+.mcq-l{ color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+@media (hover:hover){ .mcq-q:not(.is-done) .mcq-opt:hover{ background:var(--wall); } }
+.mcq-q:not(.is-done) .mcq-opt:active{ opacity:.6; }
+.mcq-q.is-done .mcq-opt{ cursor:default; color:var(--ink-soft); }
+.mcq-q.is-done .mcq-opt.is-answer{ color:var(--ink); font-weight:500; box-shadow:inset 2px 0 0 var(--ink); }
+.mcq-q.is-done .mcq-opt.is-answer .mcq-l{ color:var(--ink); }
+.mcq-q.is-done .mcq-opt.is-chosen:not(.is-answer) .mcq-t{ text-decoration:line-through; text-decoration-thickness:1px; }
+.mcq-fb{ margin:6px 0 0; font-size:17px; font-weight:500; color:var(--ink); }
+.mcq-why{ margin:0; font-size:17px; line-height:1.5; color:var(--ink-soft); max-width:62ch; }
+.mcq-bar{ display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin-top:44px; }
+.mcq-score{ font-size:15px; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+.mcq-fallback{ width:100%; max-width:760px; min-height:160px; margin-top:16px; font:14px/1.5 var(--sans); color:var(--ink);
+  background:var(--wall); border:0; border-radius:10px; padding:12px 14px; }
+/* the question numbers, in the left pane of a quiz page */
+.mcq-nav{ display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:4px; }
+.mcq-nav a{ display:block; padding:8px 0; border-radius:8px; text-align:center; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+@media (hover:hover){ .mcq-nav a:hover{ background:var(--wall); color:var(--ink); } }
+.mcq-nav a.is-right{ color:var(--ink); text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:.25em; }
+.mcq-nav a.is-wrong{ color:var(--ink); text-decoration:line-through; text-decoration-thickness:1px; }
+/* fractions stay full size inline */
+mjx-container[jax="SVG"]:not([display="true"]){ margin:0 .08em; }
+
+/* ── Loading: the one color exception — a thin rainbow ring, only while loading */
+.loading{
+  width:18px; height:18px; border-radius:50%;
+  background:conic-gradient(#ff3b30,#ff9500,#ffcc00,#34c759,#00c7be,#007aff,#af52de,#ff3b30);
+  -webkit-mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+          mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+  animation:mm-spin .9s linear infinite;
+}
+@keyframes mm-spin{ to{ transform:rotate(1turn); } }
+
+@media (prefers-reduced-motion:reduce){
+  *{ animation:none!important; transition:none!important; }
+}
+
+
+.side{display:flex;flex-direction:column;gap:28px;margin-top:28px}
+.side-title{font-size:clamp(28px,1.9vw,40px);font-weight:300;letter-spacing:-.02em;line-height:1.15;margin:0}
+.tally{font-size:15px;color:var(--ink-soft);font-variant-numeric:tabular-nums;min-height:1.5em}
+.side-actions{display:flex;flex-wrap:wrap;gap:10px}
+.side .label{margin:0 0 8px}
+.mcq-nav a.is-picked{color:var(--ink);font-weight:500}
+.mcq-opt.is-picked{background:var(--wall);font-weight:500}
+.mcq-q:not(.is-done) .mcq-opt.is-picked .mcq-l{color:var(--ink)}
+.mcq-q.is-done .mcq-opt.is-picked{background:none}
+.textbtn{align-self:flex-start;background:none;border:0;padding:6px 0;min-height:28px;color:var(--ink-soft);font-weight:500;font-size:15px;cursor:pointer}
+@media (hover:hover){.textbtn:hover{color:var(--ink)}}
+.textbtn:active{opacity:.55}
+.mcq-act{display:flex;gap:28px}
+.fig{max-width:560px;color:var(--ink);overflow-x:auto}
+.fig svg{width:100%;height:auto;display:block}
+.dt{border-collapse:collapse;font-size:clamp(16px,1vw,19px);font-variant-numeric:tabular-nums}
+.dt th,.dt td{text-align:left;padding:8px 28px 8px 0;border-bottom:1px solid var(--hair-soft);font-weight:400;vertical-align:baseline}
+.dt th{color:var(--ink-soft);font-weight:500;font-size:14px}
+.free{display:flex;flex-direction:column;gap:56px;max-width:760px;margin-top:140px}
+.frq-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:110px}
+.frq{display:flex;flex-direction:column;gap:22px;outline-offset:8px}
+.frq-head{display:grid;grid-template-columns:2em minmax(0,1fr) auto;column-gap:10px;align-items:baseline}
+.frq-title{font-size:clamp(22px,1.5vw,30px);font-weight:500;letter-spacing:-.015em;line-height:1.2}
+.frq-pts{font-size:14px;color:var(--muted)}
+.frq-stem{padding-left:calc(2em + 10px);font-size:clamp(17px,1.05vw,20px);line-height:1.55;display:flex;flex-direction:column;gap:16px;min-width:0;overflow-x:auto}
+.frq-stem p{margin:0;max-width:68ch}
+.frq-parts{list-style:none;margin:0;padding:0 0 0 calc(2em + 10px);display:flex;flex-direction:column;gap:30px}
+.frq-part{display:grid;grid-template-columns:1.5em minmax(0,1fr);column-gap:8px}
+.frq-l{color:var(--ink-soft);font-size:clamp(17px,1.05vw,20px);line-height:1.55}
+.frq-pb{display:flex;flex-direction:column;gap:8px;min-width:0}
+.frq-q{margin:0;font-size:clamp(17px,1.05vw,20px);line-height:1.55;max-width:68ch}
+.frq-p{color:var(--muted);font-size:.85em;white-space:nowrap}
+.frq-ans{border-left:1px solid var(--hair);padding:2px 0 2px 16px;font-size:17px;line-height:1.55;max-width:68ch;display:flex;flex-direction:column;gap:8px;min-width:0;overflow-x:auto}
+.frq-ans p{margin:0}
+mjx-container[display="true"]{overflow-x:auto;overflow-y:hidden;max-width:100%}
+@media (max-width:640px){
+  .pane-r .body{padding:44px max(16px, env(safe-area-inset-right, 0px)) 96px max(16px, env(safe-area-inset-left, 0px))}
+  .frq-stem,.frq-parts{padding-left:0}
+}
+
+</style>
+<div id="app">
+  <nav class="pane-l">
+    <button class="pane-hide" type="button"><span class="hide">Hide</span><span class="keep">Keep open</span><kbd>`</kbd></button>
+    <div class="side">
+      <p class="side-title">Unit 3 test</p>
+      <div class="tally" id="tally" aria-live="polite"></div>
+      <div class="side-actions">
+        <button class="btn" id="copy" type="button">Copy answers</button>
+        <button class="btn" id="reset" type="button">Start over</button>
+      </div>
+      <div><p class="label">Multiple choice</p><nav class="mcq-nav" id="mnav" aria-label="Multiple-choice questions"></nav></div>
+      <div><p class="label">Free response</p><nav class="mcq-nav" id="fnav" aria-label="Free-response questions"></nav></div>
+      <textarea class="mcq-fallback" id="fallback" readonly hidden aria-label="Answers to copy"></textarea>
+    </div>
+  </nav>
+  <main class="pane-r">
+    <a class="menu-hint" href="#">Menu<kbd>`</kbd></a>
+    <div class="body">
+      <ol class="mcq-list" id="mlist"></ol>
+      <section class="free">
+        <h2 class="h2">Free response</h2>
+        <ol class="frq-list" id="flist"></ol>
+      </section>
+    </div>
+  </main>
+</div>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],packages:{'[+]':['mhchem']}},svg:{fontCache:'global'},startup:{typeset:false}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg-full.js"></script>
+<script>
+/* Unit 3 test content. answer = index of the right option (options are shuffled on screen). */
+(function () {
+  var R = String.raw;
+
+  /* ── figures, built once ─────────────────────────────────────────────── */
+  function mbFigure() {
+    var W = 520, H = 250, x0 = 56, y0 = 210, xw = 440, yh = 180, vmax = 1000;
+    function curve(vp) {
+      var pts = [], peak = 0, ys = [];
+      for (var v = 0; v <= vmax; v += 5) { var f = (v * v) / (vp * vp * vp) * Math.exp(-(v * v) / (vp * vp)); ys.push([v, f]); }
+      return ys;
+    }
+    var a = curve(395), b = curve(197.5);
+    var fmax = 0; b.forEach(function (p) { if (p[1] > fmax) fmax = p[1]; });
+    function path(ys) {
+      return ys.map(function (p, i) {
+        var x = x0 + p[0] / vmax * xw, y = y0 - p[1] / fmax * yh * 0.92;
+        return (i ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1);
+      }).join(' ');
+    }
+    var ticks = '';
+    for (var t = 0; t <= 1000; t += 200) {
+      var tx = x0 + t / vmax * xw;
+      ticks += '<line x1="' + tx + '" y1="' + y0 + '" x2="' + tx + '" y2="' + (y0 + 5) + '" style="stroke:var(--ink-soft)" stroke-width="1"/>' +
+               '<text x="' + tx + '" y="' + (y0 + 22) + '" text-anchor="middle" style="fill:var(--ink-soft)" font-size="13">' + t + '</text>';
+    }
+    return '<svg viewBox="0 0 ' + W + ' ' + (H + 26) + '" role="img" aria-label="Two speed distributions">' +
+      '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + (x0 + xw) + '" y2="' + y0 + '" style="stroke:var(--ink-soft)" stroke-width="1"/>' +
+      '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + x0 + '" y2="' + (y0 - yh - 6) + '" style="stroke:var(--ink-soft)" stroke-width="1"/>' + ticks +
+      '<path d="' + path(a) + '" fill="none" style="stroke:var(--ink)" stroke-width="2"/>' +
+      '<path d="' + path(b) + '" fill="none" style="stroke:var(--ink-soft)" stroke-width="2" stroke-dasharray="6 5"/>' +
+      '<text x="' + (x0 + 395 / vmax * xw + 34) + '" y="' + (y0 - 100) + '" style="fill:var(--ink)" font-size="14">O<tspan font-size="10" dy="4">2</tspan></text>' +
+      '<text x="' + (x0 + 197.5 / vmax * xw + 22) + '" y="' + (y0 - yh * 0.92 - 4) + '" style="fill:var(--ink-soft)" font-size="14">Z</text>' +
+      '<text x="' + (x0 + xw / 2) + '" y="' + (y0 + 44) + '" text-anchor="middle" style="fill:var(--ink-soft)" font-size="13">Speed (m/s)</text>' +
+      '<text transform="translate(18 ' + (y0 - yh / 2) + ') rotate(-90)" text-anchor="middle" style="fill:var(--ink-soft)" font-size="13">Fraction of molecules</text>' +
+      '</svg>';
+  }
+
+  function mixFigure() {
+    // 5 open (A), 3 grey (B), 4 joined pairs (C2)
+    var A = [[60, 50], [190, 40], [300, 120], [120, 170], [250, 200]];
+    var B = [[150, 95], [330, 45], [60, 210]];
+    var C = [[230, 60, 0], [70, 110, 1], [190, 150, 1], [320, 190, 0]];
+    var s = '<svg viewBox="0 0 520 250" role="img" aria-label="Gas mixture particle diagram">' +
+      '<rect x="20" y="10" width="350" height="230" fill="none" style="stroke:var(--ink-soft)" stroke-width="1"/>';
+    A.forEach(function (p) { s += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="9" style="fill:var(--ground);stroke:var(--ink)" stroke-width="1.5"/>'; });
+    B.forEach(function (p) { s += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="9" style="fill:var(--muted)"/>'; });
+    C.forEach(function (p) {
+      var dx = p[2] ? 0 : 9, dy = p[2] ? 9 : 0;
+      s += '<circle cx="' + (p[0] - dx) + '" cy="' + (p[1] - dy) + '" r="9" style="fill:var(--ink)"/>' +
+           '<circle cx="' + (p[0] + dx) + '" cy="' + (p[1] + dy) + '" r="9" style="fill:var(--ink)"/>';
+    });
+    s += '<circle cx="402" cy="60" r="9" style="fill:var(--ground);stroke:var(--ink)" stroke-width="1.5"/><text x="420" y="65" font-size="14" style="fill:var(--ink-soft)">A</text>' +
+         '<circle cx="402" cy="100" r="9" style="fill:var(--muted)"/><text x="420" y="105" font-size="14" style="fill:var(--ink-soft)">B</text>' +
+         '<circle cx="393" cy="140" r="9" style="fill:var(--ink)"/><circle cx="411" cy="140" r="9" style="fill:var(--ink)"/><text x="429" y="145" font-size="14" style="fill:var(--ink-soft)">C<tspan font-size="10" dy="4">2</tspan></text>';
+    return s + '</svg>';
+  }
+
+  function boxesFigure() {
+    function ion(x, y, r, sign, fill) {
+      return '<circle cx="' + x + '" cy="' + y + '" r="' + r + '" style="fill:' + fill + ';stroke:var(--ink)" stroke-width="1.2"/>' +
+             '<text x="' + x + '" y="' + (y + 4) + '" text-anchor="middle" font-size="' + (r > 12 ? 13 : 10) + '" style="fill:var(--ink)">' + sign + '</text>';
+    }
+    var s = '<svg viewBox="0 0 560 230" role="img" aria-label="Two solution particle diagrams">' +
+      '<rect x="10" y="10" width="170" height="170" fill="none" style="stroke:var(--ink-soft)" stroke-width="1"/>' +
+      '<rect x="210" y="10" width="340" height="170" fill="none" style="stroke:var(--ink-soft)" stroke-width="1"/>';
+    [[40, 40], [120, 60], [60, 130], [140, 145]].forEach(function (p) { s += ion(p[0], p[1], 8, '+', 'var(--ground)'); });
+    [[95, 105], [150, 100], [40, 85], [100, 35]].forEach(function (p) { s += ion(p[0], p[1], 15, '−', 'var(--wall)'); });
+    [[260, 60], [390, 130], [490, 50]].forEach(function (p) { s += ion(p[0], p[1], 9, '2+', 'var(--ground)'); });
+    [[240, 140], [320, 40], [330, 110], [440, 80], [470, 150], [520, 110]].forEach(function (p) { s += ion(p[0], p[1], 15, '−', 'var(--wall)'); });
+    s += '<text x="95" y="204" text-anchor="middle" font-size="14" style="fill:var(--ink)">0.40 M NaCl</text>' +
+         '<text x="95" y="222" text-anchor="middle" font-size="13" style="fill:var(--ink-soft)">volume V</text>' +
+         '<text x="380" y="204" text-anchor="middle" font-size="14" style="fill:var(--ink)">CaCl₂(aq)</text>' +
+         '<text x="380" y="222" text-anchor="middle" font-size="13" style="fill:var(--ink-soft)">volume 2V</text>';
+    return s + '</svg>';
+  }
+
+  var zTable = '<table class="dt"><thead><tr><th>Gas</th><th>X</th><th>Y</th><th>Z</th></tr></thead>' +
+    '<tbody><tr><td>\\( \\dfrac{PV}{nRT} \\)</td><td>0.982</td><td>0.88</td><td>1.005</td></tr></tbody></table>';
+
+  /* ── multiple choice ─────────────────────────────────────────────────── */
+  var mcq = [
+    { q: R`A rigid 0.500 L steel cylinder rated to 60 atm holds 1.00 mol of \( \ce{CO2} \) at 27 °C. \( \ce{CO2} \) has no permanent dipole, and the ideal gas law predicts 49.3 atm. How does the measured pressure compare, and why?`,
+      options: [R`Lower; dispersion attractions between \( \ce{CO2} \) molecules soften their wall collisions`,
+                R`Equal; \( \ce{CO2} \) is nonpolar, so there are no attractions left to correct for`,
+                R`Higher; the volume taken up by \( \ce{CO2} \) molecules leaves them less free space`,
+                R`Lower; \( \ce{CO2} \) molecules move more slowly than ideal molecules at 27 °C`],
+      answer: 0,
+      why: R`Every gas has dispersion forces, and 22 electrons per \( \ce{CO2} \) make them large. At this crowding they outweigh the volume effect (the van der Waals estimate is about 39.5 atm). Average speed is set by temperature alone.` },
+
+    { q: R`Equal moles of \( \ce{H2} \) and \( \ce{O2} \) share a 5.0 L vessel at 25 °C. Through a pinhole, 4.0% of the \( \ce{H2} \) molecules escape in the first minute. About what percent of the \( \ce{O2} \) molecules escape during that same minute?`,
+      options: ['1.0%', '0.25%', '16%', '2.0%'], answer: 0 },
+
+    { q: R`Under identical conditions, a sample of an unknown gas takes 4.00 times as long to effuse through an opening as the same number of moles of helium. The unknown is one of the gases below. Which one?`,
+      options: [R`\( \ce{SO2} \)`, R`\( \ce{CH4} \)`, R`\( \ce{O2} \)`, R`\( \ce{Kr} \)`], answer: 0 },
+
+    { q: R`A 250. mL glass bulb filled with an unknown gas at 745 torr and 25 °C contains 0.440 g of the gas. The empty bulb has a mass of 87.214 g. What is the molar mass of the gas?`,
+      options: ['43.9 g/mol', '40.2 g/mol', '39.4 g/mol', '3.68 g/mol'], answer: 0 },
+
+    { q: R`In the molar volume lab, \( \ce{H2} \) from a strip of Mg is collected over water in a eudiometer at 24 °C, using 15 mL of 3.0 M HCl. After the inside and outside water levels are matched, the gas volume is 32.5 mL. The barometer reads 752 mmHg, and the vapor pressure of water at 24 °C is 22.4 mmHg. Assuming all of the Mg reacted, what mass of Mg was used?`,
+      options: ['0.0311 g', '0.0321 g', '0.0330 g', '0.0156 g'], answer: 0 },
+
+    { q: R`In the same lab, a student's Mg ribbon had a dull coating of MgO that she did not sand off. She still calculated the moles of \( \ce{H2} \) from the full mass of the ribbon. How does this affect her calculated molar volume of \( \ce{H2} \) at STP?`,
+      options: [R`Too low; the moles of \( \ce{H2} \) she calculated from the mass are more than actually formed`,
+                R`Too high; the MgO also reacts with the HCl and releases additional \( \ce{H2} \) gas`,
+                R`Too low; the oxide coating absorbs part of the \( \ce{H2} \) gas as the gas forms`,
+                R`Unchanged; the gas volume is measured directly, so the ribbon mass cannot matter`],
+      answer: 0,
+      why: R`\( \ce{MgO + 2HCl -> MgCl2 + H2O} \) makes no gas, so less \( \ce{H2} \) forms than the mass predicts. The measured volume is then divided by a mole count that is too large.` },
+
+    { q: R`A sealed flask of neon is warmed from 20 °C to 40 °C. By what factor does the average kinetic energy of the Ne atoms change?`,
+      options: ['1.07', '2.00', '1.03', '1.41'], answer: 0 },
+
+    { q: R`The graph shows the speed distributions of \( \ce{O2} \) and of an unknown gas Z, both at 300 K. The most probable speed of Z is exactly half that of \( \ce{O2} \). Which could Z be?`,
+      fig: mbFigure(), alt: 'Maxwell–Boltzmann curves at 300 K: O2 peaks near 395 m/s; Z (dashed) peaks near 198 m/s, taller and narrower.',
+      options: [R`\( \ce{HI} \)`, R`\( \ce{SO2} \)`, R`\( \ce{CH4} \)`, R`\( \ce{Ar} \)`], answer: 0 },
+
+    { q: R`A sample of \( \ce{N2} \) in a rigid container is heated from 300 K to 600 K. Which statement about its Maxwell–Boltzmann distribution is not correct?`,
+      options: ['The total area under the curve grows, because the molecules move faster',
+                'The peak moves to a higher speed, and the curve spreads out to the right',
+                'A larger fraction of the molecules move faster than a chosen high speed',
+                'The peak gets lower, because the same molecules spread over more speeds'],
+      answer: 0,
+      why: 'The area under the curve counts the molecules, and heating does not change how many there are. The curve flattens and spreads instead.' },
+
+    { q: R`A rigid flask at 400 K holds \( \ce{H2} \) at 2.0 atm and \( \ce{O2} \) at 2.0 atm. A spark starts \( \ce{2H2 + O2 -> 2H2O} \), which goes to completion, and the flask returns to 400 K. The vapor pressure of water at 400 K is 2.4 atm. What is the final total pressure?`,
+      options: ['3.0 atm', '1.0 atm', '4.0 atm', '2.0 atm'], answer: 0 },
+
+    { q: R`The box shows a sample of a gas mixture with a total pressure of 1.80 atm. What is the partial pressure of \( \ce{C2} \)?`,
+      fig: mixFigure(), alt: 'Box containing 5 single atoms of A (open circles), 3 single atoms of B (grey circles) and 4 C2 molecules (joined black pairs).',
+      options: ['0.60 atm', '0.90 atm', '0.75 atm', '0.45 atm'], answer: 0 },
+
+    { q: R`A weather balloon holds 2.50 L of helium at 22 °C and 1.00 atm at launch. At altitude, the pressure is 0.250 atm and the balloon's volume is 8.20 L. Assuming no helium escaped, what is the temperature at that altitude?`,
+      options: ['−31 °C', '18 °C', '695 °C', '242 °C'], answer: 0 },
+
+    { q: R`A student finds the moles of \( \ce{N2} \) in a 5.00 L tank at 25 °C and 750 torr. Her work: \[ n = \frac{(750)(5.00)}{(0.08206)(25)} = 1830\ \text{mol} \] Which statement correctly fixes her work?`,
+      options: [R`Both must change, to 0.987 atm and 298 K; \( n \approx 0.202 \) mol`,
+                R`Only 25 °C needs to become 298 K; \( n \approx 153 \) mol`,
+                R`Only 750 torr needs to become 0.987 atm; \( n \approx 2.41 \) mol`,
+                R`Keep the units and use \( R = 8.314 \); \( n \approx 18.0 \) mol`],
+      answer: 0 },
+
+    { q: R`Which of these would dissolve best in hexane, \( \ce{C6H14} \)?`,
+      options: [R`\( \ce{XeF4} \)`, R`\( \ce{SF4} \)`, R`\( \ce{NH3} \)`, R`\( \ce{KF} \)`], answer: 0 },
+
+    { q: R`In reversed-phase column chromatography, the column is packed with a nonpolar hydrocarbon coating, and a water–methanol mixture is pumped through it. A mixture of the four compounds below is injected at the top. Which leaves the column first?`,
+      options: [R`1-propanol, \( \ce{C3H7OH} \)`, R`1-octanol, \( \ce{C8H17OH} \)`, R`hexane, \( \ce{C6H14} \)`, R`octane, \( \ce{C8H18} \)`], answer: 0 },
+
+    { q: R`A 2.5 cm wide chromatography strip is spotted on a pencil line drawn 1.0 cm above its bottom edge. After developing, the solvent front is 8.5 cm above the bottom edge, and the center of a red spot is 41.5 mm above the bottom edge. What is the \( R_f \) of the red dye?`,
+      options: ['0.42', '0.49', '0.37', '0.55'], answer: 0 },
+
+    { q: R`An equimolar mixture of ethanol, \( \ce{CH3CH2OH} \), and dimethyl ether, \( \ce{CH3OCH3} \), is distilled. Both have a molar mass of 46.07 g/mol. Which compound is in higher concentration in the first distillate, and why?`,
+      options: [R`\( \ce{CH3OCH3} \); it cannot hydrogen bond with other molecules of itself`,
+                R`\( \ce{CH3CH2OH} \); its O–H bond breaks easily, so it leaves the liquid first`,
+                R`\( \ce{CH3OCH3} \); its C–O bonds are weaker than the O–H bond in ethanol`,
+                R`\( \ce{CH3CH2OH} \); its larger dipole makes it the more volatile of the two`],
+      answer: 0,
+      why: 'Boiling separates molecules; no covalent bond breaks. Ethanol molecules hydrogen bond to each other through O–H. The ether has no H on its O, so only dipole–dipole and dispersion forces hold it, and its vapor pressure is higher.' },
+
+    { q: R`A dye has \( \varepsilon = 1.20 \times 10^{4}\ \text{M}^{-1}\,\text{cm}^{-1} \) at 630 nm. In a cuvette with a 5.0 mm path, a solution of the dye reads \( A = 0.540 \) at 630 nm. What is the concentration of the dye?`,
+      options: ['90 µM', '45 µM', '9.0 µM', '0.090 µM'], answer: 0 },
+
+    { q: R`A sample's absorbance at \( \lambda_{\max} \) is 2.2, above the highest standard on a calibration line with slope \( \varepsilon b = 1.60\ \text{M}^{-1} \). The student pipets 2.00 mL of the sample into a 10.00 mL volumetric flask, fills it to the mark with water, and measures \( A = 0.48 \). What is the concentration of the original sample?`,
+      options: ['1.50 M', '0.300 M', '1.38 M', '1.20 M'], answer: 0 },
+
+    { q: R`A copper(II) sulfate solution looks blue in white light. Which wavelength would give the most sensitive Beer's law calibration curve for it?`,
+      options: ['630 nm', '470 nm', '520 nm', '410 nm'], answer: 0 },
+
+    { q: R`A gas-phase molecule absorbs a photon carrying \( 4.0 \times 10^{-20} \) J. What does this photon most likely do to the molecule?`,
+      options: ['Increase the vibration of its bonds', 'Increase the rotation of the molecule', 'Promote a valence electron upward', 'Break its weakest covalent bond'], answer: 0 },
+
+    { q: R`Removing an electron from the surface of a metal takes \( 3.20 \times 10^{-19} \) J. A dim 550 nm lamp shines on the metal for ten minutes. What happens?`,
+      options: [R`Electrons are ejected, each with up to \( 4.1 \times 10^{-20} \) J of kinetic energy`,
+                R`No electrons are ejected, because each photon carries too little energy to free one`,
+                R`Electrons are ejected, each with up to \( 3.6 \times 10^{-19} \) J of kinetic energy`,
+                R`No electrons are ejected, because the lamp is too dim to free any of the electrons`],
+      answer: 0 },
+
+    { q: R`A 1100 W microwave oven emits radiation at 2.45 GHz. What is the energy of one mole of its photons?`,
+      options: ['0.978 J', '978 J', R`\( 9.78 \times 10^{-4} \) J`, R`\( 1.62 \times 10^{-24} \) J`], answer: 0 },
+
+    { q: R`In a PES experiment on magnesium, the sample is struck by X-ray photons with a wavelength of 0.989 nm. The Mg 2p peak sits at 5.31 MJ/mol on the spectrum. What is the kinetic energy of the photoelectrons ejected from the 2p subshell?`,
+      options: [R`\( 1.16 \times 10^{5} \) kJ/mol`, R`\( 1.26 \times 10^{5} \) kJ/mol`, R`\( 1.21 \times 10^{5} \) kJ/mol`, R`\( 5.31 \times 10^{3} \) kJ/mol`], answer: 0 },
+
+    { q: R`A white solid melts at 1713 °C and scratches glass. It conducts electricity neither as a solid nor as a liquid, does not dissolve in water or in hexane, and has a density of 2.65 g/cm³. What kind of solid is it most likely to be?`,
+      options: ['Covalent network solid', 'Ionic crystalline solid', 'Metallic crystalline solid', 'Molecular crystalline solid'], answer: 0 },
+
+    { q: R`Adding a small amount of carbon to iron makes steel. Compared with pure iron, which change in steel is correctly explained by its structure?`,
+      options: ['It is less malleable, because C atoms in the gaps keep the layers from sliding',
+                'It conducts poorly, because C atoms bind the delocalized electrons tightly',
+                'It is brittle like salt, because C atoms become ions that repel each other',
+                'It melts lower, because C atoms replace Fe and weaken the metallic bonds'],
+      answer: 0,
+      why: 'C is much smaller than Fe, so it sits in the holes of the Fe lattice (an interstitial alloy) and pins the layers. The sea of delocalized electrons is still there, so steel conducts.' },
+
+    { q: R`Diamond and graphite are both pure carbon, but only graphite conducts electricity. Which explanation is correct?`,
+      options: [R`Each C is \( sp^2 \), and its unhybridized p electrons are shared across the whole layer`,
+                R`Each C is \( sp^3 \), and its valence electrons move freely between the stacked layers`,
+                R`The layers are held together by ionic bonds, which release mobile ions to carry charge`,
+                R`Each C forms four σ bonds, leaving one lone pair per atom that is free to move about`],
+      answer: 0,
+      why: R`Each C in graphite makes three σ bonds (trigonal planar, \( sp^2 \)). The leftover p orbitals overlap side by side into π bonding spread over the sheet, so those electrons can move. In diamond every electron is locked in an \( sp^3 \) σ bond.` },
+
+    { q: R`In Leadville, Colorado, about 3100 m above sea level, water in an open pot boils at about 90 °C. Which explanation is correct?`,
+      options: ['The air pressure is lower, so the vapor pressure of water matches it at a lower temperature',
+                'The air has less oxygen, so the hydrogen bonds between water molecules are weaker there',
+                'The colder mountain air pulls heat out of the pot, so the water boils before reaching 100 °C',
+                'The air pressure is lower, so the O–H bonds in the water molecules break at a lower temperature'],
+      answer: 0,
+      why: 'A liquid boils when its vapor pressure equals the pressure above it. Less air above the pot means less vapor pressure is needed, and water reaches that at a lower temperature. No O–H bonds break.' },
+
+    { q: R`Liquid X is drawn into a narrow, clean glass tube. Its meniscus curves upward (convex), and its surface inside the tube sits below the level of the liquid outside. What can be concluded?`,
+      options: ['X–X attractions are stronger than the attractions between X and the glass',
+                'X–glass attractions are stronger than the attractions between X molecules',
+                'X has weaker intermolecular forces than water, so its surface tension is low',
+                'X is denser than water, so gravity holds its column below the outside level'],
+      answer: 0,
+      why: 'A convex meniscus that is pushed down (like mercury) means the liquid pulls on itself more than it clings to glass. Capillary rise or fall depends on cohesion versus adhesion, not on density.' },
+
+    { q: R`Predict the order of viscosity at 25 °C, from lowest to highest, for these four liquids: propanal \( \ce{CH3CH2CHO} \), 1-propanol \( \ce{CH3CH2CH2OH} \), propane-1,2-diol \( \ce{CH3CH(OH)CH2OH} \), and glycerol \( \ce{HOCH2CH(OH)CH2OH} \).`,
+      options: ['propanal < 1-propanol < propane-1,2-diol < glycerol',
+                'glycerol < propane-1,2-diol < 1-propanol < propanal',
+                '1-propanol < propanal < glycerol < propane-1,2-diol',
+                'propanal < glycerol < 1-propanol < propane-1,2-diol'], answer: 0 },
+
+    { q: R`A student needs 250.0 mL of 0.150 M copper(II) sulfate solution. The only solid on the shelf is the blue pentahydrate, \( \ce{CuSO4*5H2O} \) (249.7 g/mol). Anhydrous \( \ce{CuSO4} \) is 159.6 g/mol. What mass of the solid should she weigh out?`,
+      options: ['9.36 g', '5.99 g', '37.5 g', '23.9 g'], answer: 0 },
+
+    { q: R`50.0 mL of 0.200 M \( \ce{AlCl3} \) is mixed with 150.0 mL of 0.100 M \( \ce{CaCl2} \). No precipitate forms. What is \( [\ce{Cl-}] \) in the mixture?`,
+      options: ['0.300 M', '0.125 M', '0.800 M', '0.400 M'], answer: 0 },
+
+    { q: R`The left box represents 0.40 M NaCl. The right box represents a \( \ce{CaCl2} \) solution and stands for twice the volume of the left box. Water molecules are not shown. What is the concentration of \( \ce{CaCl2} \) in the right box?`,
+      fig: boxesFigure(), alt: 'Left box (volume V, 0.40 M NaCl): 4 Na+ and 4 Cl−. Right box (volume 2V): 3 Ca2+ and 6 Cl−.',
+      options: ['0.15 M', '0.30 M', '0.60 M', '0.45 M'], answer: 0 },
+
+    { q: R`Which substance forms hydrogen bonds between its own molecules?`,
+      options: [R`\( \ce{CH3NH2} \)`, R`\( \ce{CH3F} \)`, R`\( \ce{CH3OCH3} \)`, R`\( \ce{H2CO} \)`], answer: 0 },
+
+    { q: R`Which attraction acts between an \( \ce{SO2} \) molecule and a \( \ce{CO2} \) molecule, but not between two \( \ce{CO2} \) molecules?`,
+      options: ['Dipole–induced dipole', 'Permanent dipole–dipole', 'Temporary dispersion', 'Hydrogen bonding'], answer: 0 },
+
+    { q: R`Boiling points track the strength of intermolecular forces more closely than melting points do. Why?`,
+      options: ['Boiling separates the particles completely; melting only rearranges them, so packing matters too',
+                'Boiling breaks the covalent bonds inside molecules; melting only breaks the forces between them',
+                'Melting happens at a lower temperature, before the intermolecular forces have fully formed yet',
+                'Boiling points are measured at 1 atm, but melting points also depend on the size of the sample'],
+      answer: 0,
+      why: 'Vaporizing pulls the particles fully apart, so the energy needed reflects the attractions directly. Melting keeps particles in contact; how well they pack into the solid also shifts the melting point.' },
+
+    { q: R`At 300 K and 10 atm, three gases X, Y and Z have the compressibility values shown. The gases are He, \( \ce{CH4} \) and \( \ce{NH3} \), in some order. Which assignment is correct?`,
+      fig: zTable, alt: 'Table of PV/nRT at 300 K and 10 atm: X 0.982, Y 0.88, Z 1.005.',
+      options: [R`X is \( \ce{CH4} \), Y is \( \ce{NH3} \), Z is He`,
+                R`X is \( \ce{CH4} \), Y is He, Z is \( \ce{NH3} \)`,
+                R`X is He, Y is \( \ce{CH4} \), Z is \( \ce{NH3} \)`,
+                R`X is \( \ce{NH3} \), Y is \( \ce{CH4} \), Z is He`],
+      answer: 0 },
+
+    { q: R`A 10.0 L tank at 25 °C contains only neon and argon. The total pressure is 3.00 atm, and the total mass of gas is 30.0 g. What mass of neon is in the tank?`,
+      options: ['19.4 g', '10.6 g', '15.0 g', '24.7 g'], answer: 0 },
+
+    { q: R`Uranium is enriched by letting \( \ce{UF6} \) gas effuse through porous barriers. Using 235.04 for U-235, 238.05 for U-238 and 19.00 for F, what is the ratio of the effusion rate of \( \ce{^{235}UF6} \) to that of \( \ce{^{238}UF6} \)?`,
+      options: ['1.0043', '1.0086', '1.0128', '1.0064'], answer: 0 },
+
+    { q: R`cis- and trans-1,2-dichloroethene, \( \ce{ClHC=CHCl} \), have the same formula. Which has the higher boiling point, and why?`,
+      options: ['cis; its C–Cl bond dipoles do not cancel, so it has dipole–dipole forces',
+                'trans; its symmetry lets its molecules pack closely and hydrogen bond',
+                'cis; its C=C π bond is stronger than the C=C π bond in the trans form',
+                'Neither; the same formula gives them identical dispersion forces'],
+      answer: 0,
+      why: 'The π bond blocks rotation, so the two shapes are fixed. In trans the C–Cl dipoles point opposite ways and cancel; in cis they add, so cis is polar (bp 60 °C vs 48 °C). Neither has H on N, O or F.' }
+  ];
+
+  /* ── free response ───────────────────────────────────────────────────── */
+  var frq = [
+    { title: 'Molar mass of butane',
+      stem: R`<p>A student finds the molar mass of the gas in a disposable lighter. She weighs the lighter, holds it under the mouth of an inverted 100 mL graduated cylinder full of water in a tub, releases gas until about 80 mL has collected, and weighs the lighter again. She cannot match the water levels: the water inside the cylinder stays 13.6 cm above the water in the tub.</p>
+<table class="dt"><tbody>
+<tr><td>Lighter, initial</td><td>25.882 g</td></tr>
+<tr><td>Lighter, final</td><td>25.705 g</td></tr>
+<tr><td>Gas collected</td><td>78.4 mL</td></tr>
+<tr><td>Water temperature</td><td>21.0 °C</td></tr>
+<tr><td>Barometric pressure</td><td>761.2 mmHg</td></tr>
+<tr><td>Vapor pressure of water, 21.0 °C</td><td>18.7 mmHg</td></tr>
+<tr><td>Pressure of 13.6 cm of water</td><td>10.0 mmHg</td></tr>
+</tbody></table>`,
+      parts: [
+        { pts: 2, q: R`Calculate the partial pressure of the lighter gas in the cylinder, in mmHg.`,
+          a: R`<p>The gas plus water vapor plus the raised water column together balance the atmosphere: \( P_{atm} = P_{gas} + P_{\ce{H2O}} + P_{column} \).</p>
+<p>\( P_{gas} = 761.2 - 18.7 - 10.0 = 732.5 \) mmHg</p>` },
+        { pts: 3, q: R`Calculate the molar mass of the gas.`,
+          a: R`<p>\( m = 25.882 - 25.705 = 0.177 \) g, \( T = 294.15 \) K, \( P = \dfrac{732.5}{760} = 0.9638 \) atm, \( V = 0.0784 \) L</p>
+<p>\[ n = \frac{PV}{RT} = \frac{(0.9638)(0.0784)}{(0.08206)(294.15)} = 3.13 \times 10^{-3}\ \text{mol} \]</p>
+<p>\[ M = \frac{0.177\ \text{g}}{3.13 \times 10^{-3}\ \text{mol}} = 56.5\ \text{g/mol} \]</p>` },
+        { pts: 2, q: R`The gas is butane, \( \ce{C4H10} \) (58.12 g/mol). The student did not dry the lighter before the final weighing. Could this alone explain the difference between her result and 58.12 g/mol? Justify your answer.`,
+          a: R`<p>Yes. Water clinging to the lighter makes the final mass too high, so the mass of gas released is too small. The moles come from \( PV/RT \) and are unaffected, so \( M = m/n \) comes out too low, which matches her low result.</p>` },
+        { pts: 2, q: R`A classmate says she should not subtract the vapor pressure of water, because butane is not water, and that doing so would bring her answer closer to 58.12 g/mol. Evaluate both parts of this claim.`,
+          a: R`<p>Both parts are wrong. The collected gas is saturated with water vapor, so the vapor contributes to the total pressure and must be subtracted. Leaving it in raises \( P \), which raises \( n \) and lowers \( M \): about 55.8 g/mol, further from 58.12 g/mol.</p>` },
+        { pts: 1, q: R`Explain, in terms of intermolecular forces, why so little butane dissolves in the water it bubbles through.`,
+          a: R`<p>Butane is nonpolar and has only dispersion forces. Water molecules attract each other through hydrogen bonds much more strongly than they can attract butane (dipole–induced dipole only), so separating water molecules to make room for butane is not worth it.</p>` }
+      ] },
+
+    { title: 'Three molecules of the same mass',
+      stem: R`<p>The three compounds below have nearly the same molar mass.</p>
+<table class="dt"><thead><tr><th>Compound</th><th>Formula</th><th>Molar mass</th><th>Normal boiling point</th><th>Vapor pressure, 25 °C</th></tr></thead><tbody>
+<tr><td>Propane</td><td>\( \ce{CH3CH2CH3} \)</td><td>44.10 g/mol</td><td>−42 °C</td><td>9.4 atm</td></tr>
+<tr><td>Dimethyl ether</td><td>\( \ce{CH3OCH3} \)</td><td>46.07 g/mol</td><td>−24 °C</td><td>5.9 atm</td></tr>
+<tr><td>Ethanol</td><td>\( \ce{CH3CH2OH} \)</td><td>46.07 g/mol</td><td>78 °C</td><td>0.078 atm</td></tr>
+</tbody></table>`,
+      parts: [
+        { pts: 2, q: R`Draw a complete Lewis diagram of dimethyl ether. Give the hybridization of the O atom and the approximate C–O–C bond angle.`,
+          a: R`<p>20 valence electrons. Each C has three C–H bonds and one C–O bond; O has two bonds and two lone pairs.</p>
+<p>O has 4 electron domains (2 bonds, 2 lone pairs): \( sp^3 \), bent, about 109.5° (VSEPR predicts slightly less, because lone pairs repel more than bonding pairs).</p>` },
+        { pts: 2, q: R`Explain why dimethyl ether boils higher than propane even though their masses are almost equal.`,
+          a: R`<p>Dimethyl ether is bent with polar C–O bonds, so it has a net dipole and dipole–dipole forces in addition to dispersion forces. Propane is essentially nonpolar and has only dispersion forces of about the same size. The extra attraction raises the ether's boiling point.</p>` },
+        { pts: 2, q: R`Explain why ethanol boils more than 100 °C higher than dimethyl ether, an isomer with the same atoms.`,
+          a: R`<p>Ethanol has an H bonded directly to O, so its molecules hydrogen bond to each other. In dimethyl ether every H is bonded to C, so it cannot hydrogen bond with itself. Hydrogen bonds are much stronger than the dipole–dipole forces in the ether, so far more energy is needed to separate ethanol molecules.</p>` },
+        { pts: 2, q: R`Dimethyl ether is quite soluble in water even though it cannot hydrogen bond with itself. Identify the strongest attraction between a dimethyl ether molecule and a water molecule, and describe how the two molecules are oriented.`,
+          a: R`<p>A hydrogen bond. The ether's O has lone pairs, so it can accept a hydrogen bond: an H of a water molecule (δ+, bonded to O) points at a lone pair on the ether's O (δ−). Water supplies the H; the ether supplies the lone pair.</p>` },
+        { pts: 2, q: R`At 25 °C, 0.100 mol of a compound is sealed in an evacuated, rigid 1.00 L flask. Show whether the ideal gas law correctly predicts the pressure in the flask if the compound is dimethyl ether, and if it is ethanol.`,
+          a: R`<p>If all of it were gas: \( P = \dfrac{nRT}{V} = \dfrac{(0.100)(0.08206)(298.15)}{1.00} = 2.45 \) atm.</p>
+<p>Dimethyl ether: 2.45 atm is below its vapor pressure (5.9 atm), so it stays entirely gas and the ideal gas law is about right.</p>
+<p>Ethanol: 2.45 atm is far above its vapor pressure (0.078 atm), so most of it condenses. The pressure stops at 0.078 atm, and the ideal gas law (which assumes it is all gas) fails.</p>` }
+      ] },
+
+    { title: 'Red 40 in a sports drink',
+      stem: R`<p>A student finds the concentration of the dye Red 40 (496.4 g/mol) in a red sports drink. She measures standards at 504 nm in a 1.00 cm cuvette.</p>
+<table class="dt"><thead><tr><th>[Red 40] (µM)</th><th>Absorbance</th></tr></thead><tbody>
+<tr><td>5.0</td><td>0.128</td></tr><tr><td>10.0</td><td>0.254</td></tr><tr><td>20.0</td><td>0.505</td></tr><tr><td>30.0</td><td>0.759</td></tr><tr><td>40.0</td><td>1.012</td></tr>
+</tbody></table>
+<p>The undiluted drink reads \( A = 1.85 \). She pipets 10.00 mL of the drink into a 50.00 mL volumetric flask, fills it to the mark with distilled water, and the diluted solution reads \( A = 0.372 \).</p>`,
+      parts: [
+        { pts: 1, q: R`The drink looks red. Explain why 504 nm (blue-green light) was chosen rather than a red wavelength.`,
+          a: R`<p>The drink looks red because it transmits red light and absorbs its complement, blue-green. Absorbance is greatest near 504 nm (\( \lambda_{\max} \)), giving the steepest calibration line and the most sensitive measurement. At a red wavelength it would absorb almost nothing.</p>` },
+        { pts: 2, q: R`Determine the molar absorptivity of Red 40 at 504 nm. Include units.`,
+          a: R`<p>Slope \( = \dfrac{1.012 - 0.128}{40.0 - 5.0} = 0.02526\ \mu\text{M}^{-1} \) (a best-fit line gives the same).</p>
+<p>\( \varepsilon b = 0.02526\ \mu\text{M}^{-1} = 2.53 \times 10^{4}\ \text{M}^{-1} \). With \( b = 1.00 \) cm, \( \varepsilon = 2.53 \times 10^{4}\ \text{M}^{-1}\,\text{cm}^{-1} \).</p>` },
+        { pts: 2, q: R`Calculate the concentration of Red 40 in the undiluted drink.`,
+          a: R`<p>Diluted: \( c = \dfrac{0.372}{0.02526} = 14.7\ \mu\text{M} \).</p>
+<p>Dilution factor \( = \dfrac{50.00}{10.00} = 5 \), so the drink is \( 5 \times 14.7 = 73.7\ \mu\text{M} \) (\( 7.37 \times 10^{-5} \) M).</p>
+<p>Reading 1.85 straight off the line would not be valid: it is beyond the highest standard.</p>` },
+        { pts: 2, q: R`Calculate the mass of Red 40, in milligrams, in one 591 mL bottle of the drink.`,
+          a: R`<p>\( n = (7.37 \times 10^{-5}\ \text{mol/L})(0.591\ \text{L}) = 4.35 \times 10^{-5} \) mol</p>
+<p>\( m = (4.35 \times 10^{-5})(496.4) = 0.0216 \) g \( = 21.6 \) mg</p>` },
+        { pts: 1, q: R`Before filling the cuvette with the diluted drink, she rinsed it with distilled water and did not rinse it with the solution. Would her calculated concentration be too high, too low, or unaffected? Justify.`,
+          a: R`<p>Too low. Water left in the cuvette dilutes the sample, so fewer dye molecules are in the light path, the absorbance is lower, and the calculated concentration is lower.</p>` },
+        { pts: 1, q: R`Calculate the energy of one 504 nm photon.`,
+          a: R`<p>\[ E = \frac{hc}{\lambda} = \frac{(6.626 \times 10^{-34})(2.998 \times 10^{8})}{504 \times 10^{-9}} = 3.94 \times 10^{-19}\ \text{J} \]</p>` },
+        { pts: 1, q: R`Could the same method measure the sugar (sucrose) in the drink? Explain.`,
+          a: R`<p>No. Sucrose is colorless: its electrons are not excited by visible light, so it does not absorb at any visible wavelength and its absorbance would not change with concentration.</p>` }
+      ] },
+
+    { title: 'Two bulbs and a white ring',
+      stem: R`<p>Two glass bulbs at 25 °C are joined by a tube with a closed valve. Bulb 1 (2.00 L) holds \( \ce{NH3} \) at 2.00 atm. Bulb 2 (3.00 L) holds \( \ce{HCl} \) at 1.00 atm. When the valve is opened, the gases react: \( \ce{NH3(g) + HCl(g) -> NH4Cl(s)} \). The volume of the tube and the solid can be ignored.</p>`,
+      parts: [
+        { pts: 1, q: R`Before the valve is opened, which bulb's molecules have the greater average kinetic energy? Justify.`,
+          a: R`<p>Neither. Average kinetic energy depends only on temperature, and both bulbs are at 25 °C. The different pressures and masses do not matter.</p>` },
+        { pts: 2, q: R`Calculate the mass of \( \ce{NH4Cl} \) that forms.`,
+          a: R`<p>\( n_{\ce{NH3}} = \dfrac{(2.00)(2.00)}{(0.08206)(298.15)} = 0.1635 \) mol; \( n_{\ce{HCl}} = \dfrac{(1.00)(3.00)}{(0.08206)(298.15)} = 0.1226 \) mol</p>
+<p>HCl is limiting: \( (0.1226)(53.49) = 6.56 \) g \( \ce{NH4Cl} \)</p>` },
+        { pts: 2, q: R`After the reaction, the system returns to 25 °C. Calculate the final pressure in the connected bulbs.`,
+          a: R`<p>Excess \( \ce{NH3} \): \( 0.1635 - 0.1226 = 0.0409 \) mol in 5.00 L.</p>
+<p>\( P = \dfrac{(0.0409)(0.08206)(298.15)}{5.00} = 0.200 \) atm. HCl is used up and the solid adds no pressure.</p>` },
+        { pts: 2, q: R`In a related demonstration, cotton soaked in ammonia and cotton soaked in hydrochloric acid are placed at opposite ends of a 100.0 cm glass tube at the same time. A white ring of \( \ce{NH4Cl} \) forms where the gases meet. Predict how far from the \( \ce{NH3} \) end it forms.`,
+          a: R`<p>\[ \frac{r_{\ce{NH3}}}{r_{\ce{HCl}}} = \sqrt{\frac{36.46}{17.03}} = 1.463 \]</p>
+<p>In the same time, distance is proportional to rate: \( \dfrac{1.463}{1.463 + 1} \times 100.0 = 59.4 \) cm from the \( \ce{NH3} \) end (closer to the HCl end).</p>` },
+        { pts: 2, q: R`Draw the Lewis diagram of \( \ce{NH4+} \). Give its shape and H–N–H bond angle.`,
+          a: R`<p>8 electrons: N with four single bonds to H and no lone pairs, in brackets with a + charge outside.</p>
+<p>Tetrahedral, 109.5°, \( sp^3 \).</p>` },
+        { pts: 1, q: R`At high pressure, which deviates more from ideal behavior, \( \ce{NH3} \) or HCl? Justify.`,
+          a: R`<p>\( \ce{NH3} \). Its molecules hydrogen bond to each other (H on N), which outweighs the slightly larger dispersion forces of HCl. Stronger attractions lower the measured pressure more below the ideal value.</p>` }
+      ] }
+  ];
+
+  window.EXAM = { title: 'Unit 3 test', mcq: mcq, frq: frq };
+})();
+
+</script>
+<script>
+/* exam.js — builds the test once at load; every press after that changes classes and text nodes only. */
+(function () {
+  'use strict';
+  var E = window.EXAM, LET = 'ABCDEF';
+  var mlist = document.getElementById('mlist'), flist = document.getElementById('flist');
+  var mnav = document.getElementById('mnav'), fnav = document.getElementById('fnav');
+  var tallyT = document.getElementById('tally').appendChild(document.createTextNode(''));
+  var copyB = document.getElementById('copy'), resetB = document.getElementById('reset'), fallback = document.getElementById('fallback');
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
+  var KEY = 'unit3-test:v1', hoverQ = null;
+
+  function make(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function glue(s) { return String(s).replace(/\\\)([.,;:!?])/g, '$1\\)'); }
+  function plain(s) {
+    return String(s).replace(/<[^>]+>/g, ' ').replace(/\\\(\s*|\s*\\\)/g, '$').replace(/\\\[\s*|\s*\\\]/g, '$$$$').replace(/[ \t]+/g, ' ').replace(/\s*\n\s*/g, ' ').trim();
+  }
+  function newSeed() { try { var a = new Uint32Array(1); crypto.getRandomValues(a); return a[0]; } catch (e) { return (Math.random() * 4294967296) >>> 0; } }
+  function rng(seed) { return function () { seed = (seed + 0x6D2B79F5) | 0; var t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  function shuffled(n, rand) { var a = []; for (var i = 0; i < n; i++) a.push(i); for (var j = n - 1; j > 0; j--) { var k = Math.floor(rand() * (j + 1)), t = a[j]; a[j] = a[k]; a[k] = t; } return a; }
+  function scroller() { return document.querySelector('.pane-r'); }
+  function glideTo(node) {
+    var sc = scroller(); if (!sc) return;
+    var y = Math.max(0, sc.scrollTop + node.getBoundingClientRect().top - sc.getBoundingClientRect().top - sc.clientHeight * 0.12);
+    if (reduce && reduce.matches) sc.scrollTop = y; else if (window.SmoothScroll && SmoothScroll.to) SmoothScroll.to(sc, y); else sc.scrollTo({ top: y, behavior: 'smooth' });
+  }
+
+  var state = null;
+  try { state = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+  if (!state || typeof state.seed !== 'number') state = { seed: newSeed(), picks: [], shown: [], frq: [] };
+  state.picks = state.picks || []; state.shown = state.shown || []; state.frq = state.frq || [];
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+
+  /* ── multiple choice ─────────────────────────────────────────────────── */
+  var qs = E.mcq.map(function (d, i) {
+    var li = make('li', 'mcq-q'); li.tabIndex = -1; li.id = 'q' + (i + 1);
+    var num = make('span', 'mcq-n'); var numT = num.appendChild(document.createTextNode(''));
+    var body = make('div', 'mcq-body');
+    var text = make('div', 'mcq-text', glue(d.q));
+    body.append(text);
+    if (d.fig) { var fig = make('div', 'fig'); fig.innerHTML = d.fig; body.append(fig); }
+    var opts = make('div', 'mcq-opts'); opts.setAttribute('role', 'group');
+    var btns = d.options.map(function (o) {
+      var b = make('button', 'mcq-opt'); b.type = 'button'; b.setAttribute('aria-pressed', 'false');
+      var l = make('span', 'mcq-l'); b._l = l.appendChild(document.createTextNode(''));
+      b.append(l, make('span', 'mcq-t', glue(o)));
+      opts.append(b); return b;
+    });
+    var act = make('div', 'mcq-act');
+    var show = make('button', 'textbtn', 'Show answer'); show.type = 'button';
+    var cq = make('button', 'textbtn', 'Copy question'); cq.type = 'button';
+    var cqf = make('textarea', 'mcq-fallback'); cqf.readOnly = true; cqf.hidden = true; cqf.setAttribute('aria-label', 'Question to copy');
+    act.append(show, cq);
+    var fb = make('p', 'mcq-fb'); fb.hidden = true; fb.setAttribute('aria-live', 'polite'); var fbT = fb.appendChild(document.createTextNode(''));
+    var why = d.why ? make('p', 'mcq-why', glue(d.why)) : null; if (why) why.hidden = true;
+    body.append(opts, act, cqf, fb); if (why) body.append(why);
+    li.append(num, body);
+    var a = make('a', 'mcq-nav-n'); a.href = '#' + li.id; var aT = a.appendChild(document.createTextNode(''));
+    var q = { i: i, d: d, li: li, numT: numT, btns: btns, show: show, fb: fb, fbT: fbT, why: why, nav: a, navT: aT, perm: [], pick: -1, shown: false };
+    li._q = q;
+    btns.forEach(function (b, o) { b.addEventListener('click', function (e) { pick(q, o, e.detail === 0); }); });
+    show.addEventListener('click', function () { reveal(q); });
+    cq.addEventListener('click', function () {
+      var lines = [q.numT.nodeValue + '. ' + plain(d.q) + (d.alt ? ' [Figure: ' + d.alt + ']' : '')];
+      q.perm.forEach(function (o, j) { lines.push('   ' + LET[j] + '. ' + plain(d.options[o])); });
+      var text = lines.join('\n'), label = cq.firstChild;
+      function ok() { cqf.hidden = true; label.nodeValue = 'Copied'; setTimeout(function () { label.nodeValue = 'Copy question'; }, 1400); }
+      function fail() { cqf.value = text; cqf.hidden = false; cqf.focus(); cqf.select(); }
+      try { navigator.clipboard.writeText(text).then(ok, fail); } catch (e) { fail(); }
+    });
+    a.addEventListener('click', function (e) { e.preventDefault(); glideTo(li); li.focus({ preventScroll: true }); });
+    li.addEventListener('pointerenter', function () { hoverQ = q; });
+    li.addEventListener('pointerleave', function () { if (hoverQ === q) hoverQ = null; });
+    return q;
+  });
+  var order = [];
+
+  function arrange() {
+    var rand = rng(state.seed);
+    order = shuffled(qs.length, rand).map(function (i) { return qs[i]; });
+    qs.forEach(function (q) { q.perm = shuffled(q.btns.length, rand); });
+    order.forEach(function (q, p) {
+      mlist.append(q.li); mnav.append(q.nav);
+      q.numT.nodeValue = String(p + 1); q.navT.nodeValue = String(p + 1);
+      var opts = q.btns[0].parentNode;
+      q.perm.forEach(function (o, j) { opts.append(q.btns[o]); q.btns[o]._l.nodeValue = LET[j]; });
+    });
+  }
+  function mark(q) {
+    var right = q.pick === q.d.answer;
+    q.li.classList.toggle('is-done', q.shown);
+    q.btns.forEach(function (b, o) {
+      b.classList.toggle('is-picked', o === q.pick);
+      b.setAttribute('aria-pressed', o === q.pick ? 'true' : 'false');
+      b.classList.toggle('is-answer', q.shown && o === q.d.answer);
+      if (q.shown) b.setAttribute('aria-disabled', 'true'); else b.removeAttribute('aria-disabled');
+    });
+    var A = LET[q.perm.indexOf(q.d.answer)];
+    q.fbT.nodeValue = !q.shown ? '' : q.pick < 0 ? 'The answer is ' + A + '.' : right ? 'Correct.' : 'Incorrect. The answer is ' + A + '.';
+    q.fb.hidden = !q.shown; q.show.hidden = q.shown;
+    if (q.why) q.why.hidden = !q.shown;
+    q.nav.classList.toggle('is-picked', q.pick >= 0 && !q.shown);
+    q.nav.classList.toggle('is-right', q.shown && right);
+    q.nav.classList.toggle('is-wrong', q.shown && !right);
+  }
+  function tally() {
+    var picked = 0, shown = 0, right = 0;
+    qs.forEach(function (q) { if (q.pick >= 0) picked++; if (q.shown) { shown++; if (q.pick === q.d.answer) right++; } });
+    tallyT.nodeValue = picked + ' of ' + qs.length + ' answered' + (shown ? ' · ' + right + ' of ' + shown + ' correct' : '');
+    state.picks = qs.map(function (q) { return q.pick; });
+    state.shown = qs.map(function (q) { return q.shown ? 1 : 0; });
+    save();
+  }
+  function nextOf(q) {
+    var p = order.indexOf(q);
+    var rest = order.slice(p + 1).filter(function (x) { return x.pick < 0 && !x.shown; });
+    return rest[0] || null;
+  }
+  function pick(q, o, keyboard) {
+    if (q.shown) return;
+    q.pick = o; mark(q); tally();
+    if (keyboard) { var n = nextOf(q); if (n) { n.li.focus({ preventScroll: true }); glideTo(n.li); } else q.li.focus({ preventScroll: true }); }
+    else q.li.focus({ preventScroll: true });
+  }
+  function reveal(q) { if (q.shown) return; q.shown = true; mark(q); tally(); q.li.focus({ preventScroll: true }); }
+
+  /* ── free response ───────────────────────────────────────────────────── */
+  var parts = [];
+  E.frq.forEach(function (f, fi) {
+    var li = make('li', 'frq'); li.id = 'f' + (fi + 1); li.tabIndex = -1;
+    var head = make('div', 'frq-head');
+    head.append(make('span', 'mcq-n', String(fi + 1)), make('span', 'frq-title', f.title));
+    var total = f.parts.reduce(function (s, p) { return s + p.pts; }, 0);
+    head.append(make('span', 'frq-pts', total + ' points'));
+    var stem = make('div', 'frq-stem'); stem.innerHTML = f.stem;
+    var ol = make('ol', 'frq-parts');
+    f.parts.forEach(function (p, pi) {
+      var pl = make('li', 'frq-part');
+      var lab = make('span', 'frq-l', 'abcdefgh'[pi]);
+      var pb = make('div', 'frq-pb');
+      var pq = make('p', 'frq-q', glue(p.q));
+      pq.append(make('span', 'frq-p', ' (' + p.pts + (p.pts === 1 ? ' point)' : ' points)')));
+      var btn = make('button', 'textbtn', 'Show answer'); btn.type = 'button';
+      var ans = make('div', 'frq-ans'); ans.innerHTML = p.a; ans.hidden = true;
+      pb.append(pq, btn, ans); pl.append(lab, pb); ol.append(pl);
+      var part = { btn: btn, ans: ans, k: fi + '.' + pi };
+      btn.addEventListener('click', function () { part.ans.hidden = false; part.btn.hidden = true; if (state.frq.indexOf(part.k) < 0) state.frq.push(part.k); save(); });
+      parts.push(part);
+    });
+    li.append(head, stem, ol); flist.append(li);
+    var a = make('a', 'mcq-nav-n', String(fi + 1)); a.href = '#' + li.id;
+    a.addEventListener('click', function (e) { e.preventDefault(); glideTo(li); li.focus({ preventScroll: true }); });
+    fnav.append(a);
+  });
+
+  /* ── copy, start over ────────────────────────────────────────────────── */
+  copyB.addEventListener('click', function () {
+    var lines = ['AP Chemistry, Unit 3 test (intermolecular forces, gases, solutions, spectroscopy). My multiple-choice answers are below; for each question you get my choice and the correct choice. Explain what I got wrong and the idea I am missing.', ''];
+    var right = 0, done = 0;
+    order.forEach(function (q, p) {
+      var d = q.d;
+      lines.push((p + 1) + '. ' + plain(d.q) + (d.alt ? ' [Figure: ' + d.alt + ']' : ''));
+      var C = LET[q.perm.indexOf(d.answer)];
+      if (q.pick < 0) lines.push('   My answer: none');
+      else { done++; if (q.pick === d.answer) right++; lines.push('   My answer: ' + LET[q.perm.indexOf(q.pick)] + '. ' + plain(d.options[q.pick]) + (q.pick === d.answer ? ' (correct)' : ' (incorrect)')); }
+      lines.push('   Correct answer: ' + C + '. ' + plain(d.options[d.answer]));
+      lines.push('');
+    });
+    lines.push('Score: ' + right + ' of ' + qs.length + ' (' + (qs.length - done) + ' unanswered)');
+    var text = lines.join('\n'), label = copyB.firstChild, was = 'Copy answers';
+    function ok() { fallback.hidden = true; label.nodeValue = 'Copied'; setTimeout(function () { label.nodeValue = was; }, 1400); }
+    function fail() { fallback.value = text; fallback.hidden = false; fallback.focus(); fallback.select(); }
+    try { navigator.clipboard.writeText(text).then(ok, fail); } catch (e) { fail(); }
+  });
+
+  var armed = false, armT = 0;
+  resetB.addEventListener('click', function () {
+    var label = resetB.firstChild;
+    if (!armed) { armed = true; label.nodeValue = 'Clear all answers?'; clearTimeout(armT); armT = setTimeout(function () { armed = false; label.nodeValue = 'Start over'; }, 3000); return; }
+    armed = false; clearTimeout(armT); label.nodeValue = 'Start over';
+    qs.forEach(function (q) { q.pick = -1; q.shown = false; mark(q); });
+    parts.forEach(function (p) { p.ans.hidden = true; p.btn.hidden = false; });
+    state = { seed: newSeed(), picks: [], shown: [], frq: [] };
+    arrange(); tally();
+    var sc = scroller(); if (sc) { if (window.SmoothScroll && SmoothScroll.to && !(reduce && reduce.matches)) SmoothScroll.to(sc, 0); else sc.scrollTop = 0; }
+  });
+
+  /* ── keys: A–D or 1–4 pick for the question in focus, under the pointer, or first open on screen ─ */
+  function current() {
+    var a = document.activeElement, li = a && a.closest && a.closest('.mcq-q'), q = li && li._q;
+    if (q && !q.shown) return q;
+    if (hoverQ && !hoverQ.shown) return hoverQ;
+    for (var i = 0; i < order.length; i++) {
+      var x = order[i], r = x.li.getBoundingClientRect();
+      if (!x.shown && x.pick < 0 && r.bottom > 40 && r.top < innerHeight - 40) return x;
+    }
+    return null;
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey || e.repeat || e.defaultPrevented) return;
+    var a = document.activeElement;
+    if (a && (a.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))) return;
+    var j = e.key.length === 1 ? LET.indexOf(e.key.toUpperCase()) : -1;
+    if (j < 0 && /^[1-6]$/.test(e.key)) j = +e.key - 1;
+    if (j < 0) return;
+    var q = current(); if (!q || j >= q.btns.length) return;
+    e.preventDefault(); pick(q, q.perm[j], true);
+  });
+
+  /* ── restore ─────────────────────────────────────────────────────────── */
+  arrange();
+  qs.forEach(function (q, i) {
+    var p = state.picks[i]; if (typeof p === 'number' && p >= 0 && p < q.btns.length) q.pick = p;
+    q.shown = !!state.shown[i]; mark(q);
+  });
+  parts.forEach(function (p) { if (state.frq.indexOf(p.k) >= 0) { p.ans.hidden = false; p.btn.hidden = true; } });
+  tally();
+
+  var MJ = window.MathJax, root = document.getElementById('app');
+  function typeset() { if (MJ && MJ.typesetPromise) MJ.typesetPromise([root]).catch(function () {}); }
+  if (MJ && MJ.startup && MJ.startup.promise) MJ.startup.promise.then(typeset); else typeset();
+})();
+
+</script>
+<script>
+/* minimono.js — the house style's behavior. Include before </body>; no init.
+   1. Two panes or one. Full-screen shows both (left ¼ · right ¾). The page
+      goes to one pane when the window isn't full-screen, or when the person
+      hides the left pane (`, or the pane's own "Hide"). Hiding is
+      remembered. Force the layout with <html data-layout="split|single">.
+   2. In one-pane mode the "Menu" link (.menu-hint) is invisible until the
+      pointer enters the top-left zone (left quarter, top sixth); clicking it,
+      or `, opens the left pane as an overlay. Esc, a click outside, or
+      choosing a row closes it. With no pointer (touch), the link stays shown.
+      The overlay is the SAME .pane-l element, moved by a class — never a
+      copy, never rebuilt — so its scroll position and selection survive.
+   3. Safari: trackpad pinch-zoom is blocked; ⌘+ / ⌘− still work.          */
+(function () {
+  'use strict';
+  var html = document.documentElement;
+  var KEY = 'minimono:pane-hidden';
+  var hidden = false;
+  try { hidden = localStorage.getItem(KEY) === '1'; } catch (e) {}
+
+  /* 1. Two panes or one ---------------------------------------------------- */
+  function isFull() {
+    var forced = html.getAttribute('data-layout');
+    if (forced === 'split') return true;
+    if (forced === 'single') return false;
+    // Full-screen or maximized. At the top level, measure the window itself
+    // (outerWidth): ⌘+ zoom shrinks innerWidth but not the window. Embedded
+    // in a frame, the frame's own width is what's available.
+    var top = true;
+    try { top = window.top === window; } catch (e) { top = false; }
+    var w = top && outerWidth > 0 ? outerWidth : innerWidth;
+    return w >= screen.availWidth - 24;
+  }
+  function layout() {
+    var windowed = !isFull();
+    html.classList.toggle('is-windowed', windowed);
+    var single = windowed || hidden;
+    if (single !== html.classList.contains('is-single')) {
+      if (!single) close(true);
+      html.classList.toggle('is-single', single);
+    }
+  }
+  function setHidden(v) {
+    hidden = v;
+    try { localStorage.setItem(KEY, v ? '1' : '0'); } catch (e) {}
+    close(true);
+    layout();
+  }
+  var raf = 0;
+  addEventListener('resize', function () { if (!raf) raf = requestAnimationFrame(function () { raf = 0; layout(); }); });
+  new MutationObserver(layout).observe(html, { attributes: true, attributeFilter: ['data-layout'] });
+
+  /* 2. The overlay --------------------------------------------------------- */
+  var lastFocus = null;
+  function pane() { return document.querySelector('.pane-l'); }
+  function typing(el) {
+    if (!el || el === document.body) return false;
+    if (el.isContentEditable) return true;
+    if (el.tagName === 'TEXTAREA' || el.tagName === 'SELECT') return true;
+    return el.tagName === 'INPUT' && !/^(button|submit|reset|checkbox|radio|range|color|file|image)$/i.test(el.type);
+  }
+  function single() { return html.classList.contains('is-single'); }
+  function isOpen() { return html.classList.contains('menu-open'); }
+  function open(keyboard) {
+    if (!single() || isOpen()) return;
+    html.classList.remove('hint-on');
+    html.classList.add('menu-open');
+    lastFocus = document.activeElement;
+    if (keyboard) {                                   // keyboard: move focus in
+      var p = pane(), cur = p && (p.querySelector('[aria-current="true"]') || p.querySelector('a,button,input,[tabindex]'));
+      if (cur) cur.focus({ preventScroll: true });
+    }
+  }
+  function close(silent) {
+    if (!isOpen()) return;
+    html.classList.remove('menu-open');
+    var p = pane();
+    if (!silent && lastFocus && lastFocus.focus && lastFocus !== document.body) lastFocus.focus({ preventScroll: true });
+    else if (p && p.contains(document.activeElement)) document.activeElement.blur();
+    lastFocus = null;
+  }
+
+  // the top-left zone: left quarter of the width, top sixth of the height.
+  // Entering it shows the menu link; nothing opens until the link is clicked.
+  function inZone(x, y) { return x <= innerWidth / 4 && y <= innerHeight / 6; }
+  var hintTimer = 0;
+  function hint(on) {
+    clearTimeout(hintTimer);
+    if (on) { html.classList.add('hint-on'); return; }
+    hintTimer = setTimeout(function () { html.classList.remove('hint-on'); }, 200);
+  }
+  addEventListener('pointermove', function (e) {
+    if (e.pointerType !== 'mouse') return;
+    hint(single() && !isOpen() && inZone(e.clientX, e.clientY));
+  }, { passive: true });
+  document.addEventListener('mouseleave', function () { hint(false); });
+
+  addEventListener('keydown', function (e) {
+    // ` (backtick) on its own — left alone while typing in a field
+    if (e.key === '`' && !e.metaKey && !e.ctrlKey && !e.altKey && !typing(document.activeElement)) {
+      e.preventDefault();
+      if (html.classList.contains('is-windowed')) { isOpen() ? close() : open(true); }
+      else setHidden(!hidden);                        // full-screen: hide, or dock it again
+      return;
+    }
+    if (e.key === 'Escape' && isOpen()) { e.preventDefault(); close(); }
+  });
+  addEventListener('pointerdown', function (e) {
+    if (!isOpen()) return;
+    var p = pane();
+    if (p && !p.contains(e.target) && !(e.target.closest && e.target.closest('.menu-hint'))) close();
+  });
+  addEventListener('click', function (e) {
+    var t = e.target.closest ? e.target : e.target.parentElement;
+    if (t.closest('.menu-hint')) { e.preventDefault(); isOpen() ? close() : open(false); return; }
+    if (t.closest('.pane-hide')) {                    // docked: "Hide" · hidden overlay: "Keep open"
+      e.preventDefault(); setHidden(!hidden); return;
+    }
+    if (isOpen() && t.closest('.pane-l .row, .pane-l .mcq-nav a')) close();
+  });
+
+  /* Focus rings: only after Tab. Shift, arrows, Space and clicks never show one. */
+  addEventListener('keydown', function (e) { if (e.key === 'Tab') html.classList.add('kbd-nav'); }, true);
+  addEventListener('pointerdown', function () { html.classList.remove('kbd-nav'); }, true);
+
+  /* 3. Safari pinch-zoom ---------------------------------------------------- */
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (t) {
+    document.addEventListener(t, function (e) { e.preventDefault(); }, { passive: false });
+  });
+
+  layout();
+  window.Minimono = {
+    open: function () { open(true); }, close: close,
+    hide: function () { setHidden(true); }, show: function () { setHidden(false); },
+    relayout: layout
+  };
+})();
+
+</script>
+<script>
+/* smooth-scroll.js — Safari's keyboard scrolling, for every pane.
+   ---------------------------------------------------------------------------
+   A port of WebKit's keyboard-scroll physics (ScrollAnimationKeyboard.cpp,
+   KeyboardScroll.h, macOS constants) so Space, arrows, Page Up/Down and
+   Home/End glide and settle on a spring in every scroller — the page, and
+   each two-pane split pane on its own.
+
+     ↑ / ↓            tap: glide one line (40px) · hold: accelerate to
+                      1000px/s in 0.2s, cruise, then the spring carries the
+                      leftover momentum and settles
+     Space / ⇧Space   the same, with a page as the step (the visible height
+     PgDn / PgUp      less 40px of overlap, never less than 87.5% of it):
+                      tap glides at least a page, hold accelerates
+     Home / End       glide to the top / bottom (also ⌘↑ / ⌘↓ on a Mac)
+   Key repeats are ignored while a key is held, as in WebKit.
+
+   Which scroller moves: the one under the pointer, else the one that holds
+   focus, else the last one clicked, else the page.
+   Left alone: any control that uses these keys itself — text fields,
+   sliders, radio groups, selects, contenteditable, tabs, listboxes — and
+   Space on a button, link, checkbox or anything else Space activates. Any key with ⌥/⌃
+   (and ⌘ except ⌘↑/⌘↓) passes through.
+   Respects prefers-reduced-motion: the same steps, applied instantly.
+   No init call — include before </body>. ~3KB. Exposes window.SmoothScroll.  */
+(function () {
+  'use strict';
+  if (window.SmoothScroll) return;
+
+  /* WebKit macOS KeyboardScrollParameters */
+  var MASS = 1, STIFF = 175, DAMP = 20, MAX_VEL_MULT = 25, TIME_TO_MAX = 0.2;
+  var LINE = 40;                         /* Scrollbar::pixelsPerLineStep()          */
+  var PAGE_MIN_FRACTION = 0.875;         /* Scrollbar::minFractionToStepWhenPaging  */
+  var PAGE_OVERLAP = 40;                 /* Scrollbar::maxOverlapBetweenPages        */
+
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
+  var docEl = function () { return document.scrollingElement || document.documentElement; };
+
+  function canScroll(el) {
+    if (el === docEl()) return el.scrollHeight > el.clientHeight;
+    var s = getComputedStyle(el), o = s.overflowY;
+    return (o === 'auto' || o === 'scroll' || o === 'overlay') && el.scrollHeight > el.clientHeight + 1;
+  }
+  function scrollerFrom(node) {
+    for (var el = node; el && el.nodeType === 1; el = el.parentElement) {
+      if (el === document.body || el === document.documentElement) break;
+      if (canScroll(el)) return el;
+    }
+    return canScroll(docEl()) ? docEl() : null;
+  }
+
+  var hovered = null, clicked = null;
+  addEventListener('pointermove', function (e) { if (e.pointerType === 'mouse') hovered = e.target; }, { passive: true });
+  addEventListener('pointerdown', function (e) { clicked = e.target; }, { passive: true });
+  document.addEventListener('mouseleave', function () { hovered = null; });
+
+  function pickScroller() {
+    var a = document.activeElement;
+    return (hovered && scrollerFrom(hovered)) ||
+           (a && a !== document.body && scrollerFrom(a)) ||
+           (clicked && scrollerFrom(clicked)) ||
+           scrollerFrom(document.body);
+  }
+
+  // controls that use arrows / Page / Home / End themselves keep them
+  function ownsKeys(el) {
+    if (!el || el === document.body) return false;
+    if (el.isContentEditable) return true;
+    var t = el.tagName;
+    if (t === 'TEXTAREA' || t === 'SELECT') return true;
+    if (t === 'INPUT') return !/^(button|submit|reset|checkbox|color|file|image)$/i.test(el.type);
+    var r = el.getAttribute && el.getAttribute('role');
+    return !!r && /^(slider|spinbutton|radio|radiogroup|tab|tablist|listbox|option|menu|menubar|menuitem|combobox|grid|tree|treeitem|textbox)$/.test(r);
+  }
+  function spaceActivates(el) {
+    if (!el || el === document.body) return false;
+    if (/^(BUTTON|A|SUMMARY|INPUT)$/.test(el.tagName)) return true;
+    var r = el.getAttribute && el.getAttribute('role');
+    return !!r && /^(button|link|tab|checkbox|radio|switch|menuitem|option|slider)$/.test(r);
+  }
+
+  /* One animator per scroller ------------------------------------------- */
+  var anims = new WeakMap();
+  function Anim(el) {
+    this.el = el; this.pos = el.scrollTop; this.vel = 0;
+    this.held = null; this.ideal = this.pos; this.minTravel = this.pos;
+    this.raf = 0; this.last = 0;
+  }
+  Anim.prototype.max = function () { return this.el.scrollHeight - this.el.clientHeight; };
+  Anim.prototype.sync = function () {
+    // the user may have scrolled by wheel/trackpad since we last moved it
+    if (!this.raf) { this.pos = this.el.scrollTop; this.ideal = this.pos; this.vel = 0; }
+  };
+  Anim.prototype.run = function () {
+    if (this.raf) return;
+    var self = this; this.last = performance.now();
+    this.raf = requestAnimationFrame(function f(t) { self.step(t) ? (self.raf = requestAnimationFrame(f)) : (self.raf = 0); });
+  };
+  Anim.prototype.stop = function () { if (this.raf) cancelAnimationFrame(this.raf); this.raf = 0; this.vel = 0; this.held = null; };
+  Anim.prototype.write = function () {
+    var max = this.max();
+    if (this.pos <= 0 || this.pos >= max) {          // hit an edge: stop there, no overshoot
+      this.pos = Math.min(Math.max(this.pos, 0), max);
+      this.vel = 0; this.ideal = this.pos;
+      this.el.scrollTop = this.pos;
+      return false;
+    }
+    this.el.scrollTop = this.pos;
+    return true;
+  };
+  /* ScrollAnimationKeyboard::animateScroll */
+  Anim.prototype.step = function (t) {
+    var dt = (t - this.last) / 1000; this.last = t;
+    if (dt <= 0) return true;
+    if (dt > 0.05) dt = 0.05;                          // a stalled frame shouldn't fling
+    var force = 0, spring = true, ideal = this.ideal;
+    if (this.held) {
+      force = this.held.force; spring = false; ideal = this.pos;
+      if (Math.abs(this.vel) >= Math.abs(this.held.maxVel)) force = 0;
+    }
+    var disp = this.pos - ideal;
+    if (spring) force -= disp * STIFF + this.vel * DAMP;
+    this.vel += force / MASS * dt;
+    this.pos += this.vel * dt;
+    var inside = this.write();
+    if (spring && disp * (this.pos - ideal) < 0) { this.vel = 0; this.pos = ideal; this.el.scrollTop = ideal; }
+    if (!inside && !this.held) return false;
+    if (!this.held && this.vel * this.vel < 1 && Math.abs(this.pos - ideal) < 0.5) { this.vel = 0; return false; }
+    return true;
+  };
+  /* startKeyboardScroll — velocity carries over, like WebKit */
+  Anim.prototype.hold = function (dir, step) {
+    var maxVel = step * MAX_VEL_MULT * dir;
+    this.held = { dir: dir, maxVel: maxVel, force: maxVel * MASS / TIME_TO_MAX };
+    this.minTravel = this.pos + step * dir;
+    this.run();
+  };
+  /* stopKeyboardScrollAnimation */
+  Anim.prototype.release = function () {
+    if (!this.held) return;
+    var d = Math.sqrt(this.vel * this.vel * MASS / STIFF) * (this.vel < 0 ? -1 : 1);
+    var settle = this.pos + d;
+    this.ideal = this.held.dir > 0 ? Math.max(settle, this.minTravel) : Math.min(settle, this.minTravel);
+    this.ideal = Math.round(Math.min(Math.max(this.ideal, 0), this.max()));
+    this.held = null;
+    this.run();
+  };
+  /* a jump to a target (top / bottom, or the public API): spring there */
+  Anim.prototype.to = function (target) {
+    var base = this.raf && !this.held ? this.ideal : this.pos;
+    if (typeof target === 'function') target = target(base);
+    this.held = null;
+    this.ideal = Math.round(Math.min(Math.max(target, 0), this.max()));
+    this.run();
+  };
+
+  function anim(el) { var a = anims.get(el); if (!a) { a = new Anim(el); anims.set(el, a); } a.sync(); return a; }
+  function pageStep(el) {
+    var h = el === docEl() ? innerHeight : el.clientHeight;
+    return Math.max(h * PAGE_MIN_FRACTION, h - PAGE_OVERLAP);
+  }
+
+  var heldKey = null, heldAnim = null;
+  function releaseHeld() { if (heldAnim) heldAnim.release(); heldKey = heldAnim = null; }
+
+  addEventListener('keydown', function (e) {
+    if (e.defaultPrevented || e.altKey || e.ctrlKey) return;
+    var k = e.key, cmdArrow = e.metaKey && (k === 'ArrowUp' || k === 'ArrowDown');
+    if (e.metaKey && !cmdArrow) return;
+    if (!/^( |ArrowUp|ArrowDown|PageUp|PageDown|Home|End)$/.test(k)) return;
+    var act = document.activeElement;
+    if (ownsKeys(act)) return;
+    if (k === ' ' && spaceActivates(act)) return;
+    if ((k === 'ArrowUp' || k === 'ArrowDown') && e.shiftKey && !cmdArrow) return;   // leave selection alone
+
+    var el = pickScroller(); if (!el) return;
+    e.preventDefault();
+    var edge = cmdArrow || k === 'Home' || k === 'End';
+    if (!edge && (e.repeat || heldKey)) return;                // WebKit ignores repeats and other keys while one is held
+    var a = anim(el), page = pageStep(el);
+
+    if (reduce && reduce.matches) {                       // same steps, no animation
+      a.stop();
+      var dy = k === 'ArrowDown' ? LINE : k === 'ArrowUp' ? -LINE :
+               (k === ' ' && !e.shiftKey) || k === 'PageDown' ? page : page * -1;
+      if (k === 'Home' || (cmdArrow && k === 'ArrowUp')) el.scrollTop = 0;
+      else if (k === 'End' || (cmdArrow && k === 'ArrowDown')) el.scrollTop = el.scrollHeight;
+      else el.scrollTop += dy;
+      return;
+    }
+
+    if (edge) {
+      a.to(k === 'Home' || k === 'ArrowUp' ? 0 : a.max());
+    } else if (k === 'ArrowUp' || k === 'ArrowDown') {
+      heldKey = k; heldAnim = a; a.hold(k === 'ArrowDown' ? 1 : -1, LINE);
+    } else {
+      heldKey = k; heldAnim = a;
+      a.hold((k === ' ' && !e.shiftKey) || k === 'PageDown' ? 1 : -1, page);
+    }
+  });
+  addEventListener('keyup', function (e) { if (e.key === heldKey) releaseHeld(); });
+  addEventListener('blur', releaseHeld);
+  document.addEventListener('visibilitychange', function () { if (document.hidden) releaseHeld(); });
+  /* a wheel/trackpad scroll takes over from a gliding key scroll */
+  addEventListener('wheel', function (e) {
+    var el = scrollerFrom(e.target), a = el && anims.get(el);
+    if (a && a.raf && !a.held) a.stop();
+  }, { passive: true });
+
+  window.SmoothScroll = {
+    /* programmatic glide, e.g. SmoothScroll.to(pane, 0) to send a pane home */
+    to: function (el, y) { anim(el || docEl()).to(y); },
+    by: function (el, dy) { var a = anim(el || docEl()); a.to(function (b) { return b + dy; }); }
+  };
+})();
+
+</script>
+
+</body></html>

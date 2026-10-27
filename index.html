@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Artifacts</title>
+<style>
+:root{
+  color-scheme:light dark;
+  --ground:#EEF1F4; --ink:#0a0a0b; --ink-soft:#5F6368; --hair-soft:rgba(10,10,12,.08);
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --ground:#000; --ink:#f6f6f8; --ink-soft:#a0a0a8; --hair-soft:rgba(255,255,255,.09);
+}}
+:root[data-theme="dark"]{ --ground:#000; --ink:#f6f6f8; --ink-soft:#a0a0a8; --hair-soft:rgba(255,255,255,.09); }
+*{ box-sizing:border-box; }
+body{ margin:0; background:var(--ground); color:var(--ink); font:16px/1.5 var(--sans); -webkit-font-smoothing:antialiased; }
+main{ max-width:760px; padding:72px max(16px, 5vw) 120px; }
+h1{ font-size:clamp(56px, 4.6vw, 112px); font-weight:300; letter-spacing:-.035em; line-height:1.02; margin:0 0 48px; }
+ul{ list-style:none; margin:0; padding:0; }
+li a{ display:block; padding:16px 0; border-bottom:1px solid var(--hair-soft); font-size:clamp(19px, 1.25vw, 24px); color:var(--ink-soft); text-decoration:none; }
+li:last-child a{ border-bottom:0; }
+@media (hover:hover){ li a:hover{ color:var(--ink); } }
+li a:active{ opacity:.6; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Artifacts</h1>
+  <ul>
+    <!-- one line per artifact folder; newest first -->
+    <li><a href="/ap-chem-unit3-test/">AP Chem Unit 3 Test</a></li>
+  </ul>
+</main>
+</body>
+</html>
