@@ -4,34 +4,142 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Artifacts</title>
+<link rel="stylesheet" href="/assets/minimono.css">
 <style>
-:root{
-  color-scheme:light dark;
-  --ground:#EEF1F4; --ink:#0a0a0b; --ink-soft:#5F6368; --hair-soft:rgba(10,10,12,.08);
-  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",system-ui,sans-serif;
-}
-@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
-  --ground:#000; --ink:#f6f6f8; --ink-soft:#a0a0a8; --hair-soft:rgba(255,255,255,.09);
-}}
-:root[data-theme="dark"]{ --ground:#000; --ink:#f6f6f8; --ink-soft:#a0a0a8; --hair-soft:rgba(255,255,255,.09); }
-*{ box-sizing:border-box; }
-body{ margin:0; background:var(--ground); color:var(--ink); font:16px/1.5 var(--sans); -webkit-font-smoothing:antialiased; }
-main{ max-width:760px; padding:72px max(16px, 5vw) 120px; }
-h1{ font-size:clamp(56px, 4.6vw, 112px); font-weight:300; letter-spacing:-.035em; line-height:1.02; margin:0 0 48px; }
-ul{ list-style:none; margin:0; padding:0; }
-li a{ display:block; padding:16px 0; border-bottom:1px solid var(--hair-soft); font-size:clamp(19px, 1.25vw, 24px); color:var(--ink-soft); text-decoration:none; }
-li:last-child a{ border-bottom:0; }
-@media (hover:hover){ li a:hover{ color:var(--ink); } }
-li a:active{ opacity:.6; }
+/* left pane: search + subjects */
+.side{ display:flex; flex-direction:column; gap:28px; margin-top:28px; }
+.side .row{ display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+  background:none; border:0; border-bottom:1px solid var(--hair-soft); text-align:left; font:inherit; font-size:clamp(17px, 1.15vw, 22px); }
+.side .row:last-child{ border-bottom:0; }
+.side .row .n{ font-size:15px; color:var(--muted); font-variant-numeric:tabular-nums; }
+.side .row[aria-current="true"] .n{ color:var(--ink-soft); }
+
+/* right pane: the widgets */
+.grid{ list-style:none; margin:0; padding:0; display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(clamp(300px, 22vw, 440px), 1fr)); gap:64px 56px; }
+.w{ border-top:1px solid var(--hair); }
+.w[hidden]{ display:none; }
+.w a{ display:flex; flex-direction:column; gap:10px; padding-top:20px; }
+.w .k{ font-size:14px; font-weight:500; color:var(--ink-soft); }
+.w .t{ font-size:clamp(28px, 1.9vw, 40px); font-weight:300; line-height:1.15; letter-spacing:-.02em; color:var(--ink); }
+.w .d{ font-size:14px; color:var(--muted); font-variant-numeric:tabular-nums; }
+@media (hover:hover){ .w a:hover .t{ text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:.18em; text-decoration-color:var(--hair); } }
+.w a:active{ opacity:.6; }
+
+.none{ font-size:clamp(17px, 1.05vw, 20px); color:var(--ink-soft); margin:0; }
+.none[hidden]{ display:none; }
 </style>
 </head>
 <body>
-<main>
-  <h1>Artifacts</h1>
-  <ul>
-    <!-- one line per artifact folder; newest first -->
-    <li><a href="/ap-chem-unit3-test/">AP Chem Unit 3 Test</a></li>
-  </ul>
-</main>
+<div id="app">
+  <nav class="pane-l">
+    <button class="pane-hide" type="button"><span class="hide">Hide</span><span class="keep">Keep open</span><kbd>`</kbd></button>
+    <div class="side">
+      <input type="search" id="q" placeholder="Search" aria-label="Search artifacts" autocomplete="off">
+      <div id="subjects"></div>
+    </div>
+  </nav>
+  <main class="pane-r">
+    <a class="menu-hint" href="#">Menu<kbd>`</kbd></a>
+    <div class="body">
+      <div class="loading" id="loading" role="status" aria-label="Loading"></div>
+      <ul class="grid" id="grid"></ul>
+      <p class="none" id="none" hidden>Nothing matches.</p>
+    </div>
+  </main>
+</div>
+
+<script>
+(function(){
+  var grid = document.getElementById('grid');
+  var subjectsEl = document.getElementById('subjects');
+  var q = document.getElementById('q');
+  var none = document.getElementById('none');
+  var loading = document.getElementById('loading');
+  var KEY = 'artifacts:subject';
+  var current = 'All';
+  try { current = localStorage.getItem(KEY) || 'All'; } catch (e) {}
+
+  function fmt(iso){
+    var d = new Date(iso + 'T12:00:00');
+    return isNaN(d) ? '' : d.toLocaleDateString(undefined, { month:'long', day:'numeric', year:'numeric' });
+  }
+
+  // Built once from the list. Afterwards, filtering only flips `hidden` and `aria-current`.
+  function build(items){
+    items.sort(function(a, b){ return (b.added || '').localeCompare(a.added || ''); });
+
+    var counts = { All: items.length }, order = ['All'];
+    items.forEach(function(it){
+      var s = it.subject || 'Other';
+      if (!(s in counts)) { counts[s] = 0; order.push(s); }
+      counts[s]++;
+    });
+    order = ['All'].concat(order.slice(1).sort());
+    if (!(current in counts)) current = 'All';
+
+    order.forEach(function(s){
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'row'; b.dataset.subject = s;
+      var name = document.createElement('span'); name.textContent = s;
+      var n = document.createElement('span'); n.className = 'n'; n.textContent = counts[s];
+      b.append(name, n);
+      subjectsEl.appendChild(b);
+    });
+
+    items.forEach(function(it){
+      var li = document.createElement('li');
+      li.className = 'w';
+      li.dataset.subject = it.subject || 'Other';
+      li.dataset.text = [it.title, it.subject, it.kind].join(' ').toLowerCase();
+      var a = document.createElement('a');
+      a.href = '/' + it.slug + '/';
+      var k = document.createElement('span'); k.className = 'k';
+      k.textContent = [it.subject, it.kind].filter(Boolean).join(' · ');
+      var t = document.createElement('span'); t.className = 't'; t.textContent = it.title;
+      var d = document.createElement('span'); d.className = 'd'; d.textContent = fmt(it.added);
+      a.append(k, t, d);
+      li.appendChild(a);
+      grid.appendChild(li);
+    });
+
+    apply();
+  }
+
+  function apply(){
+    var term = q.value.trim().toLowerCase(), shown = 0;
+    subjectsEl.querySelectorAll('.row').forEach(function(r){
+      r.setAttribute('aria-current', r.dataset.subject === current ? 'true' : 'false');
+    });
+    grid.querySelectorAll('.w').forEach(function(w){
+      var ok = (current === 'All' || w.dataset.subject === current) &&
+               (!term || w.dataset.text.indexOf(term) !== -1);
+      w.hidden = !ok;
+      if (ok) shown++;
+    });
+    none.hidden = shown > 0;
+  }
+
+  subjectsEl.addEventListener('click', function(e){
+    var r = e.target.closest('.row');
+    if (!r) return;
+    current = r.dataset.subject;
+    try { localStorage.setItem(KEY, current); } catch (err) {}
+    apply();
+  });
+  q.addEventListener('input', apply);
+
+  fetch('/artifacts.json', { cache:'no-cache' })
+    .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function(items){ loading.remove(); build(Array.isArray(items) ? items : []); })
+    .catch(function(){
+      loading.remove();
+      none.textContent = 'The list didn’t load. Reload to try again.';
+      none.hidden = false;
+    });
+})();
+</script>
+<script src="/assets/minimono.js"></script>
+<script src="/assets/smooth-scroll.js"></script>
 </body>
 </html>
