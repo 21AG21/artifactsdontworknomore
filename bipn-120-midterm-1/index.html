@@ -1,0 +1,1145 @@
+<!doctype html>
+<html lang="en" class="mj-wait">
+<head>
+<meta charset="utf-8">
+<title>BIPN 120 Midterm 1 Practice</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="BIPN 120 Endocrinology: two 30-minute Midterm 1 practice tests, 30 MCQs and 2 FRQs each.">
+<style>
+/* minimono.css — the house style's base: tokens, type, the two-pane layout,
+   the windowed overlay, and flat native controls.
+   Targets two screens: MacBook Air 15" (1710×1107, 2×) and Dell P2423D
+   (2560×1440, 1×). Every line is 1px — half-pixels vanish on the Dell.     */
+
+/* ── Tokens ─────────────────────────────────────────────────────────────── */
+:root{
+  color-scheme: light dark;            /* native controls + scrollbars follow the theme */
+  --ground:#EEF1F4; --wall:#ffffff;
+  --ink:#0a0a0b; --ink-soft:#5F6368; --muted:#9c9ca3;
+  --hair:rgba(10,10,12,.13); --hair-soft:rgba(10,10,12,.08);
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",system-ui,sans-serif;
+  --pane-l:25%;                        /* the left pane is one quarter, always */
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --ground:#000000; --wall:#161618; --ink:#f6f6f8; --ink-soft:#a0a0a8; --muted:#67676f;
+  --hair:rgba(255,255,255,.16); --hair-soft:rgba(255,255,255,.09);
+}}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#000000; --wall:#161618; --ink:#f6f6f8; --ink-soft:#a0a0a8; --muted:#67676f;
+  --hair:rgba(255,255,255,.16); --hair-soft:rgba(255,255,255,.09);
+}
+:root[data-theme="light"]{ color-scheme: light; }
+
+/* ── Base ───────────────────────────────────────────────────────────────── */
+*,*::before,*::after{ box-sizing:border-box; }
+html,body{ margin:0; height:100%; overflow:hidden; }
+body{
+  background:var(--ground); color:var(--ink);
+  font:16px/1.5 var(--sans); -webkit-font-smoothing:antialiased;
+  font-variant-numeric:tabular-nums;
+}
+:focus, :focus-visible{ outline:none; }
+/* focus shows only after Tab (minimono.js sets .kbd-nav; any click clears it),
+   as a thin grey line — never a bright ring, never from Shift or a click */
+html.kbd-nav :focus-visible{ outline:1px solid var(--muted); outline-offset:3px; border-radius:6px; }
+/* text selection keeps the system highlight — never restyle ::selection */
+a{ color:inherit; text-decoration:none; }
+/* scrollbars: left to macOS — overlay, thin, shown while scrolling. Never hidden. */
+
+/* ── Type (tuned for 1710 and 2560 wide). Weights: 300 · 400 · 500, never more ─ */
+.hero { font-size:clamp(64px, 4.6vw, 112px); font-weight:300; line-height:1.02; letter-spacing:-.035em; margin:0; }
+.h2   { font-size:clamp(28px, 1.9vw, 40px);  font-weight:500; line-height:1.15; letter-spacing:-.02em; margin:0; }
+.text { font-size:clamp(17px, 1.05vw, 20px); line-height:1.55; max-width:68ch; }
+.label{ font-size:13px; font-weight:500; color:var(--ink-soft); letter-spacing:.005em; }
+.num  { font-weight:400; letter-spacing:-.02em; }
+
+/* ── Layout: two panes, left ¼ · right ¾, each its own scroller ─────────── */
+#app{ display:flex; height:100dvh; }
+.pane-l{
+  flex:0 0 var(--pane-l); height:100%; overflow-y:auto; overscroll-behavior:contain;
+  border-right:1px solid var(--hair-soft); background:var(--ground);
+  padding:48px 32px 64px;
+}
+.pane-r{ flex:1 1 auto; min-width:0; height:100%; overflow-y:auto; overscroll-behavior:contain; }
+.pane-r .body{ max-width:1120px; padding:56px clamp(48px, 5vw, 120px) 120px; }
+
+/* the list in the left pane */
+.row{
+  display:block; width:100%; padding:14px 0; border-bottom:1px solid var(--hair-soft);
+  font-size:clamp(17px, 1.15vw, 22px); color:var(--ink-soft); cursor:pointer;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.row:last-child{ border-bottom:0; }
+@media (hover:hover){ .row:hover{ color:var(--ink); } }
+.row[aria-current="true"]{ color:var(--ink); font-weight:500; }
+.row:active{ opacity:.6; }
+
+/* ── One-pane mode: windowed, or the person hid the left pane ────────────
+   The left pane leaves the layout; it comes back as an overlay (the SAME
+   element, moved) when the pointer enters the top-left zone — the left
+   quarter of the width, the top sixth of the height — or on `.           */
+.pane-hide{
+  border:0; background:none; padding:4px 0; margin:0;
+  font:inherit; font-size:13px; color:var(--ink-soft); cursor:pointer; text-align:left;
+}
+.pane-hide kbd{ font:inherit; color:var(--muted); margin-left:6px; }
+.pane-hide .keep{ display:none; }
+html.is-single .pane-hide .hide{ display:none; }
+html.is-single .pane-hide .keep{ display:inline; }
+html.is-windowed .pane-hide{ display:none; }        /* windowed: the overlay is the only way it shows */
+@media (hover:hover){ .pane-hide:hover{ color:var(--ink); } }
+.menu-hint{ display:none; }
+/* one-pane mode: the link sits in the top-left zone, invisible until the
+   pointer enters that zone (or it takes keyboard focus); always shown on touch */
+html.is-single .menu-hint{
+  display:block; position:fixed; z-index:15;
+  top:calc(env(safe-area-inset-top, 0px) + 18px); left:max(16px, env(safe-area-inset-left, 0px), 2vw);
+  padding:6px 10px; margin:0; border-radius:8px; background:var(--ground);
+  font-size:13px; color:var(--ink-soft); cursor:pointer;
+  opacity:0; pointer-events:none; transition:opacity .14s ease;
+}
+html.is-single .menu-hint kbd{ font:inherit; color:var(--muted); margin-left:6px; }
+html.is-single.hint-on .menu-hint,
+html.kbd-nav.is-single .menu-hint:focus-visible{ opacity:1; pointer-events:auto; }
+@media (hover:none){ html.is-single .menu-hint{ opacity:1; pointer-events:auto; } }
+@media (hover:hover){ html.is-single .menu-hint:hover{ color:var(--ink); } }
+
+html.is-single .pane-l{
+  position:fixed; z-index:20; inset:0 auto 0 0; width:clamp(280px, 25vw, 640px);
+  transform:translateX(-100%); visibility:hidden;
+  transition:transform .22s cubic-bezier(.32,.72,0,1), visibility 0s linear .22s;
+}
+html.is-single.menu-open .pane-l{
+  transform:none; visibility:visible; border-right:1px solid var(--hair);
+  transition:transform .22s cubic-bezier(.32,.72,0,1), visibility 0s;
+}
+
+/* ── Controls: native elements, flat ────────────────────────────────────── */
+/* slider + checkbox + radio take ink through accent-color, natively */
+input[type="range"], input[type="checkbox"], input[type="radio"]{ accent-color:var(--ink); }
+input[type="range"]{ width:100%; max-width:420px; cursor:pointer; }
+
+/* toggle: a checkbox with role="switch", drawn flat */
+input[type="checkbox"][role="switch"]{
+  -webkit-appearance:none; appearance:none; margin:0; flex:none; cursor:pointer;
+  position:relative; width:40px; height:24px; border-radius:999px;
+  background:var(--hair); transition:background .16s ease;
+}
+input[type="checkbox"][role="switch"]::before{
+  content:""; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:999px;
+  background:var(--ground); transition:transform .18s cubic-bezier(.32,.72,0,1);
+}
+input[type="checkbox"][role="switch"]:checked{ background:var(--ink); }
+input[type="checkbox"][role="switch"]:checked::before{ transform:translateX(16px); }
+
+/* segmented choice: a radio group; the chosen one is heavier ink + a 2px mark */
+.seg{ display:inline-flex; gap:28px; border:0; padding:0; margin:0; }
+.seg label{ position:relative; cursor:pointer; padding:6px 0; color:var(--ink-soft); font-weight:400; }
+.seg input{ position:absolute; opacity:0; width:1px; height:1px; }
+.seg input:checked + span{ color:var(--ink); font-weight:500; }
+.seg input:checked + span::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:2px; background:var(--ink); border-radius:2px;
+}
+html.kbd-nav .seg input:focus-visible + span{ outline:1px solid var(--muted); outline-offset:4px; border-radius:6px; }
+@media (hover:hover){ .seg label:hover span{ color:var(--ink); } }
+
+/* search */
+input[type="search"]{
+  -webkit-appearance:none; appearance:none; width:100%; max-width:420px;
+  font:inherit; font-size:16px; color:var(--ink);
+  background:var(--wall); border:0; border-radius:10px; padding:10px 14px;
+}
+input[type="search"]::placeholder{ color:var(--muted); }
+
+/* buttons: only for real actions — navigation is text */
+button{ font:inherit; cursor:pointer; }
+.btn{ border:0; border-radius:10px; padding:10px 18px; font-weight:500; background:var(--wall); color:var(--ink); }
+.btn.primary{ background:var(--ink); color:var(--ground); }
+.btn:active{ opacity:.6; }
+
+/* ── Multiple-choice questions (quiz.js builds them from JSON) ─────────────
+   State without color: the right answer gets an ink bar and Medium weight,
+   a wrong pick is struck through, everything else recedes to grey. */
+.mcq-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:44px; max-width:760px; }
+.mcq-q{ display:grid; grid-template-columns:2em minmax(0, 1fr); column-gap:10px; outline-offset:8px; }
+.mcq-n{ font-size:clamp(19px, 1.25vw, 24px); line-height:1.45; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+.mcq-body{ display:flex; flex-direction:column; gap:12px; min-width:0; }
+.mcq-text{ margin:0; font-size:clamp(19px, 1.25vw, 24px); line-height:1.45; color:var(--ink); }
+.mcq-text mjx-container[display="true"]{ margin:.5em 0 !important; }
+.mcq-opts{ display:flex; flex-direction:column; gap:2px; }
+.mcq-opt{
+  display:grid; grid-template-columns:1.5em minmax(0, 1fr); align-items:baseline; gap:8px;
+  width:calc(100% + 20px); margin:0 -10px; padding:9px 10px; border:0; border-radius:8px;
+  background:none; text-align:left; font:inherit; font-size:clamp(17px, 1.05vw, 20px); line-height:1.45;
+  color:var(--ink); cursor:pointer;
+}
+.mcq-l{ color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+@media (hover:hover){ .mcq-q:not(.is-done) .mcq-opt:hover{ background:var(--wall); } }
+.mcq-q:not(.is-done) .mcq-opt:active{ opacity:.6; }
+.mcq-q.is-done .mcq-opt{ cursor:default; color:var(--ink-soft); }
+.mcq-q.is-done .mcq-opt.is-answer{ color:var(--ink); font-weight:500; box-shadow:inset 2px 0 0 var(--ink); }
+.mcq-q.is-done .mcq-opt.is-answer .mcq-l{ color:var(--ink); }
+.mcq-q.is-done .mcq-opt.is-chosen:not(.is-answer) .mcq-t{ text-decoration:line-through; text-decoration-thickness:1px; }
+.mcq-fb{ margin:6px 0 0; font-size:17px; font-weight:500; color:var(--ink); }
+.mcq-why{ margin:0; font-size:17px; line-height:1.5; color:var(--ink-soft); max-width:62ch; }
+.mcq-bar{ display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin-top:44px; }
+.mcq-score{ font-size:15px; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+.mcq-fallback{ width:100%; max-width:760px; min-height:160px; margin-top:16px; font:14px/1.5 var(--sans); color:var(--ink);
+  background:var(--wall); border:0; border-radius:10px; padding:12px 14px; }
+/* the question numbers, in the left pane of a quiz page */
+.mcq-nav{ display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:4px; }
+.mcq-nav a{ display:block; padding:8px 0; border-radius:8px; text-align:center; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+@media (hover:hover){ .mcq-nav a:hover{ background:var(--wall); color:var(--ink); } }
+.mcq-nav a.is-right{ color:var(--ink); text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:.25em; }
+.mcq-nav a.is-wrong{ color:var(--ink); text-decoration:line-through; text-decoration-thickness:1px; }
+/* fractions stay full size inline */
+mjx-container[jax="SVG"]:not([display="true"]){ margin:0 .08em; }
+
+/* ── Loading: the one color exception — a thin rainbow ring, only while loading */
+.loading{
+  width:18px; height:18px; border-radius:50%;
+  background:conic-gradient(#ff3b30,#ff9500,#ffcc00,#34c759,#00c7be,#007aff,#af52de,#ff3b30);
+  -webkit-mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+          mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+  animation:mm-spin .9s linear infinite;
+}
+@keyframes mm-spin{ to{ transform:rotate(1turn); } }
+
+@media (prefers-reduced-motion:reduce){
+  *{ animation:none!important; transition:none!important; }
+}
+
+/* ── This page: a course, two timed tests, MCQs then FRQs ─────────────── */
+[hidden]{ display:none!important; }
+.pane-r{ position:relative; }
+.course{ display:flex; flex-direction:column; gap:6px; margin:28px 0 30px; }
+.course-n{ margin:0; font-size:clamp(36px, 2.6vw, 56px); font-weight:300; line-height:1.12; letter-spacing:-.03em; }
+.course-t{ margin:0; font-size:clamp(17px, 1.15vw, 22px); line-height:1.35; color:var(--ink); }
+.course-s{ margin:0; font-size:14px; line-height:1.5; color:var(--ink-soft); }
+.tests{ margin:0 0 26px; }
+.frq-list{ list-style:none; margin:44px 0 0; padding:0; display:flex; flex-direction:column; gap:44px; max-width:760px; }
+.frq-q{ display:grid; grid-template-columns:2em minmax(0, 1fr); column-gap:10px; outline-offset:8px; }
+.frq-in{ display:block; width:100%; min-height:8.5em; margin:0; resize:vertical; font:inherit; font-size:clamp(17px, 1.05vw, 20px);
+  line-height:1.5; color:var(--ink); background:var(--wall); border:0; border-radius:10px; padding:12px 14px; }
+.frq-act{ display:flex; gap:12px; }
+.frq-ans{ display:flex; flex-direction:column; gap:10px; }
+.frq-ans p{ margin:0; font-size:17px; line-height:1.5; color:var(--ink); max-width:62ch; }
+.frq-pts{ margin:0; padding:0 0 0 1.1em; display:flex; flex-direction:column; gap:6px; font-size:17px; line-height:1.5; color:var(--ink-soft); max-width:62ch; }
+.frq-pts li::marker{ color:var(--muted); }
+.frq-q mjx-container[display="true"]{ margin:.5em 0 !important; }
+.mj-ring{ position:absolute; top:60px; left:clamp(48px, 5vw, 120px); }
+html:not(.mj-wait) .mj-ring{ display:none; }
+html.mj-wait .pane-r .body{ visibility:hidden; }
+
+</style>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']], packages: { '[+]': ['mhchem'] } },
+  svg: { fontCache: 'global' },
+  startup: {
+    pageReady: function () {
+      return MathJax.startup.defaultPageReady().then(function () { if (window.__mathReady) window.__mathReady(); });
+    }
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg-full.js"></script>
+</head>
+<body>
+<div id="app">
+  <nav class="pane-l">
+    <button class="pane-hide" type="button"><span class="hide">Hide</span><span class="keep">Keep open</span><kbd>`</kbd></button>
+    <header class="course">
+      <h1 class="course-n">BIPN 120</h1>
+      <p class="course-t">Endocrinology</p>
+      <p class="course-s">Midterm 1 &middot; 30 minutes each</p>
+      <p class="course-s">Receptors and signaling, hormone types, feedback, the hypothalamus and pituitary, growth hormone and the thyroid.</p>
+    </header>
+    <div class="tests">
+      <a class="row" href="#test-1" data-test="test-1" aria-current="true">Test 1</a>
+<a class="row" href="#test-2" data-test="test-2" aria-current="false">Test 2</a>
+    </div>
+    <nav class="mcq-nav" id="nav-test-1" aria-label="Test 1 questions"></nav>
+<nav class="mcq-nav" id="nav-test-2" aria-label="Test 2 questions" hidden></nav>
+  </nav>
+  <main class="pane-r">
+    <a class="menu-hint" href="#">Menu<kbd>`</kbd></a>
+    <div class="loading mj-ring" aria-hidden="true"></div>
+    <div class="body">
+<section class="test" id="test-1" data-key="bipn120-t1">
+<section class="mcq" data-title="BIPN 120 Midterm 1, Test 1" data-nav="#nav-test-1"><script type="application/json">[{"q": "Cholera toxin adds an ADP-ribose group to \\(\\text{G}_{\\text{s}}\\alpha\\) and blocks its GTPase activity. What happens in gut cells?", "options": ["\\(\\text{G}_{\\text{s}}\\) stays switched on, so cAMP stays high", "\\(\\text{G}_{\\text{s}}\\) stays switched off, so cAMP stays low", "\\(\\text{G}_{\\text{i}}\\) stays switched on, so cAMP stays low", "\\(\\text{G}_{\\text{q}}\\) stays switched on, so \\(\\ce{Ca^{2+}}\\) stays high"], "answer": 0, "why": "A G protein turns itself off by breaking down its own GTP to GDP. If that GTPase is blocked, \\(\\text{G}_{\\text{s}}\\alpha\\) stays bound to GTP and keeps activating adenylyl cyclase, so cAMP stays high. In gut cells, high cAMP opens CFTR \\(\\ce{Cl-}\\) channels, and water follows, causing severe diarrhea. Pertussis toxin, in contrast, blocks \\(\\text{G}_{\\text{i}}\\) from being activated."}, {"q": "A hormone binds a \\(\\text{G}_{\\text{q}}\\)-coupled receptor. Which two second messengers are made, and what does each do?", "options": ["IP₃ releases \\(\\ce{Ca^{2+}}\\) from the ER, and DAG activates protein kinase C", "cAMP activates protein kinase A, and DAG releases \\(\\ce{Ca^{2+}}\\) from the ER", "IP₃ activates protein kinase C, and cGMP releases \\(\\ce{Ca^{2+}}\\) from the ER", "DAG opens \\(\\ce{Ca^{2+}}\\) channels in the ER, and IP₃ activates adenylyl cyclase"], "answer": 0, "why": "\\(\\text{G}_{\\text{q}}\\) activates phospholipase C, which splits the membrane lipid PIP₂ into two pieces. IP₃ is water soluble and travels to IP₃ receptors on the ER, releasing \\(\\ce{Ca^{2+}}\\). DAG stays in the membrane, where, together with \\(\\ce{Ca^{2+}}\\), it activates protein kinase C. Hormones like TRH and GnRH use this pathway."}, {"q": "Growth hormone binds a receptor with no enzyme activity of its own. How does the signal get into the cell?", "options": ["The receptor pair activates JAK2 kinases, which phosphorylate STAT proteins", "The receptor activates \\(\\text{G}_{\\text{s}}\\), which raises cAMP in the cell", "The hormone enters the cell and binds a receptor inside the nucleus", "The receptor opens an ion channel, which lets \\(\\ce{Ca^{2+}}\\) into the cell"], "answer": 0, "why": "The GH receptor belongs to the cytokine receptor family, like the prolactin receptor. GH binding brings two receptors together, and the JAK2 kinases attached to their inner tails phosphorylate each other and the receptors. STAT proteins dock, get phosphorylated, pair up, and move to the nucleus to turn on genes such as IGF-1. The insulin receptor, by contrast, has its own tyrosine kinase built in."}, {"q": "Why does a steroid hormone typically take hours to act, while epinephrine acts in seconds?", "options": ["Steroid receptors act by changing gene transcription, which takes time", "Steroids bind to carrier proteins that release them only after hours", "Steroids must first be converted into peptides before they can act", "Steroid receptors are on the cell surface but signal through slow ions"], "answer": 0, "why": "Steroids are lipid soluble, so they cross the membrane and bind receptors inside the cell. The hormone–receptor complex binds hormone response elements on DNA and changes transcription. Making new mRNA and new proteins takes hours. Epinephrine uses surface receptors and second messengers that change existing proteins within seconds."}, {"q": "Pro-opiomelanocortin (POMC) is cut into different products in different cells. Which product links high ACTH to darker skin in Addison's disease?", "options": ["MSH, which is cut from the same precursor as ACTH", "Cortisol, which builds up and darkens the skin over time", "Prolactin, which is released together with the ACTH", "Endorphin, which acts on the melanocytes of the skin"], "answer": 0, "why": "When the adrenal fails (Addison's disease), cortisol falls, and the loss of negative feedback raises CRH and POMC production. POMC is cut into ACTH, and pieces of it, including MSH, can act on melanocyte receptors to darken the skin. ACTH itself also binds the MSH receptor a little. When the problem is in the pituitary instead, ACTH and POMC are low, so the skin does not darken."}, {"q": "A patient's blood insulin is very high but C-peptide is low. What is the best explanation?", "options": ["Insulin is being injected from outside the body", "The pancreas is making extra insulin itself", "The liver is breaking down C-peptide faster", "The kidney is clearing insulin more slowly"], "answer": 0, "why": "Beta cells make proinsulin, which is cut into insulin and C-peptide, released in equal amounts. Pharmacy insulin contains no C-peptide. So high insulin with low C-peptide means the insulin is coming from injections, not the pancreas. An insulin-making tumor would raise both."}, {"q": "Thyroxine (T₄) has a half-life of about 7 days, much longer than most peptide hormones. Why?", "options": ["Over 99% is bound to carrier proteins, which protect it from breakdown", "It is stored inside red blood cells, which release it very slowly", "It cannot be broken down by the liver, so the kidney must remove it", "It is made constantly at a high rate, which hides its true breakdown"], "answer": 0, "why": "T₄ is lipophilic and travels bound to thyroxine-binding globulin, transthyretin and albumin. Only the tiny free fraction can be broken down or enter cells, so the bound pool acts like a reservoir. That gives T₄ a half-life of about a week. Peptide hormones dissolve freely in plasma and are cleared in minutes."}, {"q": "A pregnant woman's high estrogen raises her thyroxine-binding globulin. Her thyroid is normal. After she adjusts, what are her thyroid values?", "options": ["Total T₄ is high, free T₄ is normal, and TSH is normal", "Total T₄ is high, free T₄ is high, and TSH is low", "Total T₄ is normal, free T₄ is low, and TSH is high", "Total T₄ is low, free T₄ is low, and TSH is high"], "answer": 0, "why": "Extra binding protein soaks up free T₄ at first. The small dip in free T₄ raises TSH briefly, and the thyroid makes more until the free level is normal again. Now more total T₄ is bound, but the free level, which is what cells and the pituitary sense, is back to normal, and so is TSH. She is euthyroid."}, {"q": "A patient took a high dose of prednisone (a glucocorticoid) for months and then stopped suddenly. Why is this dangerous?", "options": ["The drug's feedback shut down CRH and ACTH, so the adrenals shrank", "The drug's feedback raised CRH and ACTH, so the adrenals grew too much", "The drug damaged the adrenal medulla, so epinephrine was lost", "The drug became stored in fat, so cortisol levels spike after stopping"], "answer": 0, "why": "Glucocorticoids feed back on the hypothalamus and pituitary to cut CRH and ACTH. Months without ACTH make the adrenal cortex shrink (atrophy). If the drug stops suddenly, the adrenal cannot make enough cortisol, and the axis takes weeks to wake up, so the patient can go into adrenal crisis. Doses are tapered for this reason."}, {"q": "Which of these is an example of positive feedback?", "options": ["Rising estrogen from a mature follicle triggers a surge of LH", "Rising cortisol in blood lowers the release of ACTH from the pituitary", "Rising IGF-1 in blood raises the release of somatostatin", "Rising T₄ in blood lowers the release of TSH from the pituitary"], "answer": 0, "why": "Positive feedback means the output makes itself bigger. In the late follicular phase, high and sustained estrogen switches from inhibiting to stimulating LH release, causing the LH surge that triggers ovulation. Positive feedback loops need an outside event to end them, here the ovulation itself. The other three are negative feedback."}, {"q": "A patient has low free T₄ and a low TSH. Where is the problem most likely?", "options": ["In the pituitary or hypothalamus", "In the thyroid gland itself", "In the thyroid hormone receptor", "In the carrier proteins of the blood"], "answer": 0, "why": "If the thyroid were failing, low T₄ would remove negative feedback and TSH would be high. Low T₄ with a low or \"normal\" TSH means the pituitary is not responding as it should, so the problem is secondary (pituitary) or tertiary (hypothalamus). A TRH test can help tell those two apart."}, {"q": "The pituitary stalk is cut in an accident. Which anterior pituitary hormone rises?", "options": ["Prolactin (PRL)", "Growth hormone (GH)", "Corticotropin (ACTH)", "Thyrotropin (TSH)"], "answer": 0, "why": "Most anterior pituitary hormones are mainly driven by hypothalamic releasing hormones (GHRH, CRH, TRH, GnRH) carried down the portal vessels. Prolactin is the exception: it is mainly held back by dopamine from the hypothalamus. Cutting the stalk removes the dopamine, so prolactin goes up while the others fall."}, {"q": "Why does the hypothalamus send its releasing hormones to the anterior pituitary through portal vessels?", "options": ["They arrive in high concentration before the general blood dilutes them", "They need to be changed into active forms by the liver along the way", "They are too large to cross ordinary capillaries anywhere else", "They need to pass the posterior pituitary first to be stored there"], "answer": 0, "why": "The hypophyseal portal system connects capillaries in the median eminence directly to capillaries in the anterior pituitary. Tiny amounts of releasing hormone reach their target without being diluted in the whole blood volume, so they can work at very low total amounts. In the general blood they would be nearly undetectable."}, {"q": "Where is antidiuretic hormone (ADH) made, and where is it released?", "options": ["Made in hypothalamic neurons; released from their axon endings in the posterior pituitary", "Made in anterior pituitary cells; released into the portal vessels after hypothalamic signals", "Made in posterior pituitary cells; released when hypothalamic neurons stimulate them", "Made in kidney tubule cells; released into the blood when plasma becomes more concentrated"], "answer": 0, "why": "ADH and oxytocin are made by magnocellular neurons in the supraoptic and paraventricular nuclei. They are packaged with carrier proteins (neurophysins), carried down the axons, and stored in the nerve endings in the posterior pituitary. When the neurons fire, the hormones are released straight into the blood. The posterior pituitary is neural tissue, not a gland that makes hormones."}, {"q": "How does ADH make the kidney save water?", "options": ["V2 receptors raise cAMP, which inserts aquaporin-2 into duct membranes", "V1 receptors raise \\(\\ce{Ca^{2+}}\\), which opens \\(\\ce{Na+}\\) channels in ducts", "V2 receptors raise cGMP, which pumps water out of the collecting duct", "V1 receptors raise cAMP, which closes the tight junctions in the ducts"], "answer": 0, "why": "In collecting duct cells, ADH binds V2 receptors, which use \\(\\text{G}_{\\text{s}}\\) and cAMP. Protein kinase A causes vesicles holding aquaporin-2 water channels to fuse with the membrane facing the urine. Water then moves out of the duct into the salty kidney tissue, so urine becomes concentrated. V1 receptors on blood vessels use \\(\\text{G}_{\\text{q}}\\) and cause constriction."}, {"q": "A patient makes large amounts of dilute urine. After desmopressin (an ADH analog), the urine stays dilute. What is the most likely cause?", "options": ["Nephrogenic diabetes insipidus, as the kidney cannot respond to ADH", "Central diabetes insipidus, as the hypothalamus cannot make ADH", "Primary polydipsia, as drinking too much water suppresses ADH", "SIADH, as too much ADH is released from the posterior pituitary"], "answer": 0, "why": "In central diabetes insipidus, the kidney works but ADH is missing, so desmopressin quickly concentrates the urine. No response means the kidney itself does not react, for example from a V2 receptor or aquaporin-2 mutation, or from lithium. That is nephrogenic diabetes insipidus."}, {"q": "A patient with lung cancer has plasma \\(\\ce{Na+}\\) of 120 mM and very concentrated urine, with normal blood volume. What is the most likely cause?", "options": ["The tumor releases ADH, so the kidney holds on to too much water", "The tumor blocks ADH, so the kidney loses too much water in urine", "The tumor releases aldosterone, so the kidney keeps too much \\(\\ce{Na+}\\)", "The tumor blocks aldosterone, so the kidney loses too much \\(\\ce{Na+}\\)"], "answer": 0, "why": "Small cell lung cancers can make ADH (SIADH). The kidney keeps putting water back into the blood even though plasma is already dilute, so plasma \\(\\ce{Na+}\\) falls while urine stays concentrated. Blood volume is normal because extra water spreads into all the fluid compartments, and the body adds \\(\\ce{Na+}\\) to the urine to limit volume gain."}, {"q": "Which change is the most sensitive trigger for ADH release?", "options": ["A 1–2% rise in plasma osmolality", "A 1–2% drop in blood volume", "A 1–2% drop in plasma osmolality", "A 1–2% rise in blood pressure"], "answer": 0, "why": "Osmoreceptors in the hypothalamus respond to tiny changes, so a 1–2% rise in osmolality raises ADH clearly. Volume and pressure sensors need about a 10% drop to raise ADH, but then they can drive it much higher. Lower osmolality or higher pressure would reduce ADH, not raise it."}, {"q": "Suckling makes milk flow from the breast within a minute. What causes this?", "options": ["Oxytocin from the posterior pituitary contracts myoepithelial cells", "Prolactin from the anterior pituitary contracts myoepithelial cells", "Oxytocin from the anterior pituitary makes alveolar cells secrete milk", "Prolactin from the posterior pituitary relaxes the ducts of the breast"], "answer": 0, "why": "Nipple stimulation sends nerve signals to oxytocin neurons in the hypothalamus, which release oxytocin from their endings in the posterior pituitary. Oxytocin contracts the myoepithelial cells around the milk-filled alveoli, squeezing milk into the ducts (milk letdown). Prolactin, from the anterior pituitary, makes the milk over hours and days."}, {"q": "When is growth hormone released in its largest pulses?", "options": ["During deep sleep, with a rise in GHRH and a fall in somatostatin", "After a large meal, with a rise in blood glucose and insulin", "During rapid eye movement sleep, with a rise in somatostatin", "In the late afternoon, with a fall in ghrelin from the stomach"], "answer": 0, "why": "GH is released in bursts, and the biggest bursts happen during the first periods of deep (slow-wave) sleep. GHRH rises and somatostatin falls at that time. Low blood glucose, fasting, amino acids, exercise and ghrelin also raise GH, while high glucose and IGF-1 lower it."}, {"q": "Why is growth hormone called diabetogenic?", "options": ["It directly opposes insulin, raising blood glucose and breaking down fat", "It directly destroys beta cells, so the pancreas makes less insulin", "It turns into insulin in the liver, so insulin receptors are saturated", "It lowers IGF-1 levels, and IGF-1 is needed for glucose uptake"], "answer": 0, "why": "GH's direct effects, separate from IGF-1, include breaking down fat (lipolysis), raising glucose output from the liver, and making muscle and fat less sensitive to insulin. Over time, high GH can cause diabetes, which is why many people with acromegaly develop it. IGF-1, by contrast, acts somewhat like insulin."}, {"q": "A child is very short. GH is high but IGF-1 is very low, and GH injections do not help. What is the problem?", "options": ["A defect in the GH receptor, as in Laron syndrome", "A tumor that makes extra GH in the pituitary", "A lack of GHRH from the child's hypothalamus", "A defect in the somatostatin receptor in the pituitary"], "answer": 0, "why": "Without working GH receptors, the liver cannot make IGF-1 in response to GH. Low IGF-1 removes negative feedback, so GH rises. Giving more GH does nothing because the receptor is the problem. These children are treated with IGF-1 itself (mecasermin). A lack of GHRH would cause low GH and low IGF-1."}, {"q": "A man in his 40s notices larger hands and feet, a wider jaw and coarser facial features. Why does he not grow taller?", "options": ["His growth plates have closed, so long bones cannot lengthen", "His IGF-1 cannot reach bone, so only soft tissues enlarge", "His GH acts only on the face and hands because of local receptors", "His bones have lost their GH receptors as part of normal aging"], "answer": 0, "why": "Excess GH before puberty, while the growth plates are open, makes long bones lengthen (gigantism). After the plates close, bones can only thicken and grow at their edges, and soft tissues enlarge, giving acromegaly: big hands, feet and jaw, thick skin, enlarged organs. The cause is usually a GH-secreting pituitary tumor."}, {"q": "Which test best confirms acromegaly?", "options": ["GH stays high after drinking glucose, with high IGF-1", "GH falls normally after drinking glucose, with low IGF-1", "GH rises sharply after insulin, with normal IGF-1 levels", "GH falls after a GHRH injection, with high IGF-1 levels"], "answer": 0, "why": "In healthy people, a glucose drink suppresses GH. In acromegaly, the tumor ignores this signal, so GH stays high. A single GH value is not very useful because GH comes in pulses, but IGF-1 is steady and reflects GH over the whole day. Insulin-induced low glucose is a test for GH deficiency, not excess."}, {"q": "Which step of thyroid hormone synthesis does the \\(\\ce{Na+}\\)–iodide symporter (NIS) carry out?", "options": ["Moving iodide into thyroid cells, powered by the \\(\\ce{Na+}\\) gradient", "Moving iodide out of thyroid cells into the colloid in the follicle", "Joining iodine onto tyrosines in thyroglobulin inside the colloid", "Releasing T₄ from thyroglobulin by protein breakdown in the cell"], "answer": 0, "why": "NIS on the blood side of follicle cells brings in 2 \\(\\ce{Na+}\\) with each iodide, concentrating iodide about 30 times above blood. Then pendrin moves iodide into the colloid, where thyroid peroxidase oxidizes it and attaches it to tyrosines on thyroglobulin. NIS is also how radioactive iodine gets into thyroid tissue to treat Graves disease."}, {"q": "Why is T₃ considered the active thyroid hormone, even though the gland releases mostly T₄?", "options": ["T₃ binds the nuclear receptor about 10 times more tightly than T₄", "T₃ is the only form that can cross a cell's plasma membrane", "T₃ lasts longer in blood, so it builds up to higher levels than T₄", "T₃ binds carrier proteins more tightly, so more reaches the cell"], "answer": 0, "why": "Most T₃ is made outside the thyroid by deiodinase enzymes that remove one iodine from the outer ring of T₄. T₃ binds thyroid receptors much more tightly, so it causes most of the hormone's effects. T₄ binds carrier proteins more tightly and lasts longer in blood, acting as a reserve. Another deiodinase makes inactive reverse T₃."}, {"q": "A woman has weight loss, a fast heart rate, a smooth enlarged thyroid and bulging eyes. Her TSH is very low. What is the cause?", "options": ["Antibodies that activate the TSH receptor", "A pituitary tumor that releases extra TSH", "Antibodies that destroy thyroid peroxidase", "A lack of iodine in the person's diet"], "answer": 0, "why": "In Graves disease, the immune system makes antibodies that bind and activate the TSH receptor. The thyroid grows and makes excess hormone, and high T₄ and T₃ shut off pituitary TSH. The eye changes come from the immune system attacking tissue behind the eyes. A TSH-secreting tumor would raise TSH. Anti-peroxidase antibodies cause Hashimoto hypothyroidism."}, {"q": "Why can a lack of iodine cause a large goiter?", "options": ["Low T₄ removes feedback, so high TSH keeps the gland growing", "Low iodine makes the gland swell with water to dilute the T₄", "High T₄ builds up in the gland since it cannot be released", "Low TSH lets thyroid cells grow with no signal to stop them"], "answer": 0, "why": "Without iodine, the thyroid cannot make enough hormone, so T₄ and T₃ fall. The pituitary senses this and releases more TSH. TSH drives both hormone production and the growth of thyroid cells, so the gland enlarges, sometimes enormously, while the person stays hypothyroid."}, {"q": "Why do beta blockers help many symptoms of hyperthyroidism?", "options": ["Thyroid hormone adds \\(\\beta\\) receptors, raising the response to catecholamines", "Thyroid hormone binds \\(\\beta\\) receptors itself, acting like epinephrine", "Beta blockers lower thyroid hormone production in the follicle cells", "Beta blockers block the TSH receptor, which is a type of \\(\\beta\\) receptor"], "answer": 0, "why": "Thyroid hormone increases the number of \\(\\beta\\)-adrenergic receptors in the heart and other tissues, so normal amounts of epinephrine and norepinephrine have bigger effects: fast heart, tremor, anxiety, sweating. Beta blockers block that boosted response. They do not lower hormone levels, so other drugs are still needed to fix the cause."}, {"q": "Propylthiouracil (PTU) is used to treat hyperthyroidism. Which actions explain how it works?", "options": ["It blocks thyroid peroxidase and slows the conversion of T₄ into T₃", "It blocks the iodide symporter and destroys the thyroid follicle cells", "It blocks the TSH receptor and speeds the breakdown of T₄ in the liver", "It binds T₄ in the blood and keeps it from reaching any target tissue"], "answer": 0, "why": "PTU blocks thyroid peroxidase, the enzyme that oxidizes iodide and attaches it to thyroglobulin, so the gland makes less hormone. PTU also blocks the deiodinase that turns T₄ into T₃ outside the thyroid, which helps calm severe cases quickly. Methimazole blocks peroxidase but not the peripheral conversion."}]</script></section>
+<script type="application/json" class="frq-data">[{"q": "Three patients have these blood tests. Patient 1: TSH high, free T₄ low. Patient 2: TSH low, free T₄ low. Patient 3: TSH low, free T₄ high. (a) Where is the problem in each patient? (b) For each, give one likely cause. (c) Explain, using negative feedback, how TSH tells you where the problem is.", "answer": "(a) Patient 1 has primary hypothyroidism (the thyroid is failing). Patient 2 has secondary or tertiary hypothyroidism (the pituitary or hypothalamus is failing). Patient 3 has primary hyperthyroidism (the thyroid is overactive). (b) Patient 1: Hashimoto thyroiditis or iodine deficiency. Patient 2: a pituitary tumor, surgery, or Sheehan syndrome. Patient 3: Graves disease or a toxic nodule. (c) T₄ and T₃ inhibit TRH and TSH release. If the thyroid itself fails, low hormone removes the inhibition and TSH rises. If the pituitary fails, TSH is low and so is T₄, because the gland gets no signal. If the thyroid is overactive on its own, high hormone shuts TSH down.", "points": ["Patient 1 primary hypothyroid, Patient 2 central hypothyroid, Patient 3 primary hyperthyroid", "A sensible cause for each (Hashimoto or iodine; pituitary failure; Graves)", "TSH and T₄ moving in opposite directions points to the thyroid", "TSH and T₄ moving in the same direction points to the pituitary or hypothalamus"]}, {"q": "Compare three short children: (1) GH deficiency from a pituitary defect, (2) Laron syndrome (no working GH receptor), (3) a normal child of short parents. (a) Predict GH and IGF-1 levels in each. (b) Predict each child's response to GH injections. (c) Explain the role of IGF-1 feedback in your answer.", "answer": "(a) Child 1: low GH and low IGF-1. Child 2: high GH and very low IGF-1. Child 3: normal GH and normal IGF-1. (b) Child 1 grows well on GH, because the liver and growth plates can respond. Child 2 does not respond, because the receptor is missing; this child needs IGF-1 itself. Child 3 has a small or no response, since nothing is missing. (c) IGF-1 normally inhibits GH by acting on the pituitary and by raising hypothalamic somatostatin. In Laron syndrome, IGF-1 is low, so this brake is lost and GH rises very high. In GH deficiency, the pituitary cannot respond to the lost brake, so GH stays low.", "points": ["Child 1: low GH, low IGF-1; responds to GH", "Child 2: high GH, low IGF-1; no response to GH; treated with IGF-1", "Child 3: normal GH and IGF-1; little response", "IGF-1 feeds back on the pituitary and through somatostatin"]}]</script>
+</section>
+<section class="test" id="test-2" data-key="bipn120-t2" hidden>
+<section class="mcq" data-title="BIPN 120 Midterm 1, Test 2" data-nav="#nav-test-2"><script type="application/json">[{"q": "Why do peptide hormones act on cell-surface receptors while steroid hormones act on receptors inside the cell?", "options": ["Peptides are water soluble and cannot cross the lipid membrane", "Peptides are lipid soluble and bind to the outer lipid layer", "Steroids are too large to fit any receptor on the cell surface", "Steroids are charged and need help from carriers to reach cells"], "answer": 0, "why": "The plasma membrane is a lipid barrier. Charged, water-soluble peptides cannot cross it, so their receptors face outward and signal through second messengers. Steroids are small and lipid soluble, so they pass through the membrane and bind receptors in the cytoplasm or nucleus. Steroids do need carrier proteins in blood, but that is because they dissolve poorly in water."}, {"q": "Epinephrine and thyroid hormone are both made from tyrosine. How do their receptors differ?", "options": ["Epinephrine uses surface receptors; thyroid hormone uses nuclear receptors", "Epinephrine uses nuclear receptors; thyroid hormone uses surface receptors", "Both use surface receptors that are coupled to the same G proteins", "Both use nuclear receptors that bind the same response elements"], "answer": 0, "why": "Being an amine does not decide how a hormone acts. Epinephrine is water soluble and acts like a peptide hormone, through G protein–coupled adrenergic receptors. Thyroid hormone is lipophilic and acts like a steroid, entering cells (through transporters) and binding nuclear receptors that change transcription."}, {"q": "After long exposure to a drug that activates \\(\\beta\\) receptors, a tissue responds less to it. Which process explains this quick drop in response?", "options": ["GRK phosphorylates the receptor and \\(\\beta\\)-arrestin binds and uncouples it", "Adenylyl cyclase is destroyed, so no cAMP can be made any longer", "The drug turns into an antagonist after being exposed to the receptor", "The tissue makes extra \\(\\text{G}_{\\text{s}}\\), which competes with the receptor"], "answer": 0, "why": "Active receptors are phosphorylated by G protein–coupled receptor kinases. \\(\\beta\\)-arrestin then binds, which blocks the receptor from activating \\(\\text{G}_{\\text{s}}\\) and helps pull it into the cell. This desensitization happens in minutes. Over longer periods, cells also make fewer receptors (downregulation). This is part of why asthma inhalers lose some effect with overuse."}, {"q": "Epinephrine raises blood glucose only weakly in a person with no cortisol. Cortisol alone barely changes glucose. Together, the rise is large. Which term describes cortisol's role?", "options": ["Permissive, as cortisol allows epinephrine's full effect", "Antagonistic, as cortisol blocks part of epinephrine's effect", "Additive, as the two effects simply add to each other", "Inhibitory, as cortisol lowers the number of liver receptors"], "answer": 0, "why": "A permissive hormone does little by itself but is needed for another hormone to work fully. Cortisol keeps up the enzymes and receptors that epinephrine needs to raise glucose and break down fat. Synergism is when the combined effect is greater than the sum, and permissiveness is a special case where one hormone alone does almost nothing."}, {"q": "Insulin binding activates its receptor's tyrosine kinase. Which signal chain leads to more glucose uptake in muscle?", "options": ["IRS proteins activate PI3K and Akt, which move GLUT4 to the membrane", "JAK kinases activate STATs, which move GLUT1 to the membrane surface", "\\(\\text{G}_{\\text{s}}\\) raises cAMP, which moves GLUT2 to the membrane surface", "PLC makes IP₃, which opens glucose channels in the plasma membrane"], "answer": 0, "why": "The insulin receptor phosphorylates itself and docking proteins called IRS. These recruit PI3K, which makes PIP₃ and activates Akt. Akt signals cause vesicles holding GLUT4 to fuse with the membrane in muscle and fat, so glucose enters faster. Insulin resistance often involves defects in this chain."}, {"q": "Atrial natriuretic peptide (ANP) acts on a receptor that is itself an enzyme. What does it make?", "options": ["cGMP, from its guanylyl cyclase domain", "cAMP, from its adenylyl cyclase domain", "IP₃, from its phospholipase C domain", "PIP₃, from its PI3 kinase domain"], "answer": 0, "why": "The ANP receptor has a guanylyl cyclase domain inside the cell, so hormone binding directly makes cGMP, which activates protein kinase G. Nitric oxide also raises cGMP, but through a soluble guanylyl cyclase inside the cell. Adenylyl cyclase is a separate membrane enzyme controlled by G proteins."}, {"q": "What is the rate-limiting step of steroid hormone synthesis?", "options": ["Moving cholesterol into mitochondria, using StAR", "Making cholesterol from acetyl CoA in the cell", "Turning progesterone into cortisol in the cell", "Packaging steroids into vesicles for release"], "answer": 0, "why": "All steroid hormones start from cholesterol. The first enzyme, which cuts its side chain to make pregnenolone, is inside the inner mitochondrial membrane. The StAR protein moves cholesterol there, and ACTH or LH speed up this step. Steroids are not stored in vesicles; they leave the cell by diffusion as soon as they are made."}, {"q": "A drug blocks half of a tissue's receptors permanently. With spare receptors, the maximum response stays the same. What changes?", "options": ["A higher hormone level is now needed to reach half of the maximum", "A lower hormone level is now needed to reach half of the maximum", "The maximum response falls by half at every hormone level", "Nothing changes at any level, as the spare receptors take over"], "answer": 0, "why": "Spare receptors mean the cell can reach its full response while only part of its receptors are bound. With half of them gone, the cell can still reach the maximum, but it needs more hormone to occupy enough of the remaining receptors. The dose–response curve shifts to the right. Without spare receptors, the maximum would fall instead."}, {"q": "A woman has milk coming from her breasts and has stopped having periods. Her prolactin is very high, and a pituitary tumor is found. Which drug is usually tried first?", "options": ["A dopamine agonist, which acts like hypothalamic dopamine", "A dopamine antagonist, which blocks hypothalamic dopamine", "A somatostatin analog, which blocks the release of prolactin", "A GnRH agonist, which blocks the effects of prolactin itself"], "answer": 0, "why": "Dopamine from the hypothalamus is the main brake on prolactin. Drugs like cabergoline activate the D2 receptors on prolactin cells, lowering prolactin and often shrinking the tumor. High prolactin stops periods because it suppresses GnRH pulses. Dopamine-blocking drugs, such as many antipsychotics, raise prolactin."}, {"q": "A pituitary tumor grows upward out of the sella. Which vision problem is most likely?", "options": ["Loss of the outer half of the visual field in both eyes", "Loss of the inner half of the visual field in both eyes", "Loss of all vision in one eye with the other eye normal", "Loss of the same half of the visual field in both eyes"], "answer": 0, "why": "The optic chiasm sits right above the pituitary. Fibers that cross in the chiasm come from the inner (nasal) half of each retina, which sees the outer (temporal) half of the visual field. A tumor pressing up from below hits these crossing fibers first, causing bitemporal hemianopia."}, {"q": "After a very large blood loss during childbirth, a woman cannot breastfeed and later feels tired and cold. What happened?", "options": ["The enlarged pituitary lost blood flow and died off", "The posterior pituitary was crushed by the swollen uterus", "The thyroid was damaged by the very large blood loss", "The ovaries stopped working after the pregnancy ended"], "answer": 0, "why": "The pituitary grows during pregnancy because of extra prolactin cells, and it needs more blood. Severe bleeding and low blood pressure at delivery can make it die (Sheehan syndrome). Lack of prolactin shows up first as failure to make milk. Later, loss of TSH, ACTH and gonadotropins causes tiredness, cold intolerance and no periods."}, {"q": "Which pattern fits primary adrenal insufficiency (Addison's disease) and not pituitary ACTH deficiency?", "options": ["High ACTH and darker skin", "Low ACTH and darker skin", "High ACTH and paler skin", "Low ACTH and paler skin"], "answer": 0, "why": "In Addison's disease the adrenal itself fails, cortisol falls, and loss of feedback drives POMC and ACTH up, which darkens the skin. When the pituitary fails, ACTH is low and the skin is not darkened, often paler. Mineralocorticoids are also lost in primary failure but mostly spared in pituitary failure, because aldosterone is mainly controlled by angiotensin and \\(\\ce{K+}\\)."}, {"q": "Why does drinking alcohol make you urinate a lot?", "options": ["It blocks ADH release, so the kidney cannot save water", "It blocks aldosterone, so the kidney loses more \\(\\ce{Na+}\\)", "It raises ADH release, so the kidney makes more urine", "It raises blood pressure, so the kidney filters more fluid"], "answer": 0, "why": "Ethanol inhibits ADH release from the posterior pituitary. Without ADH, aquaporin-2 channels are pulled out of the collecting duct membranes, so water stays in the urine. Large amounts of dilute urine follow, which can leave a person dehydrated."}, {"q": "Plasma \\(\\ce{Na+}\\) is 140 mM, glucose is 90 mg/dL and blood urea nitrogen is 14 mg/dL. Using \\(P_{osm} \\approx 2[\\ce{Na+}] + \\dfrac{\\text{glucose}}{18} + \\dfrac{\\text{BUN}}{2.8}\\), what is the estimated plasma osmolality?", "options": ["290 mOsm per kg", "280 mOsm per kg", "245 mOsm per kg", "300 mOsm per kg"], "answer": 0, "why": "\\(2 \\times 140 = 280\\), plus \\(\\dfrac{90}{18} = 5\\), plus \\(\\dfrac{14}{2.8} = 5\\), for 290 mOsm per kg. The factor 2 counts the anions that go with \\(\\ce{Na+}\\). The other two terms convert mg/dL into mOsm. \\(\\ce{Na+}\\) and its partners make up most of plasma osmolality, which is why plasma \\(\\ce{Na+}\\) tracks water balance and ADH."}, {"q": "Oxytocin and ADH each have nine amino acids and differ at just two positions. What follows from this?", "options": ["At high doses, each one activates the other's receptors a little", "They are made from the same precursor in the same neurons", "They bind the same receptors equally well at normal levels", "They are both made in the anterior pituitary for that reason"], "answer": 0, "why": "Because the two are so alike, high doses of one can activate the other's receptors. For example, large oxytocin infusions in labor can cause water retention by acting on V2 receptors. They are made from separate genes, mostly in different neurons, and each is released from the posterior pituitary."}, {"q": "Ghrelin, from the stomach, rises before meals. What does it do to growth hormone?", "options": ["It stimulates GH release by acting on its own receptor in the pituitary", "It inhibits GH release by triggering somatostatin from the hypothalamus", "It has no effect on GH, since it only acts on hunger centers in the brain", "It replaces GH at the liver, so IGF-1 rises with no need for GH"], "answer": 0, "why": "Ghrelin binds the growth hormone secretagogue receptor on pituitary cells and on hypothalamic neurons, raising GH release. This links fasting to GH, which helps the body burn fat and save protein. Ghrelin also acts on the hypothalamus to increase hunger."}, {"q": "Octreotide is used to treat acromegaly. What kind of drug is it?", "options": ["A long-acting somatostatin analog that blocks GH release", "A GH receptor blocker that keeps GH from making IGF-1", "A GHRH analog that overloads and switches off GH cells", "An IGF-1 analog that feeds back to lower the GH level"], "answer": 0, "why": "Somatostatin is the hypothalamic hormone that inhibits GH release, but it lasts only a few minutes in blood. Octreotide works the same way but lasts for hours. Pegvisomant is a different drug that blocks the GH receptor, lowering IGF-1 directly."}, {"q": "Which statement about IGF-1 is correct?", "options": ["It is made mostly in the liver in response to GH, and it drives most bone growth", "It is made mostly in the pituitary in response to GHRH, and it inhibits growth", "It is made mostly in bone in response to insulin, and it raises GH release", "It is made mostly in the kidney in response to low glucose, and it acts on fat"], "answer": 0, "why": "GH tells the liver to make IGF-1, which travels in blood (bound to carrier proteins) and makes growth plate cartilage grow. Bone and cartilage also make some IGF-1 locally. IGF-1 inhibits GH release, both at the pituitary and by raising somatostatin. It also has insulin-like effects, such as lowering glucose."}, {"q": "What does TSH stimulate in the thyroid?", "options": ["Every step from iodide uptake to hormone release, plus cell growth", "Only the release of stored hormone, not any of the synthesis steps", "Only iodide uptake, while the other steps proceed by themselves", "Only cell growth, while iodine levels alone control the synthesis"], "answer": 0, "why": "TSH works through \\(\\text{G}_{\\text{s}}\\) and cAMP to raise NIS, thyroid peroxidase and thyroglobulin, to speed the uptake of colloid and the release of T₄ and T₃, and to make thyroid cells grow and divide. That is why long-lasting high TSH causes a goiter."}, {"q": "Why is a hyperthyroid person often hot, sweaty and hungry?", "options": ["Thyroid hormone raises metabolic rate, partly by increasing \\(\\ce{Na+}\\)–\\(\\ce{K+}\\) pump activity", "Thyroid hormone lowers metabolic rate, partly by decreasing \\(\\ce{Na+}\\)–\\(\\ce{K+}\\) pump activity", "Thyroid hormone raises the body's set point for temperature in the hypothalamus alone", "Thyroid hormone makes the sweat glands work harder without any change in metabolic rate"], "answer": 0, "why": "Thyroid hormone raises the activity of many energy-using processes, including \\(\\ce{Na+}\\)–\\(\\ce{K+}\\) pumps and mitochondrial activity. More ATP is used, so more heat is made. The body sheds the heat by sweating and dilating skin vessels, and the person eats more to fuel the higher metabolic rate, but often still loses weight."}, {"q": "A baby is born with no working thyroid gland. Why is it urgent to start treatment within the first weeks?", "options": ["Thyroid hormone is needed for brain development, and the damage is permanent", "Thyroid hormone is needed for kidney development, which closes after birth", "The baby's blood calcium will crash without calcitonin made by the thyroid", "The baby's pituitary will be destroyed by high TSH in the first months"], "answer": 0, "why": "During late fetal life and the first years, thyroid hormone is needed for neurons to grow and for myelin to form. Without it, intellectual disability and poor growth (cretinism) develop, and the brain damage cannot be reversed later. Newborn screening tests for this so that T₄ treatment can start right away."}, {"q": "Radioactive iodine uptake is high in one hyperthyroid patient and very low in another. Which pair of causes fits?", "options": ["High uptake is Graves disease; low uptake is thyroiditis that leaks stored hormone", "High uptake is thyroiditis; low uptake is Graves disease that destroys the gland", "High uptake is iodine deficiency; low uptake is a TSH-secreting pituitary tumor", "High uptake is a thyroid cancer; low uptake is a person taking extra iodine"], "answer": 0, "why": "In Graves disease, antibodies drive the gland to take up iodide and make new hormone, so uptake is high everywhere in the gland. In thyroiditis, inflammation damages follicles and releases hormone that was already made. High hormone lowers TSH, so the gland takes up little new iodide. Thyroiditis does not need anti-thyroid drugs."}, {"q": "Liver failure lowers thyroxine-binding globulin. The thyroid is normal. What happens after things settle?", "options": ["Total T₄ falls but free T₄ and TSH stay normal", "Total T₄ rises but free T₄ and TSH stay normal", "Total and free T₄ both fall, and TSH rises a lot", "Total and free T₄ both rise, and TSH falls a lot"], "answer": 0, "why": "With less binding protein, less T₄ is bound, so total T₄ is low. Free T₄, which the pituitary senses, is set back to normal by feedback, so TSH is normal and the person is euthyroid. This is the opposite of pregnancy, where binding protein rises."}, {"q": "Amiodarone, a heart drug, contains a lot of iodine. A patient on it becomes hypothyroid. Which mechanism best explains this?", "options": ["The Wolff–Chaikoff effect, where excess iodide blocks organification", "The Jod–Basedow effect, where excess iodide fuels extra hormone production", "The Bohr effect, where excess iodide lowers the affinity of thyroglobulin", "The Haldane effect, where excess iodide displaces T₄ from its carrier"], "answer": 0, "why": "When the thyroid gets a large iodide load, it temporarily shuts down organification of iodide (the Wolff–Chaikoff effect), which protects against overproduction. Most glands escape after a few days, but some, especially those with Hashimoto thyroiditis, stay shut down, causing hypothyroidism. In glands with nodules, extra iodide can instead cause hyperthyroidism (Jod–Basedow)."}, {"q": "Long-loop and short-loop feedback both act in the HPA axis. Which is an example of short-loop feedback?", "options": ["ACTH inhibiting CRH release from the hypothalamus", "Cortisol inhibiting ACTH release from the pituitary", "Cortisol inhibiting CRH release from the hypothalamus", "Cortisol inhibiting its own release from the adrenal"], "answer": 0, "why": "In long-loop feedback, the final hormone from the target gland (cortisol) acts back on the pituitary and hypothalamus. In short-loop feedback, a pituitary hormone (ACTH) acts back on the hypothalamus. Both help keep the axis stable. Cortisol does not directly inhibit its own adrenal output."}, {"q": "Pertussis toxin ADP-ribosylates \\(\\text{G}_{\\text{i}}\\), so it cannot be activated by its receptors. What happens to cAMP in cells that use \\(\\text{G}_{\\text{i}}\\) receptors?", "options": ["Hormones that normally lower cAMP can no longer lower it", "Hormones that normally raise cAMP can no longer raise it", "cAMP falls to zero because adenylyl cyclase is destroyed", "cAMP stays normal because \\(\\text{G}_{\\text{i}}\\) does not affect cyclase"], "answer": 0, "why": "\\(\\text{G}_{\\text{i}}\\) inhibits adenylyl cyclase. If it cannot be activated, hormones such as somatostatin or the \\(\\alpha_2\\) agonists cannot lower cAMP, so cAMP tends to stay higher. Cholera toxin works differently, by locking \\(\\text{G}_{\\text{s}}\\) on. Both toxins helped scientists map which receptors use which G proteins."}, {"q": "A drug halves the rate at which the liver clears a hormone. Secretion does not change. Once a new steady state is reached, the hormone's plasma level is:", "options": ["Twice as high as before", "Half as high as before", "Just the same as before", "Four times higher than before"], "answer": 0, "why": "At steady state, the amount secreted per minute equals the amount cleared per minute, and clearance is a rate times the plasma level. So plasma level equals secretion rate divided by clearance. Halving clearance with the same secretion doubles the steady-state level. This is why liver or kidney disease can raise hormone levels without any change in the gland. Feedback can partly correct it, but only if the hormone is under feedback control."}, {"q": "Thyroid hormone receptors differ from glucocorticoid receptors in what they do when no hormone is present. What do they do?", "options": ["They sit on DNA with corepressors, holding target genes off", "They float in the cytoplasm bound to heat shock proteins", "They are broken down at once, so none are present at all", "They sit on DNA with coactivators, holding target genes on"], "answer": 0, "why": "Glucocorticoid receptors wait in the cytoplasm, held by heat shock proteins, and move to the nucleus only after hormone binds. Thyroid hormone receptors are already bound to thyroid response elements on DNA, usually paired with the retinoid X receptor. Without T₃ they recruit corepressors and turn genes off. T₃ binding swaps the corepressors for coactivators, turning the genes on."}, {"q": "Leuprolide is a GnRH agonist. Given as a steady daily dose, it lowers LH and FSH and is used to treat prostate cancer. Why does a drug that acts like GnRH shut down LH?", "options": ["Steady stimulation downregulates GnRH receptors, which need pulses to work", "Steady stimulation turns GnRH into an inhibitor of the gonadotropes", "Steady stimulation raises testosterone, which then blocks LH by feedback", "Steady stimulation destroys the pituitary cells that make LH and FSH"], "answer": 0, "why": "Gonadotropes respond to GnRH only when it arrives in pulses, about once every 1 to 2 hours. A constant signal makes the receptors desensitize and be removed from the membrane, so LH and FSH fall after a brief first surge. Without LH, testosterone drops, which slows prostate cancers that need it. Pulsed GnRH, given by a pump, does the opposite and can restore fertility."}, {"q": "A woman with untreated primary hypothyroidism has a mildly high prolactin level. Why?", "options": ["High TRH, from lost feedback, also stimulates prolactin cells", "High TSH, from lost feedback, binds receptors on prolactin cells", "Low T₄ blocks dopamine release from the hypothalamus completely", "Low T₄ lowers prolactin breakdown in the liver and the kidney"], "answer": 0, "why": "In primary hypothyroidism, low thyroid hormone removes feedback on the hypothalamus, so TRH rises. TRH stimulates not only thyrotropes but also lactotropes, so prolactin goes up a bit. This can cause milk discharge and irregular periods. Treating the hypothyroidism with T₄ brings TRH and prolactin back down."}]</script></section>
+<script type="application/json" class="frq-data">[{"q": "A hormone acts through a \\(\\text{G}_{\\text{s}}\\)-coupled receptor. (a) Describe each step from hormone binding to protein kinase A changing target proteins. (b) Explain where the signal is amplified. (c) Predict the effect of cholera toxin, and of a mutation that blocks the receptor from being phosphorylated by GRK, on the size and length of the response.", "answer": "(a) The hormone binds the receptor, which changes shape and makes \\(\\text{G}_{\\text{s}}\\alpha\\) swap GDP for GTP. \\(\\text{G}_{\\text{s}}\\alpha\\)-GTP separates and activates adenylyl cyclase, which makes cAMP from ATP. cAMP binds the regulatory subunits of protein kinase A, freeing the catalytic subunits, which phosphorylate target proteins (enzymes, channels, or CREB in the nucleus). (b) One active receptor activates many G proteins, each adenylyl cyclase makes many cAMP molecules, and each kinase phosphorylates many targets, so a few hormone molecules can change huge numbers of proteins. (c) Cholera toxin blocks the GTPase of \\(\\text{G}_{\\text{s}}\\alpha\\), so it stays active: the response is larger and lasts as long as the toxin effect, even without hormone. Without GRK phosphorylation, \\(\\beta\\)-arrestin cannot bind, so desensitization fails: the response lasts longer and fades less during long exposure.", "points": ["Correct order: receptor, \\(\\text{G}_{\\text{s}}\\), adenylyl cyclase, cAMP, PKA, targets", "Amplification at the G protein, cyclase and kinase steps", "Cholera toxin: G protein stays on, response large and long", "No GRK site: no \\(\\beta\\)-arrestin, no desensitization, response lasts longer"]}, {"q": "Three patients pass large amounts of urine. Patient 1 has central diabetes insipidus, patient 2 has nephrogenic diabetes insipidus, and patient 3 drinks huge amounts of water (primary polydipsia). (a) Predict plasma osmolality and ADH level in each. (b) Predict how each responds to water restriction and then to desmopressin. (c) Explain why a fourth patient with SIADH has low plasma \\(\\ce{Na+}\\) and concentrated urine.", "answer": "(a) Patient 1: plasma osmolality high or high-normal, ADH low. Patient 2: plasma osmolality high or high-normal, ADH high. Patient 3: plasma osmolality low or low-normal, ADH low. (b) With water restriction, patient 3 concentrates the urine as ADH rises, while patients 1 and 2 keep making dilute urine. Then with desmopressin, patient 1 concentrates the urine (the kidney works), but patient 2 does not (the kidney cannot respond). (c) In SIADH, ADH is released even though plasma is dilute. Aquaporin-2 stays in the collecting duct, so water is reabsorbed and urine stays concentrated. The retained water dilutes plasma \\(\\ce{Na+}\\). Volume rises only a little, partly because the extra volume makes the kidney excrete more \\(\\ce{Na+}\\).", "points": ["Patient 1 low ADH, patient 2 high ADH, patient 3 low ADH with low plasma osmolality", "Water restriction concentrates urine only in patient 3", "Desmopressin concentrates urine in patient 1 but not patient 2", "SIADH: water kept by ADH dilutes plasma \\(\\ce{Na+}\\), urine stays concentrated"]}]</script>
+</section>
+    </div>
+  </main>
+</div>
+<script>
+/* minimono.js — the house style's behavior. Include before </body>; no init.
+   1. Two panes or one. Full-screen shows both (left ¼ · right ¾). The page
+      goes to one pane when the window isn't full-screen, or when the person
+      hides the left pane (`, or the pane's own "Hide"). Hiding is
+      remembered. Force the layout with <html data-layout="split|single">.
+   2. In one-pane mode the "Menu" link (.menu-hint) is invisible until the
+      pointer enters the top-left zone (left quarter, top sixth); clicking it,
+      or `, opens the left pane as an overlay. Esc, a click outside, or
+      choosing a row closes it. With no pointer (touch), the link stays shown.
+      The overlay is the SAME .pane-l element, moved by a class — never a
+      copy, never rebuilt — so its scroll position and selection survive.
+   3. Safari: trackpad pinch-zoom is blocked; ⌘+ / ⌘− still work.          */
+(function () {
+  'use strict';
+  var html = document.documentElement;
+  var KEY = 'minimono:pane-hidden';
+  var hidden = false;
+  try { hidden = localStorage.getItem(KEY) === '1'; } catch (e) {}
+
+  /* 1. Two panes or one ---------------------------------------------------- */
+  function isFull() {
+    var forced = html.getAttribute('data-layout');
+    if (forced === 'split') return true;
+    if (forced === 'single') return false;
+    // Full-screen or maximized. At the top level, measure the window itself
+    // (outerWidth): ⌘+ zoom shrinks innerWidth but not the window. Embedded
+    // in a frame, the frame's own width is what's available.
+    var top = true;
+    try { top = window.top === window; } catch (e) { top = false; }
+    var w = top && outerWidth > 0 ? outerWidth : innerWidth;
+    return w >= screen.availWidth - 24;
+  }
+  function layout() {
+    var windowed = !isFull();
+    html.classList.toggle('is-windowed', windowed);
+    var single = windowed || hidden;
+    if (single !== html.classList.contains('is-single')) {
+      if (!single) close(true);
+      html.classList.toggle('is-single', single);
+    }
+  }
+  function setHidden(v) {
+    hidden = v;
+    try { localStorage.setItem(KEY, v ? '1' : '0'); } catch (e) {}
+    close(true);
+    layout();
+  }
+  var raf = 0;
+  addEventListener('resize', function () { if (!raf) raf = requestAnimationFrame(function () { raf = 0; layout(); }); });
+  new MutationObserver(layout).observe(html, { attributes: true, attributeFilter: ['data-layout'] });
+
+  /* 2. The overlay --------------------------------------------------------- */
+  var lastFocus = null;
+  function pane() { return document.querySelector('.pane-l'); }
+  function typing(el) {
+    if (!el || el === document.body) return false;
+    if (el.isContentEditable) return true;
+    if (el.tagName === 'TEXTAREA' || el.tagName === 'SELECT') return true;
+    return el.tagName === 'INPUT' && !/^(button|submit|reset|checkbox|radio|range|color|file|image)$/i.test(el.type);
+  }
+  function single() { return html.classList.contains('is-single'); }
+  function isOpen() { return html.classList.contains('menu-open'); }
+  function open(keyboard) {
+    if (!single() || isOpen()) return;
+    html.classList.remove('hint-on');
+    html.classList.add('menu-open');
+    lastFocus = document.activeElement;
+    if (keyboard) {                                   // keyboard: move focus in
+      var p = pane(), cur = p && (p.querySelector('[aria-current="true"]') || p.querySelector('a,button,input,[tabindex]'));
+      if (cur) cur.focus({ preventScroll: true });
+    }
+  }
+  function close(silent) {
+    if (!isOpen()) return;
+    html.classList.remove('menu-open');
+    var p = pane();
+    if (!silent && lastFocus && lastFocus.focus && lastFocus !== document.body) lastFocus.focus({ preventScroll: true });
+    else if (p && p.contains(document.activeElement)) document.activeElement.blur();
+    lastFocus = null;
+  }
+
+  // the top-left zone: left quarter of the width, top sixth of the height.
+  // Entering it shows the menu link; nothing opens until the link is clicked.
+  function inZone(x, y) { return x <= innerWidth / 4 && y <= innerHeight / 6; }
+  var hintTimer = 0;
+  function hint(on) {
+    clearTimeout(hintTimer);
+    if (on) { html.classList.add('hint-on'); return; }
+    hintTimer = setTimeout(function () { html.classList.remove('hint-on'); }, 200);
+  }
+  addEventListener('pointermove', function (e) {
+    if (e.pointerType !== 'mouse') return;
+    hint(single() && !isOpen() && inZone(e.clientX, e.clientY));
+  }, { passive: true });
+  document.addEventListener('mouseleave', function () { hint(false); });
+
+  addEventListener('keydown', function (e) {
+    // ` (backtick) on its own — left alone while typing in a field
+    if (e.key === '`' && !e.metaKey && !e.ctrlKey && !e.altKey && !typing(document.activeElement)) {
+      e.preventDefault();
+      if (html.classList.contains('is-windowed')) { isOpen() ? close() : open(true); }
+      else setHidden(!hidden);                        // full-screen: hide, or dock it again
+      return;
+    }
+    if (e.key === 'Escape' && isOpen()) { e.preventDefault(); close(); }
+  });
+  addEventListener('pointerdown', function (e) {
+    if (!isOpen()) return;
+    var p = pane();
+    if (p && !p.contains(e.target) && !(e.target.closest && e.target.closest('.menu-hint'))) close();
+  });
+  addEventListener('click', function (e) {
+    var t = e.target.closest ? e.target : e.target.parentElement;
+    if (t.closest('.menu-hint')) { e.preventDefault(); isOpen() ? close() : open(false); return; }
+    if (t.closest('.pane-hide')) {                    // docked: "Hide" · hidden overlay: "Keep open"
+      e.preventDefault(); setHidden(!hidden); return;
+    }
+    if (isOpen() && t.closest('.pane-l .row, .pane-l .mcq-nav a')) close();
+  });
+
+  /* Focus rings: only after Tab. Shift, arrows, Space and clicks never show one. */
+  addEventListener('keydown', function (e) { if (e.key === 'Tab') html.classList.add('kbd-nav'); }, true);
+  addEventListener('pointerdown', function () { html.classList.remove('kbd-nav'); }, true);
+
+  /* 3. Safari pinch-zoom ---------------------------------------------------- */
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (t) {
+    document.addEventListener(t, function (e) { e.preventDefault(); }, { passive: false });
+  });
+
+  layout();
+  window.Minimono = {
+    open: function () { open(true); }, close: close,
+    hide: function () { setHidden(true); }, show: function () { setHidden(false); },
+    relayout: layout
+  };
+})();
+
+</script>
+<script>
+/* smooth-scroll.js — Safari's keyboard scrolling, for every pane.
+   ---------------------------------------------------------------------------
+   A port of WebKit's keyboard-scroll physics (ScrollAnimationKeyboard.cpp,
+   KeyboardScroll.h, macOS constants) so Space, arrows, Page Up/Down and
+   Home/End glide and settle on a spring in every scroller — the page, and
+   each two-pane split pane on its own.
+
+     ↑ / ↓            tap: glide one line (40px) · hold: accelerate to
+                      1000px/s in 0.2s, cruise, then the spring carries the
+                      leftover momentum and settles
+     Space / ⇧Space   the same, with a page as the step (the visible height
+     PgDn / PgUp      less 40px of overlap, never less than 87.5% of it):
+                      tap glides at least a page, hold accelerates
+     Home / End       glide to the top / bottom (also ⌘↑ / ⌘↓ on a Mac)
+   Key repeats are ignored while a key is held, as in WebKit.
+
+   Which scroller moves: the one under the pointer, else the one that holds
+   focus, else the last one clicked, else the page.
+   Left alone: any control that uses these keys itself — text fields,
+   sliders, radio groups, selects, contenteditable, tabs, listboxes — and
+   Space on a button, link, checkbox or anything else Space activates. Any key with ⌥/⌃
+   (and ⌘ except ⌘↑/⌘↓) passes through.
+   Respects prefers-reduced-motion: the same steps, applied instantly.
+   No init call — include before </body>. ~3KB. Exposes window.SmoothScroll.  */
+(function () {
+  'use strict';
+  if (window.SmoothScroll) return;
+
+  /* WebKit macOS KeyboardScrollParameters */
+  var MASS = 1, STIFF = 175, DAMP = 20, MAX_VEL_MULT = 25, TIME_TO_MAX = 0.2;
+  var LINE = 40;                         /* Scrollbar::pixelsPerLineStep()          */
+  var PAGE_MIN_FRACTION = 0.875;         /* Scrollbar::minFractionToStepWhenPaging  */
+  var PAGE_OVERLAP = 40;                 /* Scrollbar::maxOverlapBetweenPages        */
+
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
+  var docEl = function () { return document.scrollingElement || document.documentElement; };
+
+  function canScroll(el) {
+    if (el === docEl()) return el.scrollHeight > el.clientHeight;
+    var s = getComputedStyle(el), o = s.overflowY;
+    return (o === 'auto' || o === 'scroll' || o === 'overlay') && el.scrollHeight > el.clientHeight + 1;
+  }
+  function scrollerFrom(node) {
+    for (var el = node; el && el.nodeType === 1; el = el.parentElement) {
+      if (el === document.body || el === document.documentElement) break;
+      if (canScroll(el)) return el;
+    }
+    return canScroll(docEl()) ? docEl() : null;
+  }
+
+  var hovered = null, clicked = null;
+  addEventListener('pointermove', function (e) { if (e.pointerType === 'mouse') hovered = e.target; }, { passive: true });
+  addEventListener('pointerdown', function (e) { clicked = e.target; }, { passive: true });
+  document.addEventListener('mouseleave', function () { hovered = null; });
+
+  function pickScroller() {
+    var a = document.activeElement;
+    return (hovered && scrollerFrom(hovered)) ||
+           (a && a !== document.body && scrollerFrom(a)) ||
+           (clicked && scrollerFrom(clicked)) ||
+           scrollerFrom(document.body);
+  }
+
+  // controls that use arrows / Page / Home / End themselves keep them
+  function ownsKeys(el) {
+    if (!el || el === document.body) return false;
+    if (el.isContentEditable) return true;
+    var t = el.tagName;
+    if (t === 'TEXTAREA' || t === 'SELECT') return true;
+    if (t === 'INPUT') return !/^(button|submit|reset|checkbox|color|file|image)$/i.test(el.type);
+    var r = el.getAttribute && el.getAttribute('role');
+    return !!r && /^(slider|spinbutton|radio|radiogroup|tab|tablist|listbox|option|menu|menubar|menuitem|combobox|grid|tree|treeitem|textbox)$/.test(r);
+  }
+  function spaceActivates(el) {
+    if (!el || el === document.body) return false;
+    if (/^(BUTTON|A|SUMMARY|INPUT)$/.test(el.tagName)) return true;
+    var r = el.getAttribute && el.getAttribute('role');
+    return !!r && /^(button|link|tab|checkbox|radio|switch|menuitem|option|slider)$/.test(r);
+  }
+
+  /* One animator per scroller ------------------------------------------- */
+  var anims = new WeakMap();
+  function Anim(el) {
+    this.el = el; this.pos = el.scrollTop; this.vel = 0;
+    this.held = null; this.ideal = this.pos; this.minTravel = this.pos;
+    this.raf = 0; this.last = 0;
+  }
+  Anim.prototype.max = function () { return this.el.scrollHeight - this.el.clientHeight; };
+  Anim.prototype.sync = function () {
+    // the user may have scrolled by wheel/trackpad since we last moved it
+    if (!this.raf) { this.pos = this.el.scrollTop; this.ideal = this.pos; this.vel = 0; }
+  };
+  Anim.prototype.run = function () {
+    if (this.raf) return;
+    var self = this; this.last = performance.now();
+    this.raf = requestAnimationFrame(function f(t) { self.step(t) ? (self.raf = requestAnimationFrame(f)) : (self.raf = 0); });
+  };
+  Anim.prototype.stop = function () { if (this.raf) cancelAnimationFrame(this.raf); this.raf = 0; this.vel = 0; this.held = null; };
+  Anim.prototype.write = function () {
+    var max = this.max();
+    if (this.pos <= 0 || this.pos >= max) {          // hit an edge: stop there, no overshoot
+      this.pos = Math.min(Math.max(this.pos, 0), max);
+      this.vel = 0; this.ideal = this.pos;
+      this.el.scrollTop = this.pos;
+      return false;
+    }
+    this.el.scrollTop = this.pos;
+    return true;
+  };
+  /* ScrollAnimationKeyboard::animateScroll */
+  Anim.prototype.step = function (t) {
+    var dt = (t - this.last) / 1000; this.last = t;
+    if (dt <= 0) return true;
+    if (dt > 0.05) dt = 0.05;                          // a stalled frame shouldn't fling
+    var force = 0, spring = true, ideal = this.ideal;
+    if (this.held) {
+      force = this.held.force; spring = false; ideal = this.pos;
+      if (Math.abs(this.vel) >= Math.abs(this.held.maxVel)) force = 0;
+    }
+    var disp = this.pos - ideal;
+    if (spring) force -= disp * STIFF + this.vel * DAMP;
+    this.vel += force / MASS * dt;
+    this.pos += this.vel * dt;
+    var inside = this.write();
+    if (spring && disp * (this.pos - ideal) < 0) { this.vel = 0; this.pos = ideal; this.el.scrollTop = ideal; }
+    if (!inside && !this.held) return false;
+    if (!this.held && this.vel * this.vel < 1 && Math.abs(this.pos - ideal) < 0.5) { this.vel = 0; return false; }
+    return true;
+  };
+  /* startKeyboardScroll — velocity carries over, like WebKit */
+  Anim.prototype.hold = function (dir, step) {
+    var maxVel = step * MAX_VEL_MULT * dir;
+    this.held = { dir: dir, maxVel: maxVel, force: maxVel * MASS / TIME_TO_MAX };
+    this.minTravel = this.pos + step * dir;
+    this.run();
+  };
+  /* stopKeyboardScrollAnimation */
+  Anim.prototype.release = function () {
+    if (!this.held) return;
+    var d = Math.sqrt(this.vel * this.vel * MASS / STIFF) * (this.vel < 0 ? -1 : 1);
+    var settle = this.pos + d;
+    this.ideal = this.held.dir > 0 ? Math.max(settle, this.minTravel) : Math.min(settle, this.minTravel);
+    this.ideal = Math.round(Math.min(Math.max(this.ideal, 0), this.max()));
+    this.held = null;
+    this.run();
+  };
+  /* a jump to a target (top / bottom, or the public API): spring there */
+  Anim.prototype.to = function (target) {
+    var base = this.raf && !this.held ? this.ideal : this.pos;
+    if (typeof target === 'function') target = target(base);
+    this.held = null;
+    this.ideal = Math.round(Math.min(Math.max(target, 0), this.max()));
+    this.run();
+  };
+
+  function anim(el) { var a = anims.get(el); if (!a) { a = new Anim(el); anims.set(el, a); } a.sync(); return a; }
+  function pageStep(el) {
+    var h = el === docEl() ? innerHeight : el.clientHeight;
+    return Math.max(h * PAGE_MIN_FRACTION, h - PAGE_OVERLAP);
+  }
+
+  var heldKey = null, heldAnim = null;
+  function releaseHeld() { if (heldAnim) heldAnim.release(); heldKey = heldAnim = null; }
+
+  addEventListener('keydown', function (e) {
+    if (e.defaultPrevented || e.altKey || e.ctrlKey) return;
+    var k = e.key, cmdArrow = e.metaKey && (k === 'ArrowUp' || k === 'ArrowDown');
+    if (e.metaKey && !cmdArrow) return;
+    if (!/^( |ArrowUp|ArrowDown|PageUp|PageDown|Home|End)$/.test(k)) return;
+    var act = document.activeElement;
+    if (ownsKeys(act)) return;
+    if (k === ' ' && spaceActivates(act)) return;
+    if ((k === 'ArrowUp' || k === 'ArrowDown') && e.shiftKey && !cmdArrow) return;   // leave selection alone
+
+    var el = pickScroller(); if (!el) return;
+    e.preventDefault();
+    var edge = cmdArrow || k === 'Home' || k === 'End';
+    if (!edge && (e.repeat || heldKey)) return;                // WebKit ignores repeats and other keys while one is held
+    var a = anim(el), page = pageStep(el);
+
+    if (reduce && reduce.matches) {                       // same steps, no animation
+      a.stop();
+      var dy = k === 'ArrowDown' ? LINE : k === 'ArrowUp' ? -LINE :
+               (k === ' ' && !e.shiftKey) || k === 'PageDown' ? page : page * -1;
+      if (k === 'Home' || (cmdArrow && k === 'ArrowUp')) el.scrollTop = 0;
+      else if (k === 'End' || (cmdArrow && k === 'ArrowDown')) el.scrollTop = el.scrollHeight;
+      else el.scrollTop += dy;
+      return;
+    }
+
+    if (edge) {
+      a.to(k === 'Home' || k === 'ArrowUp' ? 0 : a.max());
+    } else if (k === 'ArrowUp' || k === 'ArrowDown') {
+      heldKey = k; heldAnim = a; a.hold(k === 'ArrowDown' ? 1 : -1, LINE);
+    } else {
+      heldKey = k; heldAnim = a;
+      a.hold((k === ' ' && !e.shiftKey) || k === 'PageDown' ? 1 : -1, page);
+    }
+  });
+  addEventListener('keyup', function (e) { if (e.key === heldKey) releaseHeld(); });
+  addEventListener('blur', releaseHeld);
+  document.addEventListener('visibilitychange', function () { if (document.hidden) releaseHeld(); });
+  /* a wheel/trackpad scroll takes over from a gliding key scroll */
+  addEventListener('wheel', function (e) {
+    var el = scrollerFrom(e.target), a = el && anims.get(el);
+    if (a && a.raf && !a.held) a.stop();
+  }, { passive: true });
+
+  window.SmoothScroll = {
+    /* programmatic glide, e.g. SmoothScroll.to(pane, 0) to send a pane home */
+    to: function (el, y) { anim(el || docEl()).to(y); },
+    by: function (el, dy) { var a = anim(el || docEl()); a.to(function (b) { return b + dy; }); }
+  };
+})();
+
+</script>
+<script>
+/* quiz.js — multiple-choice questions, the house way. Include before </body>; no init.
+
+   Write each quiz as JSON inside a .mcq element. The page builds it once,
+   at load; answering only changes classes and text.
+
+     <section class="mcq" data-title="Chapter 5 practice">
+       <script type="application/json">[
+         { "q": "If \\(t = \\sqrt{\\dfrac{2h}{g}}\\), how much taller must the table be to double \\(t\\)?",
+           "options": ["\\(2\\times\\)", "\\(4\\times\\)", "\\(8\\times\\)"],
+           "answer": 1,                       (0-based index into options, or a letter)
+           "why": "\\(t \\propto \\sqrt{h}\\), so doubling \\(t\\) takes \\(4h\\)." }
+       ]<\/script>                         (written <\/script here so the file can be inlined)
+     </section>
+
+   Randomized, always: the question order and each question's options are
+   shuffled the first time the quiz opens, kept through reloads (so progress
+   and the letters you talk about stay put), and reshuffled on Start over.
+   Never refer to a letter or a position in a question, option or why.
+
+   Optional: an empty <nav class="mcq-nav"></nav> (the left pane of a quiz
+   page) becomes the question numbers: plain = unanswered, underlined =
+   right, struck through = wrong. Clicking one glides to that question.
+
+   Answer with a click, or press A–F or 1–6. Keys go to the question that
+   holds focus or sits under the pointer, else the first unanswered one on
+   screen. An answer shows Correct / Incorrect, marks the right option,
+   strikes a wrong pick, shows the why, and locks the question. A keyboard
+   answer glides on to the next unanswered question.
+
+   Copy answers is always there: plain text with each question, its
+   options, your answer or Skipped, and the right answer. Math stays LaTeX
+   ($…$) so it pastes cleanly into a chat.
+
+   MCQ.audit() lists anything that gives an answer away: the right option
+   longest or shortest, options of very different length, a hedge only on
+   the right one or an absolute only on the wrong ones, "all/none of the
+   above", duplicates, a missing why, a slash fraction. It must come back
+   empty before a quiz is published; the same list goes to the console.     */
+(function () {
+  'use strict';
+  if (window.MCQ) return;
+  var LETTERS = 'ABCDEF';
+  var quizzes = [];
+  var hoverQ = null;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
+
+  /* ── helpers ──────────────────────────────────────────────────────────── */
+  function make(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  // punctuation right after inline math moves inside it, so a line can't start with ", "
+  function glue(s) { return String(s).replace(/\\\)([.,;:!?])/g, '$1\\)'); }
+  function asPlain(s) { return String(s).replace(/\\\(|\\\)/g, '$').replace(/\\\[|\\\]/g, '$$$$'); }
+  function hash(s) { var h = 0; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); }
+  function newSeed() {
+    try { var a = new Uint32Array(1); crypto.getRandomValues(a); return a[0]; }
+    catch (e) { return (Math.random() * 4294967296) >>> 0; }
+  }
+  function rng(seed) {                                 // mulberry32: small, seedable, even
+    return function () {
+      seed = (seed + 0x6D2B79F5) | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function shuffled(n, rand) {                         // Fisher–Yates
+    var a = []; for (var i = 0; i < n; i++) a.push(i);
+    for (var j = n - 1; j > 0; j--) { var k = Math.floor(rand() * (j + 1)), t = a[j]; a[j] = a[k]; a[k] = t; }
+    return a;
+  }
+  function answerIndex(answer, n) {
+    if (typeof answer === 'number') return answer >= 0 && answer < n ? answer : 0;
+    var j = LETTERS.indexOf(String(answer).trim().toUpperCase());
+    return j >= 0 && j < n ? j : 0;
+  }
+  function scrollerOf(node) {
+    for (var e = node.parentElement; e && e !== document.body; e = e.parentElement) {
+      var o = getComputedStyle(e).overflowY;
+      if ((o === 'auto' || o === 'scroll') && e.scrollHeight > e.clientHeight) return e;
+    }
+    return document.scrollingElement || document.documentElement;
+  }
+  function glideTo(node) {
+    var sc = scrollerOf(node), page = sc === (document.scrollingElement || document.documentElement);
+    var top = node.getBoundingClientRect().top - (page ? 0 : sc.getBoundingClientRect().top);
+    var y = Math.max(0, sc.scrollTop + top - sc.clientHeight * 0.18);
+    if (reduce && reduce.matches) sc.scrollTop = y;
+    else if (window.SmoothScroll) SmoothScroll.to(sc, y);
+    else sc.scrollTo({ top: y, behavior: 'smooth' });
+  }
+  function shown(q) { return q.li.offsetParent !== null; }
+  function onScreen(q) { var r = q.li.getBoundingClientRect(); return r.bottom > 40 && r.top < innerHeight - 40; }
+  function copyText(btn, text, fallback) {
+    var label = btn.firstChild, was = label.nodeValue;
+    function done() { fallback.hidden = true; label.nodeValue = 'Copied'; setTimeout(function () { label.nodeValue = was; }, 1400); }
+    function fail() { fallback.value = text; fallback.hidden = false; fallback.focus(); fallback.select(); }
+    try { navigator.clipboard.writeText(text).then(done, fail); } catch (e) { fail(); }
+  }
+
+  /* ── the giveaway check ───────────────────────────────────────────────── */
+  var HEDGE = /\b(usually|often|generally|typically|mostly|may|might|can|sometimes|tends? to|about|roughly)\b/i;
+  var ABSOLUTE = /\b(always|never|only|all|none|every|completely|entirely|impossible|guaranteed)\b/i;
+  function words(s) {                                  // what a reader sees: LaTeX commands and delimiters out
+    return String(s).replace(/\\[a-zA-Z]+/g, ' ').replace(/[\\{}()\[\]^_$]/g, '').replace(/\s+/g, ' ').trim();
+  }
+  function auditOne(d, i) {
+    var out = [], n = (d.options || []).length, ans = answerIndex(d.answer, n);
+    var say = function (msg) { out.push({ question: i + 1, text: words(d.q).slice(0, 60), issue: msg }); };
+    if (n < 3) say('fewer than 3 options');
+    if (!d.why) say('no why');
+    var opts = (d.options || []).map(words), lens = opts.map(function (o) { return o.length; });
+    if (new Set((d.options || []).map(function (o) { return String(o).replace(/\s+/g, ' ').trim().toLowerCase(); })).size < n) say('two options are the same');
+    if (opts.some(function (o) { return /\b(all|none|both|neither) of (the|these) (above|options)\b/i.test(o); })) say('"all / none / both of the above"');
+    var max = Math.max.apply(null, lens), min = Math.min.apply(null, lens);
+    if (max > 12) {                                    // short answers (numbers, symbols) can't give much away by length
+      if (max / Math.max(min, 1) > 1.5) say('options differ a lot in length (' + min + '–' + max + ' characters)');
+      var others = lens.filter(function (_, j) { return j !== ans; });
+      var nextLong = Math.max.apply(null, others), nextShort = Math.min.apply(null, others);
+      if (lens[ans] > nextLong && lens[ans] >= nextLong * 1.15) say('the right answer is the longest option');
+      if (lens[ans] < nextShort && lens[ans] <= nextShort * 0.85) say('the right answer is the shortest option');
+    }
+    var wrong = opts.filter(function (_, j) { return j !== ans; });
+    if (HEDGE.test(opts[ans]) && !wrong.some(function (o) { return HEDGE.test(o); })) say('only the right answer hedges ("usually", "can"…)');
+    if (!ABSOLUTE.test(opts[ans]) && wrong.length && wrong.every(function (o) { return ABSOLUTE.test(o); })) say('only the wrong answers use absolutes ("always", "never"…)');
+    [d.q, d.why].concat(d.options || []).forEach(function (s) {
+      (String(s || '').match(/\\\(([\s\S]*?)\\\)|\\\[([\s\S]*?)\\\]/g) || []).forEach(function (m) {
+        if (m.indexOf('/') !== -1) say('slash fraction in math: ' + m.slice(0, 30));
+      });
+      if (/\b(?:[Oo]ption|[Aa]nswer(?: is)?|[Cc]hoice|[Ll]etter) [A-F]\b/.test(words(s))) say('refers to a letter, but options are shuffled');
+    });
+    return out;
+  }
+
+  /* ── one quiz ─────────────────────────────────────────────────────────── */
+  function build(root) {
+    var src = root.querySelector('script[type="application/json"]'), data;
+    try { data = JSON.parse(src.textContent); } catch (e) { return; }
+    if (!Array.isArray(data) || !data.length) return;
+    var title = root.getAttribute('data-title') || document.title;
+    var key = 'minimono:mcq2:' + hash(data.map(function (d) { return d.q + '\u0001' + (d.options || []).join('\u0001'); }).join('\n'));
+    var state = null;
+    try { state = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
+    if (!state || typeof state.seed !== 'number' || !Array.isArray(state.answers)) state = { seed: newSeed(), answers: [] };
+
+    var quiz = { root: root, data: data, qs: [], order: [], nav: null };
+    var list = make('ol', 'mcq-list');
+    var nav = document.querySelector(root.getAttribute('data-nav') || '.mcq-nav');  // one nav per test
+    if (nav && !nav.dataset.built) { nav.dataset.built = '1'; quiz.nav = nav; }
+    var base = quizzes.reduce(function (s, z) { return s + z.qs.length; }, 0);
+
+    // every element is made once, here; shuffling only moves them
+    data.forEach(function (d, i) {
+      var li = make('li', 'mcq-q');
+      li.id = 'mcq-' + (base + i + 1);
+      li.tabIndex = -1;                                 // holds focus between answers, so Space still scrolls
+      var num = make('span', 'mcq-n');
+      num.setAttribute('aria-hidden', 'true');
+      var body = make('div', 'mcq-body');
+      var text = make('div', 'mcq-text', glue(d.q));
+      var opts = make('div', 'mcq-opts');
+      opts.setAttribute('role', 'group');
+      var btns = (d.options || []).map(function (o) {
+        var b = make('button', 'mcq-opt');
+        b.type = 'button';
+        var l = make('span', 'mcq-l');
+        b._letter = l.appendChild(document.createTextNode(''));
+        b.append(l, make('span', 'mcq-t', glue(o)));
+        return b;
+      });
+      var fb = make('p', 'mcq-fb');
+      fb.hidden = true;
+      fb.setAttribute('aria-live', 'polite');
+      var fbt = fb.appendChild(document.createTextNode(''));
+      var why = make('p', 'mcq-why', glue(d.why || ''));
+      why.hidden = true;
+      body.append(text, opts, fb, why);
+      li.append(num, body);
+
+      var q = { quiz: quiz, i: i, d: d, li: li, num: num.appendChild(document.createTextNode('')), opts: opts, btns: btns,
+                fb: fb, fbt: fbt, why: why, ans: answerIndex(d.answer, btns.length), chosen: -1, perm: [], navA: null };
+      li._mcq = q;
+      btns.forEach(function (b, o) {                   // o = the option's index in the JSON
+        b.addEventListener('click', function (e) { choose(q, q.perm.indexOf(o), e.detail === 0); });   // detail 0 = Enter / Space
+      });
+      li.addEventListener('pointerenter', function () { hoverQ = q; });
+      li.addEventListener('pointerleave', function () { if (hoverQ === q) hoverQ = null; });
+      if (quiz.nav) {
+        var a = make('a', 'mcq-nav-n');
+        a.href = '#' + li.id;
+        q.navT = a.appendChild(document.createTextNode(''));
+        a.addEventListener('click', function (e) { e.preventDefault(); glideTo(li); li.focus({ preventScroll: true }); });
+        q.navA = a;
+      }
+      quiz.qs.push(q);
+    });
+
+    var bar = make('div', 'mcq-bar');
+    var copyB = make('button', 'btn mcq-copy', 'Copy answers');
+    copyB.type = 'button';
+    var resetB = make('button', 'btn mcq-reset', 'Start over');
+    resetB.type = 'button';
+    var score = make('span', 'mcq-score');
+    score.setAttribute('aria-live', 'polite');
+    var scoreT = score.appendChild(document.createTextNode(''));
+    var fallback = make('textarea', 'mcq-fallback');
+    fallback.readOnly = true;
+    fallback.hidden = true;
+    fallback.setAttribute('aria-label', 'Answers to copy');
+    bar.append(copyB, resetB, score);
+    root.append(list, bar, fallback);
+
+    // lay the questions and options out in the order the seed gives
+    function arrange(seed) {
+      var rand = rng(seed);
+      quiz.order = shuffled(quiz.qs.length, rand).map(function (i) { return quiz.qs[i]; });
+      quiz.qs.forEach(function (q) { q.perm = shuffled(q.btns.length, rand); });
+      quiz.order.forEach(function (q, p) {
+        list.append(q.li);
+        q.num.nodeValue = String(p + 1);
+        q.opts.setAttribute('aria-label', 'Question ' + (p + 1));
+        q.perm.forEach(function (o, j) { q.opts.append(q.btns[o]); q.btns[o]._letter.nodeValue = LETTERS[j]; });
+        if (q.navA) { quiz.nav.append(q.navA); q.navT.nodeValue = String(p + 1); }
+      });
+    }
+    function mark(q) {
+      var done = q.chosen >= 0, right = done && q.chosen === q.ans;
+      q.li.classList.toggle('is-done', done);
+      q.li.classList.toggle('is-wrong', done && !right);
+      q.btns.forEach(function (b, o) {
+        b.classList.toggle('is-chosen', done && o === q.chosen);
+        b.classList.toggle('is-answer', done && o === q.ans);
+        if (done) b.setAttribute('aria-disabled', 'true'); else b.removeAttribute('aria-disabled');
+      });
+      q.fbt.nodeValue = !done ? '' : right ? 'Correct.' : 'Incorrect. The answer is ' + LETTERS[q.perm.indexOf(q.ans)] + '.';
+      q.fb.hidden = !done;
+      q.why.hidden = !done || !q.d.why;
+      if (q.navA) { q.navA.classList.toggle('is-right', right); q.navA.classList.toggle('is-wrong', done && !right); }
+    }
+    function save() {
+      try { localStorage.setItem(key, JSON.stringify({ seed: state.seed, answers: quiz.qs.map(function (q) { return q.chosen; }) })); } catch (e) {}
+    }
+    function tally() {
+      var answered = 0, right = 0;
+      quiz.qs.forEach(function (q) { if (q.chosen >= 0) { answered++; if (q.chosen === q.ans) right++; } });
+      var left = quiz.qs.length - answered;
+      scoreT.nodeValue = !answered ? '' : right + ' of ' + answered + ' correct' + (left ? ' · ' + left + ' left' : '');
+      save();
+    }
+    function next(q) {
+      var p = quiz.order.indexOf(q);
+      var rest = quiz.order.slice(p + 1).concat(quiz.order.slice(0, p)).filter(function (x) { return x.chosen < 0; });
+      if (rest.length) { rest[0].li.focus({ preventScroll: true }); glideTo(rest[0].li); }
+      else { q.li.focus({ preventScroll: true }); glideTo(root.querySelector('.frq-q') || bar); }  // on to the FRQs
+    }
+    function choose(q, j, advance) {                   // j = position on screen
+      if (q.chosen >= 0 || j < 0 || j >= q.btns.length) return;   // answered questions stay locked
+      q.chosen = q.perm[j];
+      mark(q);
+      tally();
+      if (advance) next(q);
+      else q.li.focus({ preventScroll: true });        // off the button, so Space scrolls again
+    }
+    quiz.choose = choose;
+
+    copyB.addEventListener('click', function () {
+      var lines = [title, ''], answered = 0, right = 0;
+      quiz.order.forEach(function (q, p) {
+        lines.push((p + 1) + '. ' + asPlain(q.d.q));
+        q.perm.forEach(function (o, j) { lines.push('   ' + LETTERS[j] + '. ' + asPlain(q.d.options[o])); });
+        var A = LETTERS[q.perm.indexOf(q.ans)];
+        if (q.chosen < 0) lines.push('   Skipped. Answer: ' + A);
+        else {
+          answered++;
+          var C = LETTERS[q.perm.indexOf(q.chosen)];
+          if (q.chosen === q.ans) { right++; lines.push('   Your answer: ' + C + ' (correct)'); }
+          else lines.push('   Your answer: ' + C + ' (incorrect). Answer: ' + A);
+        }
+        lines.push('');
+      });
+      var skipped = quiz.qs.length - answered;
+      lines.push('Score: ' + right + ' of ' + quiz.qs.length + (skipped ? ' (' + skipped + ' skipped)' : ''));
+      copyText(copyB, lines.join('\n'), fallback);
+    });
+    resetB.addEventListener('click', function () {      // a fresh order: same elements, moved
+      quiz.qs.forEach(function (q) { q.chosen = -1; mark(q); });
+      state.seed = newSeed();
+      arrange(state.seed);
+      tally();
+      var first = quiz.order[0];
+      glideTo(first.li);
+      first.li.focus({ preventScroll: true });
+    });
+
+    arrange(state.seed);
+    quiz.qs.forEach(function (q, i) {                  // reopen where you left off
+      var s = state.answers[i];
+      if (typeof s === 'number' && s >= 0 && s < q.btns.length) { q.chosen = s; mark(q); }
+    });
+    tally();
+    quizzes.push(quiz);
+
+    var issues = data.reduce(function (acc, d, i) { return acc.concat(auditOne(d, i)); }, []);
+    if (issues.length && window.console) console.warn('quiz.js: ' + issues.length + ' question(s) give the answer away', issues);
+
+    var MJ = window.MathJax, targets = [root].concat(quiz.nav ? [quiz.nav] : []);
+    if (MJ && MJ.startup && MJ.startup.promise) MJ.startup.promise.then(function () { return MJ.typesetPromise(targets); }).catch(function () {});
+    else if (MJ && typeof MJ.typesetPromise === 'function') MJ.typesetPromise(targets).catch(function () {});
+  }
+
+  /* ── keys: A–F or 1–6 answer the current question ─────────────────────── */
+  function current() {
+    var a = document.activeElement, li = a && a.closest && a.closest('.mcq-q');
+    var q = li && li._mcq;
+    if (q && q.chosen < 0 && shown(q)) return q;
+    if (hoverQ && hoverQ.chosen < 0 && shown(hoverQ)) return hoverQ;
+    var lis = document.querySelectorAll('.mcq-q');      // page order = the shuffled order
+    for (var i = 0; i < lis.length; i++) {
+      var x = lis[i]._mcq;
+      if (x && x.chosen < 0 && shown(x) && onScreen(x)) return x;
+    }
+    return null;
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey || e.repeat || e.defaultPrevented) return;
+    var a = document.activeElement;
+    if (a && (a.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))) return;
+    var j = e.key.length === 1 ? LETTERS.indexOf(e.key.toUpperCase()) : -1;
+    if (j < 0 && /^[1-6]$/.test(e.key)) j = +e.key - 1;
+    if (j < 0) return;
+    var q = current();
+    if (!q || j >= q.btns.length) return;
+    e.preventDefault();
+    q.quiz.choose(q, j, true);
+  });
+
+  function init() {
+    document.querySelectorAll('.mcq').forEach(function (r) {
+      if (!r.dataset.built) { r.dataset.built = '1'; build(r); }
+    });
+  }
+  init();                                               // the quiz markup sits above this script
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+
+  window.MCQ = {
+    init: init,
+    // every giveaway in every quiz on the page; must be empty before publishing
+    audit: function () {
+      return quizzes.reduce(function (acc, z) {
+        return acc.concat(z.data.reduce(function (a2, d, i) { return a2.concat(auditOne(d, i)); }, []));
+      }, []);
+    },
+    _shuffle: function (n, seed) { return shuffled(n, rng(seed)); }   // for tests
+  };
+})();
+
+</script>
+<script>
+
+/* page.js — this page's own behavior: FRQs, switching between the two tests,
+   and holding the questions back until the math is drawn. Everything is made
+   once at load; switching and answering only change attributes and text.  */
+(function () {
+  'use strict';
+  var html = document.documentElement;
+  var pane = document.querySelector('.pane-r');
+  var tests = [].slice.call(document.querySelectorAll('.test'));
+  var rows = [].slice.call(document.querySelectorAll('.pane-l .row[data-test]'));
+  var navs = {}, mem = {}, cur = null;
+
+  function make(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function glue(s) { return String(s).replace(/\\\)([.,;:!?])/g, '$1\\)'); }
+  function asPlain(s) { return String(s).replace(/\\\(|\\\)/g, '$').replace(/\\\[|\\\]/g, '$$$$'); }
+  function glide(el) {
+    var top = el.getBoundingClientRect().top - pane.getBoundingClientRect().top;
+    var y = Math.max(0, pane.scrollTop + top - pane.clientHeight * 0.18);
+    if (window.SmoothScroll) SmoothScroll.to(pane, y); else pane.scrollTop = y;
+  }
+  function copy(btn, text, fallback) {
+    var label = btn.firstChild, was = label.nodeValue;
+    function done() { fallback.hidden = true; label.nodeValue = 'Copied'; setTimeout(function () { label.nodeValue = was; }, 1400); }
+    function fail() { fallback.value = text; fallback.hidden = false; fallback.focus(); fallback.select(); }
+    try { navigator.clipboard.writeText(text).then(done, fail); } catch (e) { fail(); }
+  }
+
+  tests.forEach(function (t) {
+    var root = t.querySelector('.mcq');
+    var nav = document.querySelector(root.getAttribute('data-nav'));
+    navs[t.id] = nav;
+    var data = JSON.parse(t.querySelector('script.frq-data').textContent);
+    var n0 = JSON.parse(root.querySelector('script[type="application/json"]').textContent).length;
+    var key = 'bipn:frq:' + t.getAttribute('data-key');
+    var saved = null;
+    try { saved = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
+    if (!saved || !Array.isArray(saved.text)) saved = { text: [], open: [] };
+
+    var list = make('ol', 'frq-list');
+    var items = data.map(function (d, i) {
+      var n = n0 + i + 1;
+      var li = make('li', 'frq-q');
+      li.id = t.id + '-frq-' + (i + 1);
+      li.tabIndex = -1;
+      var num = make('span', 'mcq-n', String(n));
+      num.setAttribute('aria-hidden', 'true');
+      var body = make('div', 'mcq-body');
+      var text = make('div', 'mcq-text', glue(d.q));
+      var box = make('textarea', 'frq-in');
+      box.id = li.id + '-in';
+      box.rows = 6;
+      box.spellcheck = false;
+      box.setAttribute('aria-label', 'Your answer to question ' + n);
+      box.value = saved.text[i] || '';
+      var act = make('div', 'frq-act');
+      var btn = make('button', 'btn frq-show');
+      btn.type = 'button';
+      var label = btn.appendChild(document.createTextNode('Show answer'));
+      act.append(btn);
+      var ans = make('div', 'frq-ans');
+      ans.append(make('p', null, glue(d.answer)));
+      if (d.points && d.points.length) {
+        var ul = make('ul', 'frq-pts');
+        d.points.forEach(function (p) { ul.append(make('li', null, glue(p))); });
+        ans.append(ul);
+      }
+      body.append(text, box, act, ans);
+      li.append(num, body);
+      list.append(li);
+      var it = { d: d, n: n, li: li, box: box, ans: ans, navA: null };
+      it.open = function (v) {
+        ans.hidden = !v;
+        label.nodeValue = v ? 'Hide answer' : 'Show answer';
+        btn.setAttribute('aria-expanded', v ? 'true' : 'false');
+      };
+      it.open(!!saved.open[i]);
+      btn.addEventListener('click', function () { it.open(ans.hidden); save(); });
+      box.addEventListener('input', save);
+      if (nav) {
+        var a = make('a', 'mcq-nav-n', String(n));
+        a.href = '#' + li.id;
+        a.addEventListener('click', function (e) { e.preventDefault(); glide(li); li.focus({ preventScroll: true }); });
+        it.navA = a;
+      }
+      return it;
+    });
+    function save() {
+      try {
+        localStorage.setItem(key, JSON.stringify({
+          text: items.map(function (x) { return x.box.value; }),
+          open: items.map(function (x) { return !x.ans.hidden; })
+        }));
+      } catch (e) {}
+    }
+    function navTail() { if (nav) items.forEach(function (x) { nav.append(x.navA); }); }
+
+    var bar = root.querySelector('.mcq-bar');
+    var fallback = root.querySelector('.mcq-fallback');
+    var reset = root.querySelector('.mcq-reset');
+    root.insertBefore(list, bar);
+    navTail();
+
+    var copyW = make('button', 'btn frq-copy');
+    copyW.type = 'button';
+    copyW.appendChild(document.createTextNode('Copy written answers'));
+    bar.insertBefore(copyW, reset);
+    copyW.addEventListener('click', function () {
+      var lines = [root.getAttribute('data-title') + ', written answers', ''];
+      items.forEach(function (x) {
+        lines.push(x.n + '. ' + asPlain(x.d.q));
+        lines.push('   Your answer: ' + (x.box.value.trim() || 'Skipped'));
+        lines.push('   Model answer: ' + asPlain(x.d.answer));
+        (x.d.points || []).forEach(function (p) { lines.push('   - ' + asPlain(p)); });
+        lines.push('');
+      });
+      copy(copyW, lines.join('\n'), fallback);
+    });
+    reset.addEventListener('click', function () {   // quiz.js reshuffles first; then clear the written answers
+      items.forEach(function (x) { x.box.value = ''; x.open(false); });
+      save();
+      navTail();
+    });
+  });
+
+  // the two tests already exist; switching only flips `hidden` and aria-current
+  function show(id) {
+    if (!/^test-\d+$/.test(id) || !document.getElementById(id)) id = tests[0].id;
+    if (cur === id) return;
+    if (cur) mem[cur] = pane.scrollTop;
+    tests.forEach(function (t) { t.hidden = t.id !== id; });
+    rows.forEach(function (r) { r.setAttribute('aria-current', r.getAttribute('data-test') === id ? 'true' : 'false'); });
+    Object.keys(navs).forEach(function (k) { if (navs[k]) navs[k].hidden = k !== id; });
+    cur = id;
+    pane.scrollTop = mem[id] || 0;
+  }
+  function fromHash() { show((location.hash || '').slice(1)); }
+  addEventListener('hashchange', fromHash);
+  fromHash();
+
+  // the questions wait behind the loading ring until MathJax has drawn them
+  window.__mathReady = function () { html.classList.remove('mj-wait'); };
+  setTimeout(window.__mathReady, 9000);
+})();
+
+</script>
+</body>
+</html>
