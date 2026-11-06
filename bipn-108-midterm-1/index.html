@@ -1,0 +1,1145 @@
+<!doctype html>
+<html lang="en" class="mj-wait">
+<head>
+<meta charset="utf-8">
+<title>BIPN 108 Midterm 1 Practice</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="BIPN 108 Biology and Medicine of Exercise: two 30-minute Midterm 1 practice tests, 30 MCQs and 2 FRQs each.">
+<style>
+/* minimono.css — the house style's base: tokens, type, the two-pane layout,
+   the windowed overlay, and flat native controls.
+   Targets two screens: MacBook Air 15" (1710×1107, 2×) and Dell P2423D
+   (2560×1440, 1×). Every line is 1px — half-pixels vanish on the Dell.     */
+
+/* ── Tokens ─────────────────────────────────────────────────────────────── */
+:root{
+  color-scheme: light dark;            /* native controls + scrollbars follow the theme */
+  --ground:#EEF1F4; --wall:#ffffff;
+  --ink:#0a0a0b; --ink-soft:#5F6368; --muted:#9c9ca3;
+  --hair:rgba(10,10,12,.13); --hair-soft:rgba(10,10,12,.08);
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",system-ui,sans-serif;
+  --pane-l:25%;                        /* the left pane is one quarter, always */
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --ground:#000000; --wall:#161618; --ink:#f6f6f8; --ink-soft:#a0a0a8; --muted:#67676f;
+  --hair:rgba(255,255,255,.16); --hair-soft:rgba(255,255,255,.09);
+}}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#000000; --wall:#161618; --ink:#f6f6f8; --ink-soft:#a0a0a8; --muted:#67676f;
+  --hair:rgba(255,255,255,.16); --hair-soft:rgba(255,255,255,.09);
+}
+:root[data-theme="light"]{ color-scheme: light; }
+
+/* ── Base ───────────────────────────────────────────────────────────────── */
+*,*::before,*::after{ box-sizing:border-box; }
+html,body{ margin:0; height:100%; overflow:hidden; }
+body{
+  background:var(--ground); color:var(--ink);
+  font:16px/1.5 var(--sans); -webkit-font-smoothing:antialiased;
+  font-variant-numeric:tabular-nums;
+}
+:focus, :focus-visible{ outline:none; }
+/* focus shows only after Tab (minimono.js sets .kbd-nav; any click clears it),
+   as a thin grey line — never a bright ring, never from Shift or a click */
+html.kbd-nav :focus-visible{ outline:1px solid var(--muted); outline-offset:3px; border-radius:6px; }
+/* text selection keeps the system highlight — never restyle ::selection */
+a{ color:inherit; text-decoration:none; }
+/* scrollbars: left to macOS — overlay, thin, shown while scrolling. Never hidden. */
+
+/* ── Type (tuned for 1710 and 2560 wide). Weights: 300 · 400 · 500, never more ─ */
+.hero { font-size:clamp(64px, 4.6vw, 112px); font-weight:300; line-height:1.02; letter-spacing:-.035em; margin:0; }
+.h2   { font-size:clamp(28px, 1.9vw, 40px);  font-weight:500; line-height:1.15; letter-spacing:-.02em; margin:0; }
+.text { font-size:clamp(17px, 1.05vw, 20px); line-height:1.55; max-width:68ch; }
+.label{ font-size:13px; font-weight:500; color:var(--ink-soft); letter-spacing:.005em; }
+.num  { font-weight:400; letter-spacing:-.02em; }
+
+/* ── Layout: two panes, left ¼ · right ¾, each its own scroller ─────────── */
+#app{ display:flex; height:100dvh; }
+.pane-l{
+  flex:0 0 var(--pane-l); height:100%; overflow-y:auto; overscroll-behavior:contain;
+  border-right:1px solid var(--hair-soft); background:var(--ground);
+  padding:48px 32px 64px;
+}
+.pane-r{ flex:1 1 auto; min-width:0; height:100%; overflow-y:auto; overscroll-behavior:contain; }
+.pane-r .body{ max-width:1120px; padding:56px clamp(48px, 5vw, 120px) 120px; }
+
+/* the list in the left pane */
+.row{
+  display:block; width:100%; padding:14px 0; border-bottom:1px solid var(--hair-soft);
+  font-size:clamp(17px, 1.15vw, 22px); color:var(--ink-soft); cursor:pointer;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.row:last-child{ border-bottom:0; }
+@media (hover:hover){ .row:hover{ color:var(--ink); } }
+.row[aria-current="true"]{ color:var(--ink); font-weight:500; }
+.row:active{ opacity:.6; }
+
+/* ── One-pane mode: windowed, or the person hid the left pane ────────────
+   The left pane leaves the layout; it comes back as an overlay (the SAME
+   element, moved) when the pointer enters the top-left zone — the left
+   quarter of the width, the top sixth of the height — or on `.           */
+.pane-hide{
+  border:0; background:none; padding:4px 0; margin:0;
+  font:inherit; font-size:13px; color:var(--ink-soft); cursor:pointer; text-align:left;
+}
+.pane-hide kbd{ font:inherit; color:var(--muted); margin-left:6px; }
+.pane-hide .keep{ display:none; }
+html.is-single .pane-hide .hide{ display:none; }
+html.is-single .pane-hide .keep{ display:inline; }
+html.is-windowed .pane-hide{ display:none; }        /* windowed: the overlay is the only way it shows */
+@media (hover:hover){ .pane-hide:hover{ color:var(--ink); } }
+.menu-hint{ display:none; }
+/* one-pane mode: the link sits in the top-left zone, invisible until the
+   pointer enters that zone (or it takes keyboard focus); always shown on touch */
+html.is-single .menu-hint{
+  display:block; position:fixed; z-index:15;
+  top:calc(env(safe-area-inset-top, 0px) + 18px); left:max(16px, env(safe-area-inset-left, 0px), 2vw);
+  padding:6px 10px; margin:0; border-radius:8px; background:var(--ground);
+  font-size:13px; color:var(--ink-soft); cursor:pointer;
+  opacity:0; pointer-events:none; transition:opacity .14s ease;
+}
+html.is-single .menu-hint kbd{ font:inherit; color:var(--muted); margin-left:6px; }
+html.is-single.hint-on .menu-hint,
+html.kbd-nav.is-single .menu-hint:focus-visible{ opacity:1; pointer-events:auto; }
+@media (hover:none){ html.is-single .menu-hint{ opacity:1; pointer-events:auto; } }
+@media (hover:hover){ html.is-single .menu-hint:hover{ color:var(--ink); } }
+
+html.is-single .pane-l{
+  position:fixed; z-index:20; inset:0 auto 0 0; width:clamp(280px, 25vw, 640px);
+  transform:translateX(-100%); visibility:hidden;
+  transition:transform .22s cubic-bezier(.32,.72,0,1), visibility 0s linear .22s;
+}
+html.is-single.menu-open .pane-l{
+  transform:none; visibility:visible; border-right:1px solid var(--hair);
+  transition:transform .22s cubic-bezier(.32,.72,0,1), visibility 0s;
+}
+
+/* ── Controls: native elements, flat ────────────────────────────────────── */
+/* slider + checkbox + radio take ink through accent-color, natively */
+input[type="range"], input[type="checkbox"], input[type="radio"]{ accent-color:var(--ink); }
+input[type="range"]{ width:100%; max-width:420px; cursor:pointer; }
+
+/* toggle: a checkbox with role="switch", drawn flat */
+input[type="checkbox"][role="switch"]{
+  -webkit-appearance:none; appearance:none; margin:0; flex:none; cursor:pointer;
+  position:relative; width:40px; height:24px; border-radius:999px;
+  background:var(--hair); transition:background .16s ease;
+}
+input[type="checkbox"][role="switch"]::before{
+  content:""; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:999px;
+  background:var(--ground); transition:transform .18s cubic-bezier(.32,.72,0,1);
+}
+input[type="checkbox"][role="switch"]:checked{ background:var(--ink); }
+input[type="checkbox"][role="switch"]:checked::before{ transform:translateX(16px); }
+
+/* segmented choice: a radio group; the chosen one is heavier ink + a 2px mark */
+.seg{ display:inline-flex; gap:28px; border:0; padding:0; margin:0; }
+.seg label{ position:relative; cursor:pointer; padding:6px 0; color:var(--ink-soft); font-weight:400; }
+.seg input{ position:absolute; opacity:0; width:1px; height:1px; }
+.seg input:checked + span{ color:var(--ink); font-weight:500; }
+.seg input:checked + span::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:2px; background:var(--ink); border-radius:2px;
+}
+html.kbd-nav .seg input:focus-visible + span{ outline:1px solid var(--muted); outline-offset:4px; border-radius:6px; }
+@media (hover:hover){ .seg label:hover span{ color:var(--ink); } }
+
+/* search */
+input[type="search"]{
+  -webkit-appearance:none; appearance:none; width:100%; max-width:420px;
+  font:inherit; font-size:16px; color:var(--ink);
+  background:var(--wall); border:0; border-radius:10px; padding:10px 14px;
+}
+input[type="search"]::placeholder{ color:var(--muted); }
+
+/* buttons: only for real actions — navigation is text */
+button{ font:inherit; cursor:pointer; }
+.btn{ border:0; border-radius:10px; padding:10px 18px; font-weight:500; background:var(--wall); color:var(--ink); }
+.btn.primary{ background:var(--ink); color:var(--ground); }
+.btn:active{ opacity:.6; }
+
+/* ── Multiple-choice questions (quiz.js builds them from JSON) ─────────────
+   State without color: the right answer gets an ink bar and Medium weight,
+   a wrong pick is struck through, everything else recedes to grey. */
+.mcq-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:44px; max-width:760px; }
+.mcq-q{ display:grid; grid-template-columns:2em minmax(0, 1fr); column-gap:10px; outline-offset:8px; }
+.mcq-n{ font-size:clamp(19px, 1.25vw, 24px); line-height:1.45; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+.mcq-body{ display:flex; flex-direction:column; gap:12px; min-width:0; }
+.mcq-text{ margin:0; font-size:clamp(19px, 1.25vw, 24px); line-height:1.45; color:var(--ink); }
+.mcq-text mjx-container[display="true"]{ margin:.5em 0 !important; }
+.mcq-opts{ display:flex; flex-direction:column; gap:2px; }
+.mcq-opt{
+  display:grid; grid-template-columns:1.5em minmax(0, 1fr); align-items:baseline; gap:8px;
+  width:calc(100% + 20px); margin:0 -10px; padding:9px 10px; border:0; border-radius:8px;
+  background:none; text-align:left; font:inherit; font-size:clamp(17px, 1.05vw, 20px); line-height:1.45;
+  color:var(--ink); cursor:pointer;
+}
+.mcq-l{ color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+@media (hover:hover){ .mcq-q:not(.is-done) .mcq-opt:hover{ background:var(--wall); } }
+.mcq-q:not(.is-done) .mcq-opt:active{ opacity:.6; }
+.mcq-q.is-done .mcq-opt{ cursor:default; color:var(--ink-soft); }
+.mcq-q.is-done .mcq-opt.is-answer{ color:var(--ink); font-weight:500; box-shadow:inset 2px 0 0 var(--ink); }
+.mcq-q.is-done .mcq-opt.is-answer .mcq-l{ color:var(--ink); }
+.mcq-q.is-done .mcq-opt.is-chosen:not(.is-answer) .mcq-t{ text-decoration:line-through; text-decoration-thickness:1px; }
+.mcq-fb{ margin:6px 0 0; font-size:17px; font-weight:500; color:var(--ink); }
+.mcq-why{ margin:0; font-size:17px; line-height:1.5; color:var(--ink-soft); max-width:62ch; }
+.mcq-bar{ display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin-top:44px; }
+.mcq-score{ font-size:15px; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+.mcq-fallback{ width:100%; max-width:760px; min-height:160px; margin-top:16px; font:14px/1.5 var(--sans); color:var(--ink);
+  background:var(--wall); border:0; border-radius:10px; padding:12px 14px; }
+/* the question numbers, in the left pane of a quiz page */
+.mcq-nav{ display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:4px; }
+.mcq-nav a{ display:block; padding:8px 0; border-radius:8px; text-align:center; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+@media (hover:hover){ .mcq-nav a:hover{ background:var(--wall); color:var(--ink); } }
+.mcq-nav a.is-right{ color:var(--ink); text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:.25em; }
+.mcq-nav a.is-wrong{ color:var(--ink); text-decoration:line-through; text-decoration-thickness:1px; }
+/* fractions stay full size inline */
+mjx-container[jax="SVG"]:not([display="true"]){ margin:0 .08em; }
+
+/* ── Loading: the one color exception — a thin rainbow ring, only while loading */
+.loading{
+  width:18px; height:18px; border-radius:50%;
+  background:conic-gradient(#ff3b30,#ff9500,#ffcc00,#34c759,#00c7be,#007aff,#af52de,#ff3b30);
+  -webkit-mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+          mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+  animation:mm-spin .9s linear infinite;
+}
+@keyframes mm-spin{ to{ transform:rotate(1turn); } }
+
+@media (prefers-reduced-motion:reduce){
+  *{ animation:none!important; transition:none!important; }
+}
+
+/* ── This page: a course, two timed tests, MCQs then FRQs ─────────────── */
+[hidden]{ display:none!important; }
+.pane-r{ position:relative; }
+.course{ display:flex; flex-direction:column; gap:6px; margin:28px 0 30px; }
+.course-n{ margin:0; font-size:clamp(36px, 2.6vw, 56px); font-weight:300; line-height:1.12; letter-spacing:-.03em; }
+.course-t{ margin:0; font-size:clamp(17px, 1.15vw, 22px); line-height:1.35; color:var(--ink); }
+.course-s{ margin:0; font-size:14px; line-height:1.5; color:var(--ink-soft); }
+.tests{ margin:0 0 26px; }
+.frq-list{ list-style:none; margin:44px 0 0; padding:0; display:flex; flex-direction:column; gap:44px; max-width:760px; }
+.frq-q{ display:grid; grid-template-columns:2em minmax(0, 1fr); column-gap:10px; outline-offset:8px; }
+.frq-in{ display:block; width:100%; min-height:8.5em; margin:0; resize:vertical; font:inherit; font-size:clamp(17px, 1.05vw, 20px);
+  line-height:1.5; color:var(--ink); background:var(--wall); border:0; border-radius:10px; padding:12px 14px; }
+.frq-act{ display:flex; gap:12px; }
+.frq-ans{ display:flex; flex-direction:column; gap:10px; }
+.frq-ans p{ margin:0; font-size:17px; line-height:1.5; color:var(--ink); max-width:62ch; }
+.frq-pts{ margin:0; padding:0 0 0 1.1em; display:flex; flex-direction:column; gap:6px; font-size:17px; line-height:1.5; color:var(--ink-soft); max-width:62ch; }
+.frq-pts li::marker{ color:var(--muted); }
+.frq-q mjx-container[display="true"]{ margin:.5em 0 !important; }
+.mj-ring{ position:absolute; top:60px; left:clamp(48px, 5vw, 120px); }
+html:not(.mj-wait) .mj-ring{ display:none; }
+html.mj-wait .pane-r .body{ visibility:hidden; }
+
+</style>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']], packages: { '[+]': ['mhchem'] } },
+  svg: { fontCache: 'global' },
+  startup: {
+    pageReady: function () {
+      return MathJax.startup.defaultPageReady().then(function () { if (window.__mathReady) window.__mathReady(); });
+    }
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg-full.js"></script>
+</head>
+<body>
+<div id="app">
+  <nav class="pane-l">
+    <button class="pane-hide" type="button"><span class="hide">Hide</span><span class="keep">Keep open</span><kbd>`</kbd></button>
+    <header class="course">
+      <h1 class="course-n">BIPN 108</h1>
+      <p class="course-t">Biology and Medicine of Exercise</p>
+      <p class="course-s">Midterm 1 &middot; 30 minutes each</p>
+      <p class="course-s">Fuels, muscle bioenergetics, fiber types, oxygen delivery, the heart in exercise, and work and efficiency.</p>
+    </header>
+    <div class="tests">
+      <a class="row" href="#test-1" data-test="test-1" aria-current="true">Test 1</a>
+<a class="row" href="#test-2" data-test="test-2" aria-current="false">Test 2</a>
+    </div>
+    <nav class="mcq-nav" id="nav-test-1" aria-label="Test 1 questions"></nav>
+<nav class="mcq-nav" id="nav-test-2" aria-label="Test 2 questions" hidden></nav>
+  </nav>
+  <main class="pane-r">
+    <a class="menu-hint" href="#">Menu<kbd>`</kbd></a>
+    <div class="loading mj-ring" aria-hidden="true"></div>
+    <div class="body">
+<section class="test" id="test-1" data-key="bipn108-t1">
+<section class="mcq" data-title="BIPN 108 Midterm 1, Test 1" data-nav="#nav-test-1"><script type="application/json">[{"q": "A sprinter runs flat out for 8 seconds. Which source supplies most of the ATP regenerated during that time?", "options": ["Phosphocreatine, through the creatine kinase reaction", "Muscle glycogen, through aerobic breakdown in mitochondria", "Fatty acids, through beta oxidation in the mitochondria", "Blood glucose, through glycolysis taken up by GLUT4"], "answer": 0, "why": "Muscle holds only enough ATP for about 2 seconds of all-out work. Phosphocreatine (PCr) gives its phosphate to ADP in one fast step, \\(\\ce{PCr + ADP -> Cr + ATP}\\), so it can supply ATP at the highest rate, but it runs low in about 10 seconds. Glycolysis ramps up within seconds and takes over next, and aerobic systems are too slow to meet a full sprint."}, {"q": "Why does creatine supplementation help repeated short sprints more than long runs?", "options": ["It raises phosphocreatine stores, which power the first seconds of each sprint", "It raises mitochondrial number, which speeds up aerobic ATP production", "It raises glycogen stores, which power the later minutes of a long run", "It raises fatty acid uptake, which spares glycogen for the final sprint"], "answer": 0, "why": "Extra creatine raises the amount of phosphocreatine in muscle by about 10–20%. That gives more fuel for the first few seconds of hard effort and speeds PCr refilling between sprints. Long runs rely on aerobic metabolism of carbohydrate and fat, which creatine does not change."}, {"q": "Per glucose molecule, about how much ATP does anaerobic glycolysis make compared with complete aerobic breakdown?", "options": ["About 2 ATP compared with about 30 ATP", "About 30 ATP compared with about 2 ATP", "About 2 ATP compared with about 4 ATP", "About 8 ATP compared with about 100 ATP"], "answer": 0, "why": "Glycolysis to lactate gives a net 2 ATP per glucose (3 if it starts from glycogen). Sending pyruvate into the mitochondria for the citric acid cycle and the electron transport chain gives about 30 to 32 ATP in total. Glycolysis is wasteful but very fast, which is why it powers intense efforts lasting 10 seconds to 2 minutes."}, {"q": "Fat holds more energy per gram than carbohydrate. Why can't a runner run as fast using mostly fat?", "options": ["Fat yields ATP at a slower maximum rate and uses more \\(\\ce{O2}\\) per ATP", "Fat yields ATP at a faster maximum rate but uses less \\(\\ce{O2}\\) per ATP", "Fat cannot be broken down in muscle and must first go to the liver", "Fat makes lactate when it is burned, which makes the muscles tire"], "answer": 0, "why": "Fat breakdown involves getting fatty acids out of fat stores, moving them into muscle and mitochondria, and running many steps of beta oxidation, so the top rate of ATP supply is lower. Fat also gives fewer ATP per \\(\\ce{O2}\\) molecule (about 5.6 ATP per \\(\\ce{O2}\\), compared with about 6.3 for glucose). At high intensity, when \\(\\ce{O2}\\) is limiting, carbohydrate is the better fuel."}, {"q": "During steady exercise, a person's respiratory exchange ratio (RER) is 0.85. What does this mean?", "options": ["About half the energy comes from fat and half from carbohydrate", "Almost all the energy comes from fat, with none from carbohydrate", "Almost all the energy comes from carbohydrate, with none from fat", "The person is making lactate faster than it can be cleared away"], "answer": 0, "why": "RER is \\(\\dfrac{\\dot V_{\\ce{CO2}}}{\\dot V_{\\ce{O2}}}\\). Burning carbohydrate gives 1.0 (\\(\\ce{C6H12O6 + 6O2 -> 6CO2 + 6H2O}\\)), and burning fat gives about 0.7, because fat has less oxygen in it and needs more \\(\\ce{O2}\\) per \\(\\ce{CO2}\\) made. A value of 0.85 is halfway, so energy is split about evenly. Lactate production would push RER above 1."}, {"q": "Near maximal exercise, a person's RER rises above 1.1. What causes this?", "options": ["Bicarbonate buffers acid from glycolysis, releasing extra \\(\\ce{CO2}\\)", "The body switches to burning protein, which releases extra \\(\\ce{CO2}\\)", "The muscles start burning fat faster, which releases extra \\(\\ce{CO2}\\)", "The lungs stop releasing \\(\\ce{CO2}\\), so measured \\(\\ce{O2}\\) use falls"], "answer": 0, "why": "Pure carbohydrate burning gives an RER of 1.0, so values above 1 cannot come from fuel alone. At high intensity, glycolysis releases \\(\\ce{H+}\\) faster than it is cleared. Blood bicarbonate buffers it: \\(\\ce{H+ + HCO3- -> H2CO3 -> CO2 + H2O}\\). The extra \\(\\ce{CO2}\\) is breathed out, so \\(\\dot V_{\\ce{CO2}}\\) rises above \\(\\dot V_{\\ce{O2}}\\). An RER over 1.1 is one sign that a test reached maximal effort."}, {"q": "At the very start of a jog, \\(\\ce{O2}\\) uptake takes about 2–3 minutes to rise to its steady level. How is ATP supplied during that lag?", "options": ["From phosphocreatine and anaerobic glycolysis, creating an oxygen deficit", "From fatty acids burned without \\(\\ce{O2}\\), creating no oxygen deficit", "From \\(\\ce{O2}\\) stored in the lungs, which supplies all of the ATP needed", "From ketone bodies released by the liver, which need no \\(\\ce{O2}\\) at all"], "answer": 0, "why": "ATP demand jumps the moment exercise starts, but aerobic metabolism takes minutes to catch up. The gap, called the oxygen deficit, is filled by ATP from phosphocreatine and glycolysis, plus small amounts of \\(\\ce{O2}\\) stored on myoglobin and hemoglobin. After exercise, the extra \\(\\ce{O2}\\) used to refill these stores is part of EPOC."}, {"q": "After a hard workout, \\(\\ce{O2}\\) uptake stays above resting for a while (EPOC). Which process accounts for part of this?", "options": ["Remaking phosphocreatine and clearing lactate", "Breaking down muscle glycogen to store as fat", "Making new mitochondria from stored proteins", "Moving \\(\\ce{O2}\\) from the lungs into fat cells"], "answer": 0, "why": "Excess post-exercise oxygen consumption pays for restoring the body after exercise: resynthesizing PCr and ATP, refilling \\(\\ce{O2}\\) stored on myoglobin and hemoglobin, turning some lactate back into glucose or burning it, and the cost of higher body temperature, heart rate and breathing. Its size grows with exercise intensity."}, {"q": "Which description fits type I (slow oxidative) muscle fibers?", "options": ["Many mitochondria and myoglobin, slow myosin ATPase, high fatigue resistance", "Few mitochondria and myoglobin, fast myosin ATPase, low fatigue resistance", "Many mitochondria and myoglobin, fast myosin ATPase, low fatigue resistance", "Few mitochondria and myoglobin, slow myosin ATPase, high fatigue resistance"], "answer": 0, "why": "Type I fibers have slow myosin, dense capillaries, lots of mitochondria and myoglobin (which makes them red), and they use fat and carbohydrate aerobically, so they resist fatigue. Type IIx fibers are fast, glycolytic and fatigue quickly. Type IIa fibers fall in between: fast but with good oxidative capacity."}, {"q": "As effort rises from walking to sprinting, motor units are recruited in a set order. What is that order?", "options": ["Small, slow units first, then larger, faster ones", "Large, fast units first, then smaller, slower ones", "All unit sizes at once, but each fires more often", "Random units at first, then the most rested ones"], "answer": 0, "why": "By Henneman's size principle, small motor neurons have high input resistance, so a given synaptic current depolarizes them more, and they reach threshold first. They control slow, fatigue-resistant fibers. As drive increases, larger motor neurons controlling fast fibers join in. This lets light tasks rely on fibers that do not tire."}, {"q": "Elite marathoners usually have mostly type I fibers in their leg muscles, while elite sprinters have mostly type II. Which statement about training is best supported?", "options": ["Training changes fiber properties, but fiber type mix is largely set by genetics", "Training converts nearly all fibers from type I to type II in a few weeks", "Training adds new fibers of the trained type by splitting old fibers apart", "Training has no effect on fibers, so all changes come from the nervous system"], "answer": 0, "why": "Endurance training greatly increases mitochondria, capillaries and oxidative enzymes in all fiber types, and can shift some type IIx fibers toward IIa. But large switches between type I and type II are limited in humans, so much of an elite athlete's fiber mix reflects inheritance. Strength training enlarges existing fibers (hypertrophy) more than it adds new ones."}, {"q": "What is the lactate threshold?", "options": ["The effort level above which blood lactate rises much faster than it is cleared", "The effort level at which muscles first begin to make any lactate at all", "The blood lactate level at which muscles stop contracting from acidity", "The effort level at which the liver begins to turn lactate into fat"], "answer": 0, "why": "Muscles always make some lactate, and the heart, liver and slow fibers clear it, so blood lactate stays low at easy effort. Past the threshold, production outpaces clearance, and blood lactate climbs steeply. Endurance training raises the threshold, mostly by improving mitochondrial capacity and clearance, so athletes can hold a faster pace."}, {"q": "Where does much of the lactate made by fast fibers during exercise end up?", "options": ["Burned for fuel by the heart and slow fibers, or turned into glucose by the liver", "Stored in fast fibers until exercise ends, causing next-day muscle soreness", "Excreted in the urine within an hour, which wastes the energy it contains", "Turned into fat in the muscle that made it, which is stored for later use"], "answer": 0, "why": "Lactate is a fuel, not just waste. It leaves fast fibers through MCT carriers and is taken up by the heart and oxidative fibers, which turn it back into pyruvate and burn it (the lactate shuttle). The liver also turns some into glucose (the Cori cycle). Next-day soreness comes from muscle damage, especially from eccentric work, not from lactate."}, {"q": "About 20 miles into a marathon, a runner suddenly slows down sharply (\"hits the wall\"). What is the main cause?", "options": ["Muscle and liver glycogen are nearly used up", "Lactate in the blood has risen to toxic levels", "Fat stores in the body have been used up", "Blood \\(\\ce{O2}\\) has fallen because the lungs tire"], "answer": 0, "why": "The body stores only about 400–500 g of glycogen in muscle and about 100 g in the liver, enough for roughly 90–120 minutes of hard running. When glycogen is nearly gone, the runner must rely more on fat, which supplies ATP more slowly, so pace drops. Fat stores are huge and never run out in a marathon. Eating carbohydrates during the race and carbohydrate loading beforehand delay this."}, {"q": "Why can muscle glycogen not be used to raise blood glucose?", "options": ["Muscle lacks glucose-6-phosphatase, so its glucose cannot leave the cell", "Muscle lacks glycogen phosphorylase, so its glycogen cannot be broken down", "Muscle has no GLUT carriers, so glucose cannot cross its plasma membrane", "Muscle glycogen is bound to myosin and cannot be released during work"], "answer": 0, "why": "When glycogen is broken down, it becomes glucose-6-phosphate, which is trapped in the cell because of its charge. The liver has glucose-6-phosphatase, which removes the phosphate so glucose can leave and supply the blood. Muscle lacks this enzyme, so its glycogen fuels only that muscle."}, {"q": "Exercise raises glucose uptake into muscle even in people with insulin resistance. Why?", "options": ["Contraction activates AMPK and \\(\\ce{Ca^{2+}}\\) signals that move GLUT4 to the membrane", "Contraction lowers blood glucose, so glucose diffuses in through the lipid bilayer", "Contraction releases insulin from muscle, which binds the insulin receptor nearby", "Contraction blocks glycolysis, so glucose builds up in the blood and floods in"], "answer": 0, "why": "Contracting muscle uses ATP, which raises AMP, and AMP activates AMP-activated protein kinase (AMPK). AMPK and \\(\\ce{Ca^{2+}}\\) signals bring GLUT4 vesicles to the membrane by a path that does not need the insulin receptor or PI3K. This is one reason exercise helps control blood sugar in type 2 diabetes."}, {"q": "A patient lacks muscle glycogen phosphorylase (McArdle disease). During exercise, what happens to blood lactate?", "options": ["It barely rises, since muscle cannot break down its glycogen", "It rises much higher than usual, since glycolysis runs too fast", "It rises earlier than usual, since the liver cannot clear lactate", "It stays at a normal level, since muscle uses blood glucose instead"], "answer": 0, "why": "Without glycogen phosphorylase, muscle cannot turn its glycogen into glucose-6-phosphate, so glycolysis has little fuel at the start of exercise and little lactate is made. These patients tire and cramp early. After about 10 minutes, more blood glucose and fatty acids arrive, and they often feel a \"second wind.\""}, {"q": "A person exercises at 10 METs and weighs 70 kg. What is their \\(\\ce{O2}\\) uptake? (1 MET = 3.5 mL \\(\\ce{O2}\\) per kg per minute.)", "options": ["2.45 L per minute", "0.35 L per minute", "24.5 L per minute", "0.245 L per minute"], "answer": 0, "why": "\\(10 \\times 3.5 = 35\\) mL per kg per minute, and \\(35 \\times 70 = 2450\\) mL per minute, or 2.45 L per minute. At about 5 kcal per liter of \\(\\ce{O2}\\), that is about 12 kcal per minute. METs let you compare activities by how many times resting metabolism they require."}, {"q": "Using the Fick principle, what is \\(\\dot V_{\\ce{O2}}\\) if cardiac output is 25 L per minute and the arterial–venous \\(\\ce{O2}\\) difference is 15 mL per dL?", "options": ["3.75 L per minute", "0.375 L per minute", "37.5 L per minute", "1.67 L per minute"], "answer": 0, "why": "\\(\\dot V_{\\ce{O2}} = Q \\times (C_a - C_v)\\). The difference is 15 mL per dL, which is 150 mL per L. So \\(25 \\times 150 = 3750\\) mL per minute, or 3.75 L per minute. Forgetting to convert dL to L gives 0.375."}, {"q": "An untrained person and a trained endurance athlete have the same maximal heart rate. What mainly lets the athlete reach a much higher \\(\\dot V_{\\ce{O2}\\text{max}}\\)?", "options": ["A larger stroke volume, from a bigger, better-filled left ventricle", "A higher maximal heart rate, from a more active sinoatrial node", "A larger lung volume, which lets far more \\(\\ce{O2}\\) into the blood", "A higher hemoglobin affinity for \\(\\ce{O2}\\), from a left-shifted curve"], "answer": 0, "why": "\\(\\dot V_{\\ce{O2}\\text{max}}\\) equals maximal cardiac output times the maximal a–v \\(\\ce{O2}\\) difference. Maximal heart rate depends mostly on age, not training. Endurance training expands blood volume and the left ventricle, raising stroke volume, which is the main reason cardiac output and \\(\\dot V_{\\ce{O2}\\text{max}}\\) rise. Muscle extraction also improves somewhat."}, {"q": "Why do well-trained endurance athletes often have resting heart rates near 40 beats per minute?", "options": ["A larger stroke volume and more vagal tone meet resting needs at fewer beats", "A smaller stroke volume and less vagal tone meet resting needs at fewer beats", "A damaged sinoatrial node slows its own firing as the heart enlarges", "A lower resting metabolic rate means the body needs much less blood flow"], "answer": 0, "why": "At rest, the body needs about 5 L of blood per minute. A trained heart pumps more per beat, so it can meet this need with fewer beats. Training also raises parasympathetic (vagal) tone to the sinoatrial node. This athletic bradycardia is a healthy adaptation, not a sign of heart disease."}, {"q": "During maximal whole-body exercise, about what share of cardiac output goes to working muscle?", "options": ["About 80–85%", "About 20–25%", "About 50%", "Almost 100%"], "answer": 0, "why": "At rest, skeletal muscle gets about 20% of cardiac output. During maximal exercise, local metabolites dilate muscle arterioles while sympathetic nerves constrict vessels in the gut and kidneys. Combined with a 4–5 times higher cardiac output, muscle flow can rise about 20 times. The brain's flow stays about the same in absolute terms."}, {"q": "During running, systolic blood pressure rises but diastolic pressure stays about the same or falls a little. Why?", "options": ["Cardiac output rises a lot while vessel resistance falls in working muscle", "Cardiac output falls a little while vessel resistance rises in working muscle", "The heart beats so fast that it cannot fill, so stroke volume falls to zero", "The arteries stiffen during running, which raises pressure only in systole"], "answer": 0, "why": "Mean arterial pressure equals cardiac output times total peripheral resistance. In dynamic exercise, output rises 4–5 times, but resistance falls because muscle arterioles dilate widely, so mean pressure rises only modestly. The stronger ejection raises systolic pressure, while the low resistance lets diastolic pressure stay about the same."}, {"q": "Lifting and holding a very heavy weight (isometric effort) raises blood pressure much more than jogging. Why?", "options": ["Contracted muscle squeezes its own vessels, so resistance stays high", "Contracted muscle releases more \\(\\ce{NO}\\), so resistance drops much lower", "Isometric work lowers cardiac output, so the vessels must tighten up", "Isometric work uses only the arms, so leg vessels stay fully open"], "answer": 0, "why": "A strong, sustained contraction compresses the blood vessels running through the muscle, so flow is restricted and resistance stays high. Signals from the starved muscle (the exercise pressor reflex) and central command further raise sympathetic activity. With resistance high, even a moderate rise in cardiac output causes a big jump in blood pressure. Breath holding can add more."}, {"q": "During prolonged exercise at a steady pace in the heat, heart rate slowly rises while stroke volume falls (cardiovascular drift). Why?", "options": ["Sweating and skin blood flow lower central blood volume and ventricular filling", "Lactate builds up in the heart and weakens each contraction over time", "Training gets lost during the session, so the heart muscle weakens", "The sinoatrial node tires out, and backup pacemakers take over"], "answer": 0, "why": "As the body heats up, more blood goes to the skin for cooling, and fluid lost in sweat lowers plasma volume. Less blood returns to the heart, so filling and stroke volume fall. To keep cardiac output, heart rate rises. Drinking fluids reduces the drift."}, {"q": "A cyclist produces 200 W of power while using 2.8 L of \\(\\ce{O2}\\) per minute. Using about 5 kcal per liter of \\(\\ce{O2}\\) (1 kcal = 4184 J), what is her gross efficiency?", "options": ["About 20%", "About 5%", "About 50%", "About 80%"], "answer": 0, "why": "Energy used: \\(2.8 \\times 5 = 14\\) kcal per minute, which is \\(\\dfrac{14 \\times 4184}{60} = 976\\) J per second, or 976 W. Efficiency is \\(\\dfrac{200}{976} = 0.205\\), about 20%. The other 80% becomes heat, which is why exercise warms the body so much."}, {"q": "A lab test seeks a true \\(\\dot V_{\\ce{O2}\\text{max}}\\). Which finding best shows it was reached?", "options": ["\\(\\dot V_{\\ce{O2}}\\) plateaus even as the work rate keeps rising", "\\(\\dot V_{\\ce{O2}}\\) keeps rising steadily until the test ends", "Heart rate reaches 150 beats per minute during the test", "RER stays below 0.9 throughout the entire test period"], "answer": 0, "why": "The classic sign of \\(\\dot V_{\\ce{O2}\\text{max}}\\) is a plateau: more work no longer raises \\(\\ce{O2}\\) uptake, because the extra energy comes from anaerobic sources. Other supporting signs are an RER above about 1.1, very high blood lactate, and a heart rate near the expected maximum. An RER below 0.9 means the effort was far from maximal."}, {"q": "Endurance training increases mitochondria in muscle. How does this change fuel use at the same absolute pace?", "options": ["More fat and less glycogen is burned, so glycogen lasts longer", "More glycogen and less fat is burned, so glycogen runs out sooner", "More protein is burned, so both glycogen and fat are spared", "No change in fuel happens, since only maximal capacity changes"], "answer": 0, "why": "With more mitochondria, each one needs to work less hard at a given pace, so ADP and AMP rise less, which keeps glycolysis from speeding up as much. More fatty acid transport and beta oxidation capacity also help. The trained person burns more fat and less carbohydrate at the same pace, makes less lactate, and saves glycogen."}, {"q": "In healthy people at sea level, which system usually limits \\(\\dot V_{\\ce{O2}\\text{max}}\\)?", "options": ["The heart's ability to deliver \\(\\ce{O2}\\)-rich blood", "The lungs' ability to move air in and out", "The muscles' supply of mitochondria", "The blood's supply of dissolved \\(\\ce{O2}\\)"], "answer": 0, "why": "Breathing harder at maximal effort is still well within the lungs' capacity, and arterial blood stays almost fully saturated in most people. Giving extra \\(\\ce{O2}\\) or adding blood (raising hemoglobin) raises \\(\\dot V_{\\ce{O2}\\text{max}}\\), which shows that \\(\\ce{O2}\\) delivery, mostly set by maximal cardiac output, is the main limit. Some very elite athletes do lose saturation, which is an exception."}, {"q": "Besides myosin, which ATP user takes the largest share of a muscle's ATP during contraction?", "options": ["The SERCA pump, moving \\(\\ce{Ca^{2+}}\\) back into the sarcoplasmic reticulum", "The \\(\\ce{Na+}\\)–\\(\\ce{K+}\\) pump, moving \\(\\ce{Na+}\\) out after each action potential", "The creatine kinase enzyme, moving phosphate between creatine and ATP", "The glycogen synthase enzyme, storing new glycogen during contraction"], "answer": 0, "why": "Myosin uses most of the ATP, about two thirds. SERCA, which pumps \\(\\ce{Ca^{2+}}\\) back into the sarcoplasmic reticulum so the muscle can relax, uses most of the rest, about a quarter to a third. The \\(\\ce{Na+}\\)–\\(\\ce{K+}\\) pump uses a few percent. Creatine kinase moves phosphate around but does not use up ATP overall."}]</script></section>
+<script type="application/json" class="frq-data">[{"q": "An athlete trains for six months. Before training: maximal heart rate 190 beats per minute, maximal stroke volume 120 mL and maximal a–v \\(\\ce{O2}\\) difference 15 mL per dL. After training: maximal heart rate 190, stroke volume 150 mL and a–v difference 16 mL per dL. (a) Find maximal cardiac output and \\(\\dot V_{\\ce{O2}\\text{max}}\\) before and after. (b) By what percent did \\(\\dot V_{\\ce{O2}\\text{max}}\\) rise, and which change contributed most? (c) Explain the training adaptations behind each change.", "answer": "(a) Before: \\(Q = 190 \\times 0.120 = 22.8\\) L per minute, and \\(\\dot V_{\\ce{O2}\\text{max}} = 22.8 \\times 150 = 3420\\) mL per minute (3.42 L). After: \\(Q = 190 \\times 0.150 = 28.5\\) L per minute, and \\(\\dot V_{\\ce{O2}\\text{max}} = 28.5 \\times 160 = 4560\\) mL per minute (4.56 L). (b) The rise is \\(\\dfrac{4560 - 3420}{3420} = 33\\%\\). Stroke volume rose 25% while the a–v difference rose about 7%, so the bigger stroke volume contributed most. (c) Stroke volume rises because training expands plasma volume (more filling) and enlarges the left ventricle. The a–v difference rises because muscles gain more capillaries (longer contact time and shorter diffusion distance) and more mitochondria and myoglobin (they pull more \\(\\ce{O2}\\) out of the blood). Maximal heart rate does not change with training.", "points": ["\\(\\dot V_{\\ce{O2}\\text{max}}\\) 3.42 L per minute before and 4.56 L after", "About a 33% rise, mostly from stroke volume", "Central adaptations: more blood volume, larger ventricle", "Peripheral adaptations: more capillaries, mitochondria and myoglobin"]}, {"q": "Compare the energy systems used in (1) a 100 m sprint (10 seconds), (2) a 400 m run (about 50 seconds) and (3) a marathon (about 3 hours). (a) For each, name the main ATP source and fuel. (b) Explain what limits performance in each. (c) Explain why eating carbohydrate during a marathon helps but would not help the 100 m.", "answer": "(a) 100 m: stored ATP and phosphocreatine, with glycolysis starting up. 400 m: mainly anaerobic glycolysis from muscle glycogen, plus phosphocreatine at the start and a growing aerobic share. Marathon: aerobic metabolism of carbohydrate (muscle glycogen and blood glucose from the liver) and fat. (b) 100 m: limited by the peak rate of ATP supply and the speed of fast fibers, and by phosphocreatine running low. 400 m: limited by buildup of \\(\\ce{H+}\\), inorganic phosphate and other products of fast glycolysis, which impair the muscles. Marathon: limited by \\(\\dot V_{\\ce{O2}\\text{max}}\\), the lactate threshold, running economy and especially glycogen stores; heat and dehydration also matter. (c) In a marathon, glycogen runs low after about 90 to 120 minutes, so eaten carbohydrate supplies blood glucose that muscles can burn, sparing glycogen. In a 10-second sprint, glycogen and blood glucose never run low, and there is no time to absorb food.", "points": ["Correct main ATP source for each race", "Sprint limited by ATP rate and PCr; 400 m by fatigue products; marathon by \\(\\ce{O2}\\) delivery and glycogen", "Glycogen depletion explains the marathon \"wall\"", "Eaten carbohydrate helps only when glycogen limits performance"]}]</script>
+</section>
+<section class="test" id="test-2" data-key="bipn108-t2" hidden>
+<section class="mcq" data-title="BIPN 108 Midterm 1, Test 2" data-nav="#nav-test-2"><script type="application/json">[{"q": "What is the main job of creatine kinase in muscle?", "options": ["It moves phosphate between creatine and ATP, buffering ATP levels", "It turns creatine into creatinine, clearing it from the muscle", "It breaks down glycogen into glucose during intense exercise", "It moves fatty acids into mitochondria for beta oxidation"], "answer": 0, "why": "Creatine kinase catalyzes \\(\\ce{PCr + ADP \u003c=> Cr + ATP}\\). At the start of hard work, it keeps ATP almost constant by using PCr. At rest and during recovery, it runs the other way to rebuild PCr from ATP made by mitochondria. Creatinine is a breakdown product formed slowly without any enzyme, and it is removed by the kidneys."}, {"q": "During intense exercise, the muscle's AMP level rises sharply even though ATP falls only a little. Why does this matter?", "options": ["AMP is a sensitive alarm that turns on glycolysis and AMPK", "AMP is a direct fuel that myosin uses in place of ATP", "AMP blocks glycolysis so that fat becomes the main fuel", "AMP binds \\(\\ce{O2}\\), which helps unload it from hemoglobin"], "answer": 0, "why": "Adenylate kinase turns two ADP into ATP plus AMP. Because AMP is normally very low, a small drop in ATP causes a large relative rise in AMP. AMP activates phosphofructokinase (a key glycolysis enzyme), glycogen phosphorylase and AMPK, which speed up ATP-making pathways. It is the cell's sensitive fuel gauge."}, {"q": "Which muscle fiber type would show the highest maximal shortening speed and the fastest fatigue?", "options": ["Type IIx (fast glycolytic)", "Type I (slow oxidative)", "Type IIa (fast oxidative)", "Cardiac muscle fibers"], "answer": 0, "why": "Type IIx fibers have the fastest myosin ATPase, so they shorten quickly and generate high power. They rely mainly on glycolysis and have few mitochondria and capillaries, so they tire within a minute or so. Type IIa fibers are fast too but more fatigue resistant, and type I fibers are the slowest and most resistant."}, {"q": "Why do type I fibers look red and type IIx fibers look pale?", "options": ["Type I fibers hold more myoglobin and are surrounded by more capillaries", "Type I fibers hold more hemoglobin inside the cells to carry \\(\\ce{O2}\\)", "Type IIx fibers have more mitochondria, which reflect red light away", "Type IIx fibers store more fat, which hides the red color of myoglobin"], "answer": 0, "why": "Myoglobin, an iron-containing \\(\\ce{O2}\\)-storing protein, is red. Slow oxidative fibers have a lot of it, plus many capillaries, which gives them their dark color, as in the dark meat of chicken legs. Fast glycolytic fibers, like chicken breast, have little myoglobin and fewer capillaries. Hemoglobin is in red blood cells, not muscle fibers."}, {"q": "A muscle biopsy is taken from a cyclist after 2 hours of steady riding at moderate effort. Which fibers are most depleted of glycogen?", "options": ["Type I fibers, since they are recruited first and stay active the longest", "Type IIx fibers, since they burn glycogen fastest whenever they are active", "All fiber types equally, since every fiber works at moderate effort", "No fibers at all, since moderate effort uses only fat for its energy"], "answer": 0, "why": "At moderate intensity, the size principle recruits mainly type I and some IIa fibers, and they work throughout the ride. So their glycogen runs down first. As those fibers tire, the body recruits more type II fibers to hold the pace. In sprinting, type IIx fibers would empty their glycogen first."}, {"q": "Which statement about lactate during hard exercise is most accurate?", "options": ["Lactate production consumes \\(\\ce{H+}\\), and acid comes mainly from ATP breakdown and glycolysis", "Lactate is a strong acid that releases \\(\\ce{H+}\\) and directly causes all muscle fatigue", "Lactate production stops when \\(\\ce{O2}\\) is present, so it marks a lack of \\(\\ce{O2}\\)", "Lactate is a waste product that the body cannot use and must remove through urine"], "answer": 0, "why": "Turning pyruvate into lactate uses NADH and an \\(\\ce{H+}\\), which regenerates NAD⁺ so glycolysis can continue. Acid buildup during intense effort comes mostly from the breakdown of ATP and from glycolysis itself, not from lactate. Lactate is made even when \\(\\ce{O2}\\) is plentiful and is a useful fuel. Fatigue has many causes, including inorganic phosphate buildup."}, {"q": "Why does carbohydrate loading before a marathon help performance?", "options": ["It raises muscle glycogen, so the runner can hold pace longer before depletion", "It raises blood lactate, so the runner can buffer more acid during the race", "It raises fat stores, so the runner can burn more fat instead of glycogen", "It raises \\(\\dot V_{\\ce{O2}\\text{max}}\\), so the runner can run faster from the start"], "answer": 0, "why": "Eating more carbohydrate for a few days, while tapering training, can raise muscle glycogen well above normal. Since glycogen depletion is a main cause of slowing late in a marathon, more stored glycogen means the runner can keep a faster pace for longer. It does not change \\(\\dot V_{\\ce{O2}\\text{max}}\\) or fat stores in a useful way."}, {"q": "Why does each liter of \\(\\ce{O2}\\) give slightly more energy when burning carbohydrate than when burning fat?", "options": ["Carbohydrate already holds oxygen, so less \\(\\ce{O2}\\) is needed per ATP", "Fat already holds oxygen, so more \\(\\ce{O2}\\) is wasted per ATP made", "Carbohydrate is burned in the cytoplasm, which needs no \\(\\ce{O2}\\) at all", "Fat is burned as ketones, which give more energy per liter than glucose"], "answer": 0, "why": "Glucose (\\(\\ce{C6H12O6}\\)) is partly oxidized already, so it needs less \\(\\ce{O2}\\) per unit of energy released, about 5.05 kcal per liter. Fat has little oxygen, so it needs more \\(\\ce{O2}\\) and gives about 4.7 kcal per liter. Fat still holds more energy per gram, which is why it is the body's main energy store."}, {"q": "Which statement about \\(\\ce{O2}\\) unloading in a working muscle is correct?", "options": ["Higher temperature, \\(\\ce{CO2}\\) and \\(\\ce{H+}\\) shift the curve right, so more \\(\\ce{O2}\\) is released", "Higher temperature, \\(\\ce{CO2}\\) and \\(\\ce{H+}\\) shift the curve left, so more \\(\\ce{O2}\\) is held", "Lower muscle \\(P_{\\ce{O2}}\\) shifts the curve left, so hemoglobin holds \\(\\ce{O2}\\) more tightly", "Myoglobin shifts the hemoglobin curve right by binding to hemoglobin in the blood"], "answer": 0, "why": "Working muscle is warm, acidic and full of \\(\\ce{CO2}\\), all of which lower hemoglobin's affinity for \\(\\ce{O2}\\) (the Bohr effect and temperature effect). Together with the very low \\(P_{\\ce{O2}}\\) in active muscle, this lets the a–v \\(\\ce{O2}\\) difference rise from about 5 at rest to about 15 mL per dL during exercise. Myoglobin stays inside muscle cells."}, {"q": "Stroke volume rises from rest to moderate exercise. Which two mechanisms mainly cause this?", "options": ["More venous return stretches the ventricle, and sympathetic input boosts contraction", "Less venous return lets the ventricle relax, and vagal input slows the heart down", "Lower heart rate gives more time to fill, and the heart grows larger at once", "Higher blood viscosity stretches the ventricle, and adrenaline makes it stiffer"], "answer": 0, "why": "The muscle pump and deeper breathing push more blood back to the heart, so the ventricle fills more and contracts more strongly (the Frank–Starling mechanism). Sympathetic nerves and epinephrine also strengthen each contraction, emptying the ventricle more fully. As heart rate climbs very high, filling time shortens, and stroke volume levels off."}, {"q": "During exercise, what helps blood return to the heart from the legs?", "options": ["Contracting leg muscles squeeze veins, and valves keep blood moving upward", "Relaxed leg muscles widen veins, and valves let blood flow back toward the feet", "Leg arteries pull blood upward through capillaries by suction from the heart", "The lymph system carries most of the blood back up to the heart during exercise"], "answer": 0, "why": "The muscle pump works because veins have one-way valves. Each contraction squeezes the deep veins and pushes blood toward the heart, and the valves stop it from falling back. Breathing also helps, since breathing in lowers chest pressure and raises belly pressure, which pulls blood into the chest. Standing still for long periods lets blood pool in the legs."}, {"q": "What happens to total peripheral resistance during dynamic whole-body exercise?", "options": ["It falls a lot, because muscle arterioles dilate widely", "It rises a lot, because sympathetic nerves tighten all vessels", "It stays the same, because dilation and constriction cancel out", "It rises a little, because blood becomes thicker with sweating"], "answer": 0, "why": "In active muscle, potassium, adenosine, \\(\\ce{CO2}\\), \\(\\ce{H+}\\), low \\(\\ce{O2}\\) and nitric oxide relax arteriole smooth muscle, overriding the sympathetic constriction there (functional sympatholysis). Because muscle makes up so much of the body, total resistance falls to a third or less of resting. Sympathetic constriction in the gut and kidney redirects blood toward the muscles."}, {"q": "During a graded treadmill test, minute ventilation rises in a straight line with work rate until moderate intensity, then rises more steeply. What causes the steeper rise?", "options": ["Acid from glycolysis, buffered into extra \\(\\ce{CO2}\\), drives breathing harder", "The lungs run short of \\(\\ce{O2}\\), so blood \\(P_{\\ce{O2}}\\) falls and drives breathing", "The breathing muscles tire, so each breath moves less air than before", "Dead space shrinks sharply, so each breath becomes more efficient"], "answer": 0, "why": "Above the ventilatory threshold, buffering of \\(\\ce{H+}\\) by bicarbonate adds extra \\(\\ce{CO2}\\), and the falling pH stimulates the carotid bodies. Both drive breathing up faster than \\(\\ce{O2}\\) use. Arterial \\(P_{\\ce{O2}}\\) usually stays normal in healthy people at sea level, so low \\(\\ce{O2}\\) is not the trigger."}, {"q": "In \\(\\ce{O2}\\) uptake, what does \"running economy\" refer to?", "options": ["The \\(\\ce{O2}\\) cost of running at a given speed", "The highest \\(\\ce{O2}\\) uptake a runner can reach", "The speed at which lactate starts to build up", "The calories burned per kilogram of body fat"], "answer": 0, "why": "Two runners with the same \\(\\dot V_{\\ce{O2}\\text{max}}\\) can differ in how much \\(\\ce{O2}\\) they need to run at a given pace. A more economical runner uses less \\(\\ce{O2}\\) at that pace, so they run at a lower fraction of their maximum and can go faster or farther. Economy depends on body build, tendon elasticity, form and training."}, {"q": "Power is work divided by time. A 70 kg climber walks up 3 m of stairs in 3 s. Using \\(g = 9.8\\) m per s², what power did the climber produce against gravity?", "options": ["About 690 W", "About 70 W", "About 2060 W", "About 230 W"], "answer": 0, "why": "Work against gravity is \\(mgh = 70 \\times 9.8 \\times 3 = 2058\\) J. Power is \\(\\dfrac{2058}{3} = 686\\) W. With an efficiency of about 20%, the body would need to release about 3400 W of energy to do this, which is why stair sprints are so hard."}, {"q": "A person rests quietly, consuming 0.25 L of \\(\\ce{O2}\\) per minute. Using about 4.8 kcal per liter, about how many kcal per day is that?", "options": ["About 1700 kcal", "About 360 kcal", "About 7000 kcal", "About 120 kcal"], "answer": 0, "why": "\\(0.25 \\times 4.8 = 1.2\\) kcal per minute. A day has 1440 minutes, so \\(1.2 \\times 1440 = 1728\\), about 1700 kcal. This shows how indirect calorimetry turns \\(\\ce{O2}\\) use into energy use. It is roughly a resting metabolic rate for an adult."}, {"q": "Why does a well-trained athlete make less lactate than an untrained person running at the same absolute pace?", "options": ["More mitochondria handle pyruvate aerobically and need less glycolysis", "Fewer mitochondria force pyruvate to be turned into lactate instead", "A higher heart rate washes lactate out of the muscle into the urine", "Less muscle glycogen means less glucose is available to make lactate"], "answer": 0, "why": "With more mitochondria, the trained muscle can oxidize pyruvate and NADH faster, so less pyruvate must be turned into lactate. The same pace also uses a smaller fraction of the athlete's \\(\\dot V_{\\ce{O2}\\text{max}}\\), so glycolysis is not pushed as hard. Trained muscle also clears lactate faster."}, {"q": "Which change in a muscle reflects endurance training?", "options": ["More capillaries around each fiber", "Fewer mitochondria in each fiber", "More type IIx fibers in the muscle", "Lower myoglobin in each fiber"], "answer": 0, "why": "Endurance training increases capillary density, mitochondrial content, oxidative enzymes and myoglobin. More capillaries mean more surface area and a longer transit time for blood, so muscles extract more \\(\\ce{O2}\\). Training also tends to shift type IIx fibers toward the more oxidative IIa type."}, {"q": "Why do muscles become sore one to two days after hiking downhill, more than after hiking uphill?", "options": ["Eccentric (lengthening) contractions cause small tears in muscle fibers", "Concentric (shortening) contractions leave more lactate in the muscle", "Downhill hiking uses more \\(\\ce{O2}\\), which damages the muscle by oxidation", "Downhill hiking uses more fat, which builds up between muscle fibers"], "answer": 0, "why": "Walking downhill makes the thigh muscles act as brakes, contracting while being stretched (eccentric work). Eccentric contractions produce high force with fewer active fibers, which damages sarcomeres and membranes. Inflammation and repair over the next day or two cause the soreness. Lactate is cleared within an hour after exercise and does not cause this."}, {"q": "An athlete trains at high altitude for several weeks. Which change most directly raises \\(\\ce{O2}\\) delivery at sea level afterward?", "options": ["More red blood cells, driven by erythropoietin", "Lower red blood cell count, from thinner blood", "Higher hemoglobin affinity, from less 2,3-BPG", "More dead space, from larger airways"], "answer": 0, "why": "Low \\(\\ce{O2}\\) at altitude makes the kidneys release erythropoietin (EPO), which increases red blood cell production over weeks. More hemoglobin raises the \\(\\ce{O2}\\) content of arterial blood, so the same cardiac output delivers more \\(\\ce{O2}\\). Athletes try to carry this benefit back to sea level, and taking EPO itself is banned for this reason."}, {"q": "A healthy person and an athlete both run at 60% of their own \\(\\dot V_{\\ce{O2}\\text{max}}\\). Which is more likely to be burning more fat?", "options": ["The athlete, because training raises fat-burning capacity", "The healthy person, because untrained muscle prefers fat", "Neither, because the same relative effort uses the same fuel", "Neither, because fat is never burned at 60% intensity"], "answer": 0, "why": "Endurance training increases the muscle's ability to take up and burn fatty acids, through more mitochondria, more fatty acid transport proteins and more fat stored inside the muscle. So at the same relative intensity, the trained person burns a greater share of fat and spares glycogen. Fat is an important fuel at moderate intensities in everyone."}, {"q": "What is \"central command\" in the control of breathing and circulation during exercise?", "options": ["Signals from motor areas of the brain that raise heart rate and breathing at the start", "Signals from muscle receptors that raise heart rate and breathing after a delay", "Signals from the carotid bodies that raise heart rate when \\(\\ce{O2}\\) falls low", "Signals from the kidneys that raise blood volume after a long bout of exercise"], "answer": 0, "why": "When the brain sends signals to start moving, it also sends parallel signals to the cardiovascular and breathing centers in the brainstem. That is why heart rate and breathing rise within seconds, even before metabolites build up in muscle. Feedback from muscle receptors (the exercise pressor reflex) fine-tunes the response later."}, {"q": "A muscle is stimulated repeatedly until its force falls. Which change inside the muscle is a major cause of this fatigue?", "options": ["Inorganic phosphate builds up and weakens cross-bridges and \\(\\ce{Ca^{2+}}\\) release", "ATP falls to zero, so the cross-bridges lock in place like rigor mortis", "Lactate binds troponin, so \\(\\ce{Ca^{2+}}\\) can no longer start contraction", "Glucose builds up and makes the fibers swell, so they cannot shorten"], "answer": 0, "why": "During intense work, phosphocreatine breakdown releases inorganic phosphate (\\(\\ce{P_i}\\)). High \\(\\ce{P_i}\\) reduces the force each cross-bridge makes and can enter the sarcoplasmic reticulum, where it binds \\(\\ce{Ca^{2+}}\\), so less \\(\\ce{Ca^{2+}}\\) is released. ATP rarely falls below about 60–70% of resting even in severe fatigue."}, {"q": "When a person starts a moderate run, why is the \\(\\ce{O2}\\) deficit smaller in trained than in untrained people?", "options": ["Trained muscles turn on aerobic metabolism faster at the start", "Trained muscles have less phosphocreatine to start with", "Trained muscles need less ATP for every contraction they make", "Trained muscles turn off aerobic metabolism to save \\(\\ce{O2}\\)"], "answer": 0, "why": "With more mitochondria and capillaries, trained muscle speeds up aerobic metabolism more quickly when exercise starts, so \\(\\ce{O2}\\) uptake reaches its steady level sooner. Less of the early ATP need must come from PCr and glycolysis, so the deficit (and lactate production) is smaller."}, {"q": "The resting a–v \\(\\ce{O2}\\) difference is about 5 mL per dL. In maximal exercise it can reach about 15 mL per dL. What mainly causes this rise?", "options": ["Working muscle takes much more \\(\\ce{O2}\\) out of the blood passing through", "Arterial \\(\\ce{O2}\\) content rises sharply, as the lungs load more \\(\\ce{O2}\\)", "Venous \\(\\ce{O2}\\) content rises sharply, as blood passes muscle faster", "Hemoglobin levels fall during exercise, so less \\(\\ce{O2}\\) returns in veins"], "answer": 0, "why": "Arterial \\(\\ce{O2}\\) content stays near 20 mL per dL. In active muscle, the low \\(P_{\\ce{O2}}\\), right-shifted curve, opened capillaries and active mitochondria pull far more \\(\\ce{O2}\\) from each dL of blood, so venous \\(\\ce{O2}\\) falls. Also, most of the cardiac output goes to muscle, which extracts much more than other tissues."}, {"q": "Cardiac output rises from 5 L per minute at rest to 30 L per minute in an elite athlete. Heart rate rises from 50 to 190. What happens to stroke volume?", "options": ["It rises from 100 mL to about 158 mL", "It falls from 100 mL to about 63 mL", "It stays near 100 mL the whole time", "It rises from 100 mL to about 600 mL"], "answer": 0, "why": "Stroke volume is cardiac output divided by heart rate. At rest: \\(\\dfrac{5000}{50} = 100\\) mL. At maximum: \\(\\dfrac{30{,}000}{190} = 158\\) mL. So both heart rate (3.8 times) and stroke volume (1.6 times) contribute to the 6-fold rise in output."}, {"q": "An athlete stops training for 3 weeks. Which change explains most of the early drop in \\(\\dot V_{\\ce{O2}\\text{max}}\\)?", "options": ["Plasma volume shrinks, so stroke volume falls", "Muscle fiber types switch from type I to IIx", "Maximal heart rate falls by 30 beats per minute", "Lung capacity shrinks because breathing is lighter"], "answer": 0, "why": "Some of the first gains from training come from extra plasma volume, and it is also lost first. Within a few weeks of stopping, plasma volume falls, the heart fills less, stroke volume drops, and maximal cardiac output and \\(\\dot V_{\\ce{O2}\\text{max}}\\) fall. Mitochondrial content falls over several weeks too. Maximal heart rate and fiber types change little."}, {"q": "At rest, a person takes up 250 mL of \\(\\ce{O2}\\) per minute and the a–v \\(\\ce{O2}\\) difference is 5 mL per dL. What is cardiac output?", "options": ["5 L per minute", "50 L per minute", "1.25 L per minute", "0.5 L per minute"], "answer": 0, "why": "Rearranging the Fick principle: \\(Q = \\dfrac{\\dot V_{\\ce{O2}}}{C_a - C_v}\\). The a–v difference is 5 mL per dL, or 50 mL per L, so \\(Q = \\dfrac{250}{50} = 5\\) L per minute. This is how Fick first measured cardiac output."}, {"q": "During hard exercise, what fuels does the heart muscle rely on most?", "options": ["Fatty acids and lactate, burned aerobically in its many mitochondria", "Glucose alone, burned anaerobically to make lactate for the muscles", "Its own glycogen, which it breaks down quickly into lactate", "Ketone bodies alone, made by the liver only during exercise"], "answer": 0, "why": "Heart muscle has so many mitochondria that about a third of its volume is mitochondria, and it almost never runs anaerobically. At rest it burns mostly fatty acids. During exercise, blood lactate rises, and the heart takes up lactate and burns it as a major fuel. This helps clear lactate from the blood."}, {"q": "A resting person hyperventilates on purpose for one minute. Measured RER rises to 1.2. Does this mean they are burning more carbohydrate?", "options": ["No; they are breathing out \\(\\ce{CO2}\\) stored in the body, not making more", "Yes; hyperventilation shifts the muscles to burning more glucose", "No; they are burning more protein, which has an RER above 1", "Yes; the extra breathing work needs more glycogen as fuel"], "answer": 0, "why": "RER is what you measure at the mouth. It equals the true fuel ratio (RQ) only when \\(\\ce{CO2}\\) stores in the body are steady. Hyperventilating removes \\(\\ce{CO2}\\) from blood and tissues faster than it is made, so \\(\\dot V_{\\ce{CO2}}\\) at the mouth rises while fuel use does not change. That is why RER is measured during steady exercise."}]</script></section>
+<script type="application/json" class="frq-data">[{"q": "A cyclist pedals at 150 W while using 2.2 L of \\(\\ce{O2}\\) per minute with an RER of 0.95 (about 4.99 kcal per liter of \\(\\ce{O2}\\); 1 kcal = 4184 J). (a) Calculate her metabolic power in watts and her gross efficiency. (b) What happens to the rest of the energy, and how does her body deal with it? (c) Near the end of a maximal test, her RER reaches 1.15. Explain why this value cannot come from fuel use alone.", "answer": "(a) Energy use: \\(2.2 \\times 4.99 = 11.0\\) kcal per minute. In watts: \\(\\dfrac{11.0 \\times 4184}{60} = 766\\) W. Gross efficiency: \\(\\dfrac{150}{766} = 0.196\\), about 20%. (b) About 80% of the energy, roughly 616 W, becomes heat. The body gets rid of it by sending more blood to the skin and by sweating, which cools the body as the sweat evaporates. In hot or humid conditions, this competes with muscle for blood flow and can cause heat illness. (c) Burning carbohydrate makes one \\(\\ce{CO2}\\) per \\(\\ce{O2}\\), so fuel alone cannot push RER above 1.0. At maximal effort, \\(\\ce{H+}\\) from glycolysis is buffered by bicarbonate, which releases extra \\(\\ce{CO2}\\) that is breathed out, and hyperventilation blows off more \\(\\ce{CO2}\\), raising the ratio above 1.", "points": ["About 766 W of metabolic power and about 20% efficiency", "The remaining energy becomes heat, removed by skin blood flow and sweating", "Carbohydrate gives RER 1.0 at most", "Extra \\(\\ce{CO2}\\) from bicarbonate buffering and hyperventilation pushes RER above 1"]}, {"q": "A 25-year-old with McArdle disease (no muscle glycogen phosphorylase) does a cycling test. (a) Predict his blood lactate and his ability to do intense exercise in the first few minutes, and explain. (b) After about 10 minutes of easy pedaling, he finds he can ride harder (a \"second wind\"). Explain why. (c) Using the size principle, explain which fiber types are most affected and when.", "answer": "(a) Without glycogen phosphorylase, his muscles cannot break down their glycogen, so glycolysis has little fuel early in exercise. Little lactate is made, so blood lactate barely rises. He cannot sustain intense work and develops early fatigue, cramps and sometimes muscle damage, because ATP supply cannot keep up. (b) Over the first minutes, blood flow to muscle increases, and the liver releases more glucose while fat cells release fatty acids. Once these blood-borne fuels arrive in large amounts, his muscles can make ATP aerobically from them, so he can work harder. (c) At low effort, type I fibers are recruited first. They rely more on aerobic fuels and can use blood glucose and fat, so they are less affected. As effort rises, type II fibers are recruited, and they depend most on glycogen breakdown and fast glycolysis, so intense efforts that need them fail first.", "points": ["Little lactate rise, early fatigue and cramps", "\"Second wind\" from more blood glucose and fatty acids reaching muscle", "Type II fibers are most affected because they depend on glycogen", "Type I fibers are recruited first and can use blood-borne fuels"]}]</script>
+</section>
+    </div>
+  </main>
+</div>
+<script>
+/* minimono.js — the house style's behavior. Include before </body>; no init.
+   1. Two panes or one. Full-screen shows both (left ¼ · right ¾). The page
+      goes to one pane when the window isn't full-screen, or when the person
+      hides the left pane (`, or the pane's own "Hide"). Hiding is
+      remembered. Force the layout with <html data-layout="split|single">.
+   2. In one-pane mode the "Menu" link (.menu-hint) is invisible until the
+      pointer enters the top-left zone (left quarter, top sixth); clicking it,
+      or `, opens the left pane as an overlay. Esc, a click outside, or
+      choosing a row closes it. With no pointer (touch), the link stays shown.
+      The overlay is the SAME .pane-l element, moved by a class — never a
+      copy, never rebuilt — so its scroll position and selection survive.
+   3. Safari: trackpad pinch-zoom is blocked; ⌘+ / ⌘− still work.          */
+(function () {
+  'use strict';
+  var html = document.documentElement;
+  var KEY = 'minimono:pane-hidden';
+  var hidden = false;
+  try { hidden = localStorage.getItem(KEY) === '1'; } catch (e) {}
+
+  /* 1. Two panes or one ---------------------------------------------------- */
+  function isFull() {
+    var forced = html.getAttribute('data-layout');
+    if (forced === 'split') return true;
+    if (forced === 'single') return false;
+    // Full-screen or maximized. At the top level, measure the window itself
+    // (outerWidth): ⌘+ zoom shrinks innerWidth but not the window. Embedded
+    // in a frame, the frame's own width is what's available.
+    var top = true;
+    try { top = window.top === window; } catch (e) { top = false; }
+    var w = top && outerWidth > 0 ? outerWidth : innerWidth;
+    return w >= screen.availWidth - 24;
+  }
+  function layout() {
+    var windowed = !isFull();
+    html.classList.toggle('is-windowed', windowed);
+    var single = windowed || hidden;
+    if (single !== html.classList.contains('is-single')) {
+      if (!single) close(true);
+      html.classList.toggle('is-single', single);
+    }
+  }
+  function setHidden(v) {
+    hidden = v;
+    try { localStorage.setItem(KEY, v ? '1' : '0'); } catch (e) {}
+    close(true);
+    layout();
+  }
+  var raf = 0;
+  addEventListener('resize', function () { if (!raf) raf = requestAnimationFrame(function () { raf = 0; layout(); }); });
+  new MutationObserver(layout).observe(html, { attributes: true, attributeFilter: ['data-layout'] });
+
+  /* 2. The overlay --------------------------------------------------------- */
+  var lastFocus = null;
+  function pane() { return document.querySelector('.pane-l'); }
+  function typing(el) {
+    if (!el || el === document.body) return false;
+    if (el.isContentEditable) return true;
+    if (el.tagName === 'TEXTAREA' || el.tagName === 'SELECT') return true;
+    return el.tagName === 'INPUT' && !/^(button|submit|reset|checkbox|radio|range|color|file|image)$/i.test(el.type);
+  }
+  function single() { return html.classList.contains('is-single'); }
+  function isOpen() { return html.classList.contains('menu-open'); }
+  function open(keyboard) {
+    if (!single() || isOpen()) return;
+    html.classList.remove('hint-on');
+    html.classList.add('menu-open');
+    lastFocus = document.activeElement;
+    if (keyboard) {                                   // keyboard: move focus in
+      var p = pane(), cur = p && (p.querySelector('[aria-current="true"]') || p.querySelector('a,button,input,[tabindex]'));
+      if (cur) cur.focus({ preventScroll: true });
+    }
+  }
+  function close(silent) {
+    if (!isOpen()) return;
+    html.classList.remove('menu-open');
+    var p = pane();
+    if (!silent && lastFocus && lastFocus.focus && lastFocus !== document.body) lastFocus.focus({ preventScroll: true });
+    else if (p && p.contains(document.activeElement)) document.activeElement.blur();
+    lastFocus = null;
+  }
+
+  // the top-left zone: left quarter of the width, top sixth of the height.
+  // Entering it shows the menu link; nothing opens until the link is clicked.
+  function inZone(x, y) { return x <= innerWidth / 4 && y <= innerHeight / 6; }
+  var hintTimer = 0;
+  function hint(on) {
+    clearTimeout(hintTimer);
+    if (on) { html.classList.add('hint-on'); return; }
+    hintTimer = setTimeout(function () { html.classList.remove('hint-on'); }, 200);
+  }
+  addEventListener('pointermove', function (e) {
+    if (e.pointerType !== 'mouse') return;
+    hint(single() && !isOpen() && inZone(e.clientX, e.clientY));
+  }, { passive: true });
+  document.addEventListener('mouseleave', function () { hint(false); });
+
+  addEventListener('keydown', function (e) {
+    // ` (backtick) on its own — left alone while typing in a field
+    if (e.key === '`' && !e.metaKey && !e.ctrlKey && !e.altKey && !typing(document.activeElement)) {
+      e.preventDefault();
+      if (html.classList.contains('is-windowed')) { isOpen() ? close() : open(true); }
+      else setHidden(!hidden);                        // full-screen: hide, or dock it again
+      return;
+    }
+    if (e.key === 'Escape' && isOpen()) { e.preventDefault(); close(); }
+  });
+  addEventListener('pointerdown', function (e) {
+    if (!isOpen()) return;
+    var p = pane();
+    if (p && !p.contains(e.target) && !(e.target.closest && e.target.closest('.menu-hint'))) close();
+  });
+  addEventListener('click', function (e) {
+    var t = e.target.closest ? e.target : e.target.parentElement;
+    if (t.closest('.menu-hint')) { e.preventDefault(); isOpen() ? close() : open(false); return; }
+    if (t.closest('.pane-hide')) {                    // docked: "Hide" · hidden overlay: "Keep open"
+      e.preventDefault(); setHidden(!hidden); return;
+    }
+    if (isOpen() && t.closest('.pane-l .row, .pane-l .mcq-nav a')) close();
+  });
+
+  /* Focus rings: only after Tab. Shift, arrows, Space and clicks never show one. */
+  addEventListener('keydown', function (e) { if (e.key === 'Tab') html.classList.add('kbd-nav'); }, true);
+  addEventListener('pointerdown', function () { html.classList.remove('kbd-nav'); }, true);
+
+  /* 3. Safari pinch-zoom ---------------------------------------------------- */
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (t) {
+    document.addEventListener(t, function (e) { e.preventDefault(); }, { passive: false });
+  });
+
+  layout();
+  window.Minimono = {
+    open: function () { open(true); }, close: close,
+    hide: function () { setHidden(true); }, show: function () { setHidden(false); },
+    relayout: layout
+  };
+})();
+
+</script>
+<script>
+/* smooth-scroll.js — Safari's keyboard scrolling, for every pane.
+   ---------------------------------------------------------------------------
+   A port of WebKit's keyboard-scroll physics (ScrollAnimationKeyboard.cpp,
+   KeyboardScroll.h, macOS constants) so Space, arrows, Page Up/Down and
+   Home/End glide and settle on a spring in every scroller — the page, and
+   each two-pane split pane on its own.
+
+     ↑ / ↓            tap: glide one line (40px) · hold: accelerate to
+                      1000px/s in 0.2s, cruise, then the spring carries the
+                      leftover momentum and settles
+     Space / ⇧Space   the same, with a page as the step (the visible height
+     PgDn / PgUp      less 40px of overlap, never less than 87.5% of it):
+                      tap glides at least a page, hold accelerates
+     Home / End       glide to the top / bottom (also ⌘↑ / ⌘↓ on a Mac)
+   Key repeats are ignored while a key is held, as in WebKit.
+
+   Which scroller moves: the one under the pointer, else the one that holds
+   focus, else the last one clicked, else the page.
+   Left alone: any control that uses these keys itself — text fields,
+   sliders, radio groups, selects, contenteditable, tabs, listboxes — and
+   Space on a button, link, checkbox or anything else Space activates. Any key with ⌥/⌃
+   (and ⌘ except ⌘↑/⌘↓) passes through.
+   Respects prefers-reduced-motion: the same steps, applied instantly.
+   No init call — include before </body>. ~3KB. Exposes window.SmoothScroll.  */
+(function () {
+  'use strict';
+  if (window.SmoothScroll) return;
+
+  /* WebKit macOS KeyboardScrollParameters */
+  var MASS = 1, STIFF = 175, DAMP = 20, MAX_VEL_MULT = 25, TIME_TO_MAX = 0.2;
+  var LINE = 40;                         /* Scrollbar::pixelsPerLineStep()          */
+  var PAGE_MIN_FRACTION = 0.875;         /* Scrollbar::minFractionToStepWhenPaging  */
+  var PAGE_OVERLAP = 40;                 /* Scrollbar::maxOverlapBetweenPages        */
+
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
+  var docEl = function () { return document.scrollingElement || document.documentElement; };
+
+  function canScroll(el) {
+    if (el === docEl()) return el.scrollHeight > el.clientHeight;
+    var s = getComputedStyle(el), o = s.overflowY;
+    return (o === 'auto' || o === 'scroll' || o === 'overlay') && el.scrollHeight > el.clientHeight + 1;
+  }
+  function scrollerFrom(node) {
+    for (var el = node; el && el.nodeType === 1; el = el.parentElement) {
+      if (el === document.body || el === document.documentElement) break;
+      if (canScroll(el)) return el;
+    }
+    return canScroll(docEl()) ? docEl() : null;
+  }
+
+  var hovered = null, clicked = null;
+  addEventListener('pointermove', function (e) { if (e.pointerType === 'mouse') hovered = e.target; }, { passive: true });
+  addEventListener('pointerdown', function (e) { clicked = e.target; }, { passive: true });
+  document.addEventListener('mouseleave', function () { hovered = null; });
+
+  function pickScroller() {
+    var a = document.activeElement;
+    return (hovered && scrollerFrom(hovered)) ||
+           (a && a !== document.body && scrollerFrom(a)) ||
+           (clicked && scrollerFrom(clicked)) ||
+           scrollerFrom(document.body);
+  }
+
+  // controls that use arrows / Page / Home / End themselves keep them
+  function ownsKeys(el) {
+    if (!el || el === document.body) return false;
+    if (el.isContentEditable) return true;
+    var t = el.tagName;
+    if (t === 'TEXTAREA' || t === 'SELECT') return true;
+    if (t === 'INPUT') return !/^(button|submit|reset|checkbox|color|file|image)$/i.test(el.type);
+    var r = el.getAttribute && el.getAttribute('role');
+    return !!r && /^(slider|spinbutton|radio|radiogroup|tab|tablist|listbox|option|menu|menubar|menuitem|combobox|grid|tree|treeitem|textbox)$/.test(r);
+  }
+  function spaceActivates(el) {
+    if (!el || el === document.body) return false;
+    if (/^(BUTTON|A|SUMMARY|INPUT)$/.test(el.tagName)) return true;
+    var r = el.getAttribute && el.getAttribute('role');
+    return !!r && /^(button|link|tab|checkbox|radio|switch|menuitem|option|slider)$/.test(r);
+  }
+
+  /* One animator per scroller ------------------------------------------- */
+  var anims = new WeakMap();
+  function Anim(el) {
+    this.el = el; this.pos = el.scrollTop; this.vel = 0;
+    this.held = null; this.ideal = this.pos; this.minTravel = this.pos;
+    this.raf = 0; this.last = 0;
+  }
+  Anim.prototype.max = function () { return this.el.scrollHeight - this.el.clientHeight; };
+  Anim.prototype.sync = function () {
+    // the user may have scrolled by wheel/trackpad since we last moved it
+    if (!this.raf) { this.pos = this.el.scrollTop; this.ideal = this.pos; this.vel = 0; }
+  };
+  Anim.prototype.run = function () {
+    if (this.raf) return;
+    var self = this; this.last = performance.now();
+    this.raf = requestAnimationFrame(function f(t) { self.step(t) ? (self.raf = requestAnimationFrame(f)) : (self.raf = 0); });
+  };
+  Anim.prototype.stop = function () { if (this.raf) cancelAnimationFrame(this.raf); this.raf = 0; this.vel = 0; this.held = null; };
+  Anim.prototype.write = function () {
+    var max = this.max();
+    if (this.pos <= 0 || this.pos >= max) {          // hit an edge: stop there, no overshoot
+      this.pos = Math.min(Math.max(this.pos, 0), max);
+      this.vel = 0; this.ideal = this.pos;
+      this.el.scrollTop = this.pos;
+      return false;
+    }
+    this.el.scrollTop = this.pos;
+    return true;
+  };
+  /* ScrollAnimationKeyboard::animateScroll */
+  Anim.prototype.step = function (t) {
+    var dt = (t - this.last) / 1000; this.last = t;
+    if (dt <= 0) return true;
+    if (dt > 0.05) dt = 0.05;                          // a stalled frame shouldn't fling
+    var force = 0, spring = true, ideal = this.ideal;
+    if (this.held) {
+      force = this.held.force; spring = false; ideal = this.pos;
+      if (Math.abs(this.vel) >= Math.abs(this.held.maxVel)) force = 0;
+    }
+    var disp = this.pos - ideal;
+    if (spring) force -= disp * STIFF + this.vel * DAMP;
+    this.vel += force / MASS * dt;
+    this.pos += this.vel * dt;
+    var inside = this.write();
+    if (spring && disp * (this.pos - ideal) < 0) { this.vel = 0; this.pos = ideal; this.el.scrollTop = ideal; }
+    if (!inside && !this.held) return false;
+    if (!this.held && this.vel * this.vel < 1 && Math.abs(this.pos - ideal) < 0.5) { this.vel = 0; return false; }
+    return true;
+  };
+  /* startKeyboardScroll — velocity carries over, like WebKit */
+  Anim.prototype.hold = function (dir, step) {
+    var maxVel = step * MAX_VEL_MULT * dir;
+    this.held = { dir: dir, maxVel: maxVel, force: maxVel * MASS / TIME_TO_MAX };
+    this.minTravel = this.pos + step * dir;
+    this.run();
+  };
+  /* stopKeyboardScrollAnimation */
+  Anim.prototype.release = function () {
+    if (!this.held) return;
+    var d = Math.sqrt(this.vel * this.vel * MASS / STIFF) * (this.vel < 0 ? -1 : 1);
+    var settle = this.pos + d;
+    this.ideal = this.held.dir > 0 ? Math.max(settle, this.minTravel) : Math.min(settle, this.minTravel);
+    this.ideal = Math.round(Math.min(Math.max(this.ideal, 0), this.max()));
+    this.held = null;
+    this.run();
+  };
+  /* a jump to a target (top / bottom, or the public API): spring there */
+  Anim.prototype.to = function (target) {
+    var base = this.raf && !this.held ? this.ideal : this.pos;
+    if (typeof target === 'function') target = target(base);
+    this.held = null;
+    this.ideal = Math.round(Math.min(Math.max(target, 0), this.max()));
+    this.run();
+  };
+
+  function anim(el) { var a = anims.get(el); if (!a) { a = new Anim(el); anims.set(el, a); } a.sync(); return a; }
+  function pageStep(el) {
+    var h = el === docEl() ? innerHeight : el.clientHeight;
+    return Math.max(h * PAGE_MIN_FRACTION, h - PAGE_OVERLAP);
+  }
+
+  var heldKey = null, heldAnim = null;
+  function releaseHeld() { if (heldAnim) heldAnim.release(); heldKey = heldAnim = null; }
+
+  addEventListener('keydown', function (e) {
+    if (e.defaultPrevented || e.altKey || e.ctrlKey) return;
+    var k = e.key, cmdArrow = e.metaKey && (k === 'ArrowUp' || k === 'ArrowDown');
+    if (e.metaKey && !cmdArrow) return;
+    if (!/^( |ArrowUp|ArrowDown|PageUp|PageDown|Home|End)$/.test(k)) return;
+    var act = document.activeElement;
+    if (ownsKeys(act)) return;
+    if (k === ' ' && spaceActivates(act)) return;
+    if ((k === 'ArrowUp' || k === 'ArrowDown') && e.shiftKey && !cmdArrow) return;   // leave selection alone
+
+    var el = pickScroller(); if (!el) return;
+    e.preventDefault();
+    var edge = cmdArrow || k === 'Home' || k === 'End';
+    if (!edge && (e.repeat || heldKey)) return;                // WebKit ignores repeats and other keys while one is held
+    var a = anim(el), page = pageStep(el);
+
+    if (reduce && reduce.matches) {                       // same steps, no animation
+      a.stop();
+      var dy = k === 'ArrowDown' ? LINE : k === 'ArrowUp' ? -LINE :
+               (k === ' ' && !e.shiftKey) || k === 'PageDown' ? page : page * -1;
+      if (k === 'Home' || (cmdArrow && k === 'ArrowUp')) el.scrollTop = 0;
+      else if (k === 'End' || (cmdArrow && k === 'ArrowDown')) el.scrollTop = el.scrollHeight;
+      else el.scrollTop += dy;
+      return;
+    }
+
+    if (edge) {
+      a.to(k === 'Home' || k === 'ArrowUp' ? 0 : a.max());
+    } else if (k === 'ArrowUp' || k === 'ArrowDown') {
+      heldKey = k; heldAnim = a; a.hold(k === 'ArrowDown' ? 1 : -1, LINE);
+    } else {
+      heldKey = k; heldAnim = a;
+      a.hold((k === ' ' && !e.shiftKey) || k === 'PageDown' ? 1 : -1, page);
+    }
+  });
+  addEventListener('keyup', function (e) { if (e.key === heldKey) releaseHeld(); });
+  addEventListener('blur', releaseHeld);
+  document.addEventListener('visibilitychange', function () { if (document.hidden) releaseHeld(); });
+  /* a wheel/trackpad scroll takes over from a gliding key scroll */
+  addEventListener('wheel', function (e) {
+    var el = scrollerFrom(e.target), a = el && anims.get(el);
+    if (a && a.raf && !a.held) a.stop();
+  }, { passive: true });
+
+  window.SmoothScroll = {
+    /* programmatic glide, e.g. SmoothScroll.to(pane, 0) to send a pane home */
+    to: function (el, y) { anim(el || docEl()).to(y); },
+    by: function (el, dy) { var a = anim(el || docEl()); a.to(function (b) { return b + dy; }); }
+  };
+})();
+
+</script>
+<script>
+/* quiz.js — multiple-choice questions, the house way. Include before </body>; no init.
+
+   Write each quiz as JSON inside a .mcq element. The page builds it once,
+   at load; answering only changes classes and text.
+
+     <section class="mcq" data-title="Chapter 5 practice">
+       <script type="application/json">[
+         { "q": "If \\(t = \\sqrt{\\dfrac{2h}{g}}\\), how much taller must the table be to double \\(t\\)?",
+           "options": ["\\(2\\times\\)", "\\(4\\times\\)", "\\(8\\times\\)"],
+           "answer": 1,                       (0-based index into options, or a letter)
+           "why": "\\(t \\propto \\sqrt{h}\\), so doubling \\(t\\) takes \\(4h\\)." }
+       ]<\/script>                         (written <\/script here so the file can be inlined)
+     </section>
+
+   Randomized, always: the question order and each question's options are
+   shuffled the first time the quiz opens, kept through reloads (so progress
+   and the letters you talk about stay put), and reshuffled on Start over.
+   Never refer to a letter or a position in a question, option or why.
+
+   Optional: an empty <nav class="mcq-nav"></nav> (the left pane of a quiz
+   page) becomes the question numbers: plain = unanswered, underlined =
+   right, struck through = wrong. Clicking one glides to that question.
+
+   Answer with a click, or press A–F or 1–6. Keys go to the question that
+   holds focus or sits under the pointer, else the first unanswered one on
+   screen. An answer shows Correct / Incorrect, marks the right option,
+   strikes a wrong pick, shows the why, and locks the question. A keyboard
+   answer glides on to the next unanswered question.
+
+   Copy answers is always there: plain text with each question, its
+   options, your answer or Skipped, and the right answer. Math stays LaTeX
+   ($…$) so it pastes cleanly into a chat.
+
+   MCQ.audit() lists anything that gives an answer away: the right option
+   longest or shortest, options of very different length, a hedge only on
+   the right one or an absolute only on the wrong ones, "all/none of the
+   above", duplicates, a missing why, a slash fraction. It must come back
+   empty before a quiz is published; the same list goes to the console.     */
+(function () {
+  'use strict';
+  if (window.MCQ) return;
+  var LETTERS = 'ABCDEF';
+  var quizzes = [];
+  var hoverQ = null;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
+
+  /* ── helpers ──────────────────────────────────────────────────────────── */
+  function make(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  // punctuation right after inline math moves inside it, so a line can't start with ", "
+  function glue(s) { return String(s).replace(/\\\)([.,;:!?])/g, '$1\\)'); }
+  function asPlain(s) { return String(s).replace(/\\\(|\\\)/g, '$').replace(/\\\[|\\\]/g, '$$$$'); }
+  function hash(s) { var h = 0; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); }
+  function newSeed() {
+    try { var a = new Uint32Array(1); crypto.getRandomValues(a); return a[0]; }
+    catch (e) { return (Math.random() * 4294967296) >>> 0; }
+  }
+  function rng(seed) {                                 // mulberry32: small, seedable, even
+    return function () {
+      seed = (seed + 0x6D2B79F5) | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function shuffled(n, rand) {                         // Fisher–Yates
+    var a = []; for (var i = 0; i < n; i++) a.push(i);
+    for (var j = n - 1; j > 0; j--) { var k = Math.floor(rand() * (j + 1)), t = a[j]; a[j] = a[k]; a[k] = t; }
+    return a;
+  }
+  function answerIndex(answer, n) {
+    if (typeof answer === 'number') return answer >= 0 && answer < n ? answer : 0;
+    var j = LETTERS.indexOf(String(answer).trim().toUpperCase());
+    return j >= 0 && j < n ? j : 0;
+  }
+  function scrollerOf(node) {
+    for (var e = node.parentElement; e && e !== document.body; e = e.parentElement) {
+      var o = getComputedStyle(e).overflowY;
+      if ((o === 'auto' || o === 'scroll') && e.scrollHeight > e.clientHeight) return e;
+    }
+    return document.scrollingElement || document.documentElement;
+  }
+  function glideTo(node) {
+    var sc = scrollerOf(node), page = sc === (document.scrollingElement || document.documentElement);
+    var top = node.getBoundingClientRect().top - (page ? 0 : sc.getBoundingClientRect().top);
+    var y = Math.max(0, sc.scrollTop + top - sc.clientHeight * 0.18);
+    if (reduce && reduce.matches) sc.scrollTop = y;
+    else if (window.SmoothScroll) SmoothScroll.to(sc, y);
+    else sc.scrollTo({ top: y, behavior: 'smooth' });
+  }
+  function shown(q) { return q.li.offsetParent !== null; }
+  function onScreen(q) { var r = q.li.getBoundingClientRect(); return r.bottom > 40 && r.top < innerHeight - 40; }
+  function copyText(btn, text, fallback) {
+    var label = btn.firstChild, was = label.nodeValue;
+    function done() { fallback.hidden = true; label.nodeValue = 'Copied'; setTimeout(function () { label.nodeValue = was; }, 1400); }
+    function fail() { fallback.value = text; fallback.hidden = false; fallback.focus(); fallback.select(); }
+    try { navigator.clipboard.writeText(text).then(done, fail); } catch (e) { fail(); }
+  }
+
+  /* ── the giveaway check ───────────────────────────────────────────────── */
+  var HEDGE = /\b(usually|often|generally|typically|mostly|may|might|can|sometimes|tends? to|about|roughly)\b/i;
+  var ABSOLUTE = /\b(always|never|only|all|none|every|completely|entirely|impossible|guaranteed)\b/i;
+  function words(s) {                                  // what a reader sees: LaTeX commands and delimiters out
+    return String(s).replace(/\\[a-zA-Z]+/g, ' ').replace(/[\\{}()\[\]^_$]/g, '').replace(/\s+/g, ' ').trim();
+  }
+  function auditOne(d, i) {
+    var out = [], n = (d.options || []).length, ans = answerIndex(d.answer, n);
+    var say = function (msg) { out.push({ question: i + 1, text: words(d.q).slice(0, 60), issue: msg }); };
+    if (n < 3) say('fewer than 3 options');
+    if (!d.why) say('no why');
+    var opts = (d.options || []).map(words), lens = opts.map(function (o) { return o.length; });
+    if (new Set((d.options || []).map(function (o) { return String(o).replace(/\s+/g, ' ').trim().toLowerCase(); })).size < n) say('two options are the same');
+    if (opts.some(function (o) { return /\b(all|none|both|neither) of (the|these) (above|options)\b/i.test(o); })) say('"all / none / both of the above"');
+    var max = Math.max.apply(null, lens), min = Math.min.apply(null, lens);
+    if (max > 12) {                                    // short answers (numbers, symbols) can't give much away by length
+      if (max / Math.max(min, 1) > 1.5) say('options differ a lot in length (' + min + '–' + max + ' characters)');
+      var others = lens.filter(function (_, j) { return j !== ans; });
+      var nextLong = Math.max.apply(null, others), nextShort = Math.min.apply(null, others);
+      if (lens[ans] > nextLong && lens[ans] >= nextLong * 1.15) say('the right answer is the longest option');
+      if (lens[ans] < nextShort && lens[ans] <= nextShort * 0.85) say('the right answer is the shortest option');
+    }
+    var wrong = opts.filter(function (_, j) { return j !== ans; });
+    if (HEDGE.test(opts[ans]) && !wrong.some(function (o) { return HEDGE.test(o); })) say('only the right answer hedges ("usually", "can"…)');
+    if (!ABSOLUTE.test(opts[ans]) && wrong.length && wrong.every(function (o) { return ABSOLUTE.test(o); })) say('only the wrong answers use absolutes ("always", "never"…)');
+    [d.q, d.why].concat(d.options || []).forEach(function (s) {
+      (String(s || '').match(/\\\(([\s\S]*?)\\\)|\\\[([\s\S]*?)\\\]/g) || []).forEach(function (m) {
+        if (m.indexOf('/') !== -1) say('slash fraction in math: ' + m.slice(0, 30));
+      });
+      if (/\b(?:[Oo]ption|[Aa]nswer(?: is)?|[Cc]hoice|[Ll]etter) [A-F]\b/.test(words(s))) say('refers to a letter, but options are shuffled');
+    });
+    return out;
+  }
+
+  /* ── one quiz ─────────────────────────────────────────────────────────── */
+  function build(root) {
+    var src = root.querySelector('script[type="application/json"]'), data;
+    try { data = JSON.parse(src.textContent); } catch (e) { return; }
+    if (!Array.isArray(data) || !data.length) return;
+    var title = root.getAttribute('data-title') || document.title;
+    var key = 'minimono:mcq2:' + hash(data.map(function (d) { return d.q + '\u0001' + (d.options || []).join('\u0001'); }).join('\n'));
+    var state = null;
+    try { state = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
+    if (!state || typeof state.seed !== 'number' || !Array.isArray(state.answers)) state = { seed: newSeed(), answers: [] };
+
+    var quiz = { root: root, data: data, qs: [], order: [], nav: null };
+    var list = make('ol', 'mcq-list');
+    var nav = document.querySelector(root.getAttribute('data-nav') || '.mcq-nav');  // one nav per test
+    if (nav && !nav.dataset.built) { nav.dataset.built = '1'; quiz.nav = nav; }
+    var base = quizzes.reduce(function (s, z) { return s + z.qs.length; }, 0);
+
+    // every element is made once, here; shuffling only moves them
+    data.forEach(function (d, i) {
+      var li = make('li', 'mcq-q');
+      li.id = 'mcq-' + (base + i + 1);
+      li.tabIndex = -1;                                 // holds focus between answers, so Space still scrolls
+      var num = make('span', 'mcq-n');
+      num.setAttribute('aria-hidden', 'true');
+      var body = make('div', 'mcq-body');
+      var text = make('div', 'mcq-text', glue(d.q));
+      var opts = make('div', 'mcq-opts');
+      opts.setAttribute('role', 'group');
+      var btns = (d.options || []).map(function (o) {
+        var b = make('button', 'mcq-opt');
+        b.type = 'button';
+        var l = make('span', 'mcq-l');
+        b._letter = l.appendChild(document.createTextNode(''));
+        b.append(l, make('span', 'mcq-t', glue(o)));
+        return b;
+      });
+      var fb = make('p', 'mcq-fb');
+      fb.hidden = true;
+      fb.setAttribute('aria-live', 'polite');
+      var fbt = fb.appendChild(document.createTextNode(''));
+      var why = make('p', 'mcq-why', glue(d.why || ''));
+      why.hidden = true;
+      body.append(text, opts, fb, why);
+      li.append(num, body);
+
+      var q = { quiz: quiz, i: i, d: d, li: li, num: num.appendChild(document.createTextNode('')), opts: opts, btns: btns,
+                fb: fb, fbt: fbt, why: why, ans: answerIndex(d.answer, btns.length), chosen: -1, perm: [], navA: null };
+      li._mcq = q;
+      btns.forEach(function (b, o) {                   // o = the option's index in the JSON
+        b.addEventListener('click', function (e) { choose(q, q.perm.indexOf(o), e.detail === 0); });   // detail 0 = Enter / Space
+      });
+      li.addEventListener('pointerenter', function () { hoverQ = q; });
+      li.addEventListener('pointerleave', function () { if (hoverQ === q) hoverQ = null; });
+      if (quiz.nav) {
+        var a = make('a', 'mcq-nav-n');
+        a.href = '#' + li.id;
+        q.navT = a.appendChild(document.createTextNode(''));
+        a.addEventListener('click', function (e) { e.preventDefault(); glideTo(li); li.focus({ preventScroll: true }); });
+        q.navA = a;
+      }
+      quiz.qs.push(q);
+    });
+
+    var bar = make('div', 'mcq-bar');
+    var copyB = make('button', 'btn mcq-copy', 'Copy answers');
+    copyB.type = 'button';
+    var resetB = make('button', 'btn mcq-reset', 'Start over');
+    resetB.type = 'button';
+    var score = make('span', 'mcq-score');
+    score.setAttribute('aria-live', 'polite');
+    var scoreT = score.appendChild(document.createTextNode(''));
+    var fallback = make('textarea', 'mcq-fallback');
+    fallback.readOnly = true;
+    fallback.hidden = true;
+    fallback.setAttribute('aria-label', 'Answers to copy');
+    bar.append(copyB, resetB, score);
+    root.append(list, bar, fallback);
+
+    // lay the questions and options out in the order the seed gives
+    function arrange(seed) {
+      var rand = rng(seed);
+      quiz.order = shuffled(quiz.qs.length, rand).map(function (i) { return quiz.qs[i]; });
+      quiz.qs.forEach(function (q) { q.perm = shuffled(q.btns.length, rand); });
+      quiz.order.forEach(function (q, p) {
+        list.append(q.li);
+        q.num.nodeValue = String(p + 1);
+        q.opts.setAttribute('aria-label', 'Question ' + (p + 1));
+        q.perm.forEach(function (o, j) { q.opts.append(q.btns[o]); q.btns[o]._letter.nodeValue = LETTERS[j]; });
+        if (q.navA) { quiz.nav.append(q.navA); q.navT.nodeValue = String(p + 1); }
+      });
+    }
+    function mark(q) {
+      var done = q.chosen >= 0, right = done && q.chosen === q.ans;
+      q.li.classList.toggle('is-done', done);
+      q.li.classList.toggle('is-wrong', done && !right);
+      q.btns.forEach(function (b, o) {
+        b.classList.toggle('is-chosen', done && o === q.chosen);
+        b.classList.toggle('is-answer', done && o === q.ans);
+        if (done) b.setAttribute('aria-disabled', 'true'); else b.removeAttribute('aria-disabled');
+      });
+      q.fbt.nodeValue = !done ? '' : right ? 'Correct.' : 'Incorrect. The answer is ' + LETTERS[q.perm.indexOf(q.ans)] + '.';
+      q.fb.hidden = !done;
+      q.why.hidden = !done || !q.d.why;
+      if (q.navA) { q.navA.classList.toggle('is-right', right); q.navA.classList.toggle('is-wrong', done && !right); }
+    }
+    function save() {
+      try { localStorage.setItem(key, JSON.stringify({ seed: state.seed, answers: quiz.qs.map(function (q) { return q.chosen; }) })); } catch (e) {}
+    }
+    function tally() {
+      var answered = 0, right = 0;
+      quiz.qs.forEach(function (q) { if (q.chosen >= 0) { answered++; if (q.chosen === q.ans) right++; } });
+      var left = quiz.qs.length - answered;
+      scoreT.nodeValue = !answered ? '' : right + ' of ' + answered + ' correct' + (left ? ' · ' + left + ' left' : '');
+      save();
+    }
+    function next(q) {
+      var p = quiz.order.indexOf(q);
+      var rest = quiz.order.slice(p + 1).concat(quiz.order.slice(0, p)).filter(function (x) { return x.chosen < 0; });
+      if (rest.length) { rest[0].li.focus({ preventScroll: true }); glideTo(rest[0].li); }
+      else { q.li.focus({ preventScroll: true }); glideTo(root.querySelector('.frq-q') || bar); }  // on to the FRQs
+    }
+    function choose(q, j, advance) {                   // j = position on screen
+      if (q.chosen >= 0 || j < 0 || j >= q.btns.length) return;   // answered questions stay locked
+      q.chosen = q.perm[j];
+      mark(q);
+      tally();
+      if (advance) next(q);
+      else q.li.focus({ preventScroll: true });        // off the button, so Space scrolls again
+    }
+    quiz.choose = choose;
+
+    copyB.addEventListener('click', function () {
+      var lines = [title, ''], answered = 0, right = 0;
+      quiz.order.forEach(function (q, p) {
+        lines.push((p + 1) + '. ' + asPlain(q.d.q));
+        q.perm.forEach(function (o, j) { lines.push('   ' + LETTERS[j] + '. ' + asPlain(q.d.options[o])); });
+        var A = LETTERS[q.perm.indexOf(q.ans)];
+        if (q.chosen < 0) lines.push('   Skipped. Answer: ' + A);
+        else {
+          answered++;
+          var C = LETTERS[q.perm.indexOf(q.chosen)];
+          if (q.chosen === q.ans) { right++; lines.push('   Your answer: ' + C + ' (correct)'); }
+          else lines.push('   Your answer: ' + C + ' (incorrect). Answer: ' + A);
+        }
+        lines.push('');
+      });
+      var skipped = quiz.qs.length - answered;
+      lines.push('Score: ' + right + ' of ' + quiz.qs.length + (skipped ? ' (' + skipped + ' skipped)' : ''));
+      copyText(copyB, lines.join('\n'), fallback);
+    });
+    resetB.addEventListener('click', function () {      // a fresh order: same elements, moved
+      quiz.qs.forEach(function (q) { q.chosen = -1; mark(q); });
+      state.seed = newSeed();
+      arrange(state.seed);
+      tally();
+      var first = quiz.order[0];
+      glideTo(first.li);
+      first.li.focus({ preventScroll: true });
+    });
+
+    arrange(state.seed);
+    quiz.qs.forEach(function (q, i) {                  // reopen where you left off
+      var s = state.answers[i];
+      if (typeof s === 'number' && s >= 0 && s < q.btns.length) { q.chosen = s; mark(q); }
+    });
+    tally();
+    quizzes.push(quiz);
+
+    var issues = data.reduce(function (acc, d, i) { return acc.concat(auditOne(d, i)); }, []);
+    if (issues.length && window.console) console.warn('quiz.js: ' + issues.length + ' question(s) give the answer away', issues);
+
+    var MJ = window.MathJax, targets = [root].concat(quiz.nav ? [quiz.nav] : []);
+    if (MJ && MJ.startup && MJ.startup.promise) MJ.startup.promise.then(function () { return MJ.typesetPromise(targets); }).catch(function () {});
+    else if (MJ && typeof MJ.typesetPromise === 'function') MJ.typesetPromise(targets).catch(function () {});
+  }
+
+  /* ── keys: A–F or 1–6 answer the current question ─────────────────────── */
+  function current() {
+    var a = document.activeElement, li = a && a.closest && a.closest('.mcq-q');
+    var q = li && li._mcq;
+    if (q && q.chosen < 0 && shown(q)) return q;
+    if (hoverQ && hoverQ.chosen < 0 && shown(hoverQ)) return hoverQ;
+    var lis = document.querySelectorAll('.mcq-q');      // page order = the shuffled order
+    for (var i = 0; i < lis.length; i++) {
+      var x = lis[i]._mcq;
+      if (x && x.chosen < 0 && shown(x) && onScreen(x)) return x;
+    }
+    return null;
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey || e.repeat || e.defaultPrevented) return;
+    var a = document.activeElement;
+    if (a && (a.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))) return;
+    var j = e.key.length === 1 ? LETTERS.indexOf(e.key.toUpperCase()) : -1;
+    if (j < 0 && /^[1-6]$/.test(e.key)) j = +e.key - 1;
+    if (j < 0) return;
+    var q = current();
+    if (!q || j >= q.btns.length) return;
+    e.preventDefault();
+    q.quiz.choose(q, j, true);
+  });
+
+  function init() {
+    document.querySelectorAll('.mcq').forEach(function (r) {
+      if (!r.dataset.built) { r.dataset.built = '1'; build(r); }
+    });
+  }
+  init();                                               // the quiz markup sits above this script
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+
+  window.MCQ = {
+    init: init,
+    // every giveaway in every quiz on the page; must be empty before publishing
+    audit: function () {
+      return quizzes.reduce(function (acc, z) {
+        return acc.concat(z.data.reduce(function (a2, d, i) { return a2.concat(auditOne(d, i)); }, []));
+      }, []);
+    },
+    _shuffle: function (n, seed) { return shuffled(n, rng(seed)); }   // for tests
+  };
+})();
+
+</script>
+<script>
+
+/* page.js — this page's own behavior: FRQs, switching between the two tests,
+   and holding the questions back until the math is drawn. Everything is made
+   once at load; switching and answering only change attributes and text.  */
+(function () {
+  'use strict';
+  var html = document.documentElement;
+  var pane = document.querySelector('.pane-r');
+  var tests = [].slice.call(document.querySelectorAll('.test'));
+  var rows = [].slice.call(document.querySelectorAll('.pane-l .row[data-test]'));
+  var navs = {}, mem = {}, cur = null;
+
+  function make(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function glue(s) { return String(s).replace(/\\\)([.,;:!?])/g, '$1\\)'); }
+  function asPlain(s) { return String(s).replace(/\\\(|\\\)/g, '$').replace(/\\\[|\\\]/g, '$$$$'); }
+  function glide(el) {
+    var top = el.getBoundingClientRect().top - pane.getBoundingClientRect().top;
+    var y = Math.max(0, pane.scrollTop + top - pane.clientHeight * 0.18);
+    if (window.SmoothScroll) SmoothScroll.to(pane, y); else pane.scrollTop = y;
+  }
+  function copy(btn, text, fallback) {
+    var label = btn.firstChild, was = label.nodeValue;
+    function done() { fallback.hidden = true; label.nodeValue = 'Copied'; setTimeout(function () { label.nodeValue = was; }, 1400); }
+    function fail() { fallback.value = text; fallback.hidden = false; fallback.focus(); fallback.select(); }
+    try { navigator.clipboard.writeText(text).then(done, fail); } catch (e) { fail(); }
+  }
+
+  tests.forEach(function (t) {
+    var root = t.querySelector('.mcq');
+    var nav = document.querySelector(root.getAttribute('data-nav'));
+    navs[t.id] = nav;
+    var data = JSON.parse(t.querySelector('script.frq-data').textContent);
+    var n0 = JSON.parse(root.querySelector('script[type="application/json"]').textContent).length;
+    var key = 'bipn:frq:' + t.getAttribute('data-key');
+    var saved = null;
+    try { saved = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
+    if (!saved || !Array.isArray(saved.text)) saved = { text: [], open: [] };
+
+    var list = make('ol', 'frq-list');
+    var items = data.map(function (d, i) {
+      var n = n0 + i + 1;
+      var li = make('li', 'frq-q');
+      li.id = t.id + '-frq-' + (i + 1);
+      li.tabIndex = -1;
+      var num = make('span', 'mcq-n', String(n));
+      num.setAttribute('aria-hidden', 'true');
+      var body = make('div', 'mcq-body');
+      var text = make('div', 'mcq-text', glue(d.q));
+      var box = make('textarea', 'frq-in');
+      box.id = li.id + '-in';
+      box.rows = 6;
+      box.spellcheck = false;
+      box.setAttribute('aria-label', 'Your answer to question ' + n);
+      box.value = saved.text[i] || '';
+      var act = make('div', 'frq-act');
+      var btn = make('button', 'btn frq-show');
+      btn.type = 'button';
+      var label = btn.appendChild(document.createTextNode('Show answer'));
+      act.append(btn);
+      var ans = make('div', 'frq-ans');
+      ans.append(make('p', null, glue(d.answer)));
+      if (d.points && d.points.length) {
+        var ul = make('ul', 'frq-pts');
+        d.points.forEach(function (p) { ul.append(make('li', null, glue(p))); });
+        ans.append(ul);
+      }
+      body.append(text, box, act, ans);
+      li.append(num, body);
+      list.append(li);
+      var it = { d: d, n: n, li: li, box: box, ans: ans, navA: null };
+      it.open = function (v) {
+        ans.hidden = !v;
+        label.nodeValue = v ? 'Hide answer' : 'Show answer';
+        btn.setAttribute('aria-expanded', v ? 'true' : 'false');
+      };
+      it.open(!!saved.open[i]);
+      btn.addEventListener('click', function () { it.open(ans.hidden); save(); });
+      box.addEventListener('input', save);
+      if (nav) {
+        var a = make('a', 'mcq-nav-n', String(n));
+        a.href = '#' + li.id;
+        a.addEventListener('click', function (e) { e.preventDefault(); glide(li); li.focus({ preventScroll: true }); });
+        it.navA = a;
+      }
+      return it;
+    });
+    function save() {
+      try {
+        localStorage.setItem(key, JSON.stringify({
+          text: items.map(function (x) { return x.box.value; }),
+          open: items.map(function (x) { return !x.ans.hidden; })
+        }));
+      } catch (e) {}
+    }
+    function navTail() { if (nav) items.forEach(function (x) { nav.append(x.navA); }); }
+
+    var bar = root.querySelector('.mcq-bar');
+    var fallback = root.querySelector('.mcq-fallback');
+    var reset = root.querySelector('.mcq-reset');
+    root.insertBefore(list, bar);
+    navTail();
+
+    var copyW = make('button', 'btn frq-copy');
+    copyW.type = 'button';
+    copyW.appendChild(document.createTextNode('Copy written answers'));
+    bar.insertBefore(copyW, reset);
+    copyW.addEventListener('click', function () {
+      var lines = [root.getAttribute('data-title') + ', written answers', ''];
+      items.forEach(function (x) {
+        lines.push(x.n + '. ' + asPlain(x.d.q));
+        lines.push('   Your answer: ' + (x.box.value.trim() || 'Skipped'));
+        lines.push('   Model answer: ' + asPlain(x.d.answer));
+        (x.d.points || []).forEach(function (p) { lines.push('   - ' + asPlain(p)); });
+        lines.push('');
+      });
+      copy(copyW, lines.join('\n'), fallback);
+    });
+    reset.addEventListener('click', function () {   // quiz.js reshuffles first; then clear the written answers
+      items.forEach(function (x) { x.box.value = ''; x.open(false); });
+      save();
+      navTail();
+    });
+  });
+
+  // the two tests already exist; switching only flips `hidden` and aria-current
+  function show(id) {
+    if (!/^test-\d+$/.test(id) || !document.getElementById(id)) id = tests[0].id;
+    if (cur === id) return;
+    if (cur) mem[cur] = pane.scrollTop;
+    tests.forEach(function (t) { t.hidden = t.id !== id; });
+    rows.forEach(function (r) { r.setAttribute('aria-current', r.getAttribute('data-test') === id ? 'true' : 'false'); });
+    Object.keys(navs).forEach(function (k) { if (navs[k]) navs[k].hidden = k !== id; });
+    cur = id;
+    pane.scrollTop = mem[id] || 0;
+  }
+  function fromHash() { show((location.hash || '').slice(1)); }
+  addEventListener('hashchange', fromHash);
+  fromHash();
+
+  // the questions wait behind the loading ring until MathJax has drawn them
+  window.__mathReady = function () { html.classList.remove('mj-wait'); };
+  setTimeout(window.__mathReady, 9000);
+})();
+
+</script>
+</body>
+</html>
