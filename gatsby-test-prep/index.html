@@ -1,0 +1,748 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Gatsby Test Prep</title>
+<style>
+/* minimono.css — the house style's base: tokens, type, the two-pane layout,
+   the windowed overlay, and flat native controls.
+   Targets two screens: MacBook Air 15" (1710×1107, 2×) and Dell P2423D
+   (2560×1440, 1×). Every line is 1px — half-pixels vanish on the Dell.     */
+
+/* ── Tokens ─────────────────────────────────────────────────────────────── */
+:root{
+  color-scheme: light dark;            /* native controls + scrollbars follow the theme */
+  --ground:#EEF1F4; --wall:#ffffff;
+  --ink:#0a0a0b; --ink-soft:#5F6368; --muted:#9c9ca3;
+  --hair:rgba(10,10,12,.13); --hair-soft:rgba(10,10,12,.08);
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",system-ui,sans-serif;
+  --pane-l:25%;                        /* the left pane is one quarter, always */
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --ground:#000000; --wall:#161618; --ink:#f6f6f8; --ink-soft:#a0a0a8; --muted:#67676f;
+  --hair:rgba(255,255,255,.16); --hair-soft:rgba(255,255,255,.09);
+}}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#000000; --wall:#161618; --ink:#f6f6f8; --ink-soft:#a0a0a8; --muted:#67676f;
+  --hair:rgba(255,255,255,.16); --hair-soft:rgba(255,255,255,.09);
+}
+:root[data-theme="light"]{ color-scheme: light; }
+
+/* ── Base ───────────────────────────────────────────────────────────────── */
+*,*::before,*::after{ box-sizing:border-box; }
+html,body{ margin:0; height:100%; overflow:hidden; }
+body{
+  background:var(--ground); color:var(--ink);
+  font:16px/1.5 var(--sans); -webkit-font-smoothing:antialiased;
+  font-variant-numeric:tabular-nums;
+}
+:focus, :focus-visible{ outline:none; }
+/* focus shows only after Tab (minimono.js sets .kbd-nav; any click clears it),
+   as a thin grey line — never a bright ring, never from Shift or a click */
+html.kbd-nav :focus-visible{ outline:1px solid var(--muted); outline-offset:3px; border-radius:6px; }
+/* text selection keeps the system highlight — never restyle ::selection */
+a{ color:inherit; text-decoration:none; }
+/* scrollbars: left to macOS — overlay, thin, shown while scrolling. Never hidden. */
+
+/* ── Type (tuned for 1710 and 2560 wide). Weights: 300 · 400 · 500, never more ─ */
+.hero { font-size:clamp(64px, 4.6vw, 112px); font-weight:300; line-height:1.02; letter-spacing:-.035em; margin:0; }
+.h2   { font-size:clamp(28px, 1.9vw, 40px);  font-weight:500; line-height:1.15; letter-spacing:-.02em; margin:0; }
+.text { font-size:clamp(17px, 1.05vw, 20px); line-height:1.55; max-width:68ch; }
+.label{ font-size:13px; font-weight:500; color:var(--ink-soft); letter-spacing:.005em; }
+.num  { font-weight:400; letter-spacing:-.02em; }
+
+/* ── Layout: two panes, left ¼ · right ¾, each its own scroller ─────────── */
+#app{ display:flex; height:100dvh; }
+.pane-l{
+  flex:0 0 var(--pane-l); height:100%; overflow-y:auto; overscroll-behavior:contain;
+  border-right:1px solid var(--hair-soft); background:var(--ground);
+  padding:48px 32px 64px;
+}
+.pane-r{ flex:1 1 auto; min-width:0; height:100%; overflow-y:auto; overscroll-behavior:contain; }
+.pane-r .body{ max-width:1120px; padding:56px clamp(48px, 5vw, 120px) 120px; }
+
+/* the list in the left pane */
+.row{
+  display:block; width:100%; padding:14px 0; border-bottom:1px solid var(--hair-soft);
+  font-size:clamp(17px, 1.15vw, 22px); color:var(--ink-soft); cursor:pointer;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.row:last-child{ border-bottom:0; }
+@media (hover:hover){ .row:hover{ color:var(--ink); } }
+.row[aria-current="true"]{ color:var(--ink); font-weight:500; }
+.row:active{ opacity:.6; }
+
+/* ── One-pane mode: windowed, or the person hid the left pane ────────────
+   The left pane leaves the layout; it comes back as an overlay (the SAME
+   element, moved) when the pointer enters the top-left zone — the left
+   quarter of the width, the top sixth of the height — or on `.           */
+.pane-hide{
+  border:0; background:none; padding:4px 0; margin:0;
+  font:inherit; font-size:13px; color:var(--ink-soft); cursor:pointer; text-align:left;
+}
+.pane-hide kbd{ font:inherit; color:var(--muted); margin-left:6px; }
+.pane-hide .keep{ display:none; }
+html.is-single .pane-hide .hide{ display:none; }
+html.is-single .pane-hide .keep{ display:inline; }
+html.is-windowed .pane-hide{ display:none; }        /* windowed: the overlay is the only way it shows */
+@media (hover:hover){ .pane-hide:hover{ color:var(--ink); } }
+.menu-hint{ display:none; }
+/* one-pane mode: the link sits in the top-left zone, invisible until the
+   pointer enters that zone (or it takes keyboard focus); always shown on touch */
+html.is-single .menu-hint{
+  display:block; position:fixed; z-index:15;
+  top:calc(env(safe-area-inset-top, 0px) + 18px); left:max(16px, env(safe-area-inset-left, 0px), 2vw);
+  padding:6px 10px; margin:0; border-radius:8px; background:var(--ground);
+  font-size:13px; color:var(--ink-soft); cursor:pointer;
+  opacity:0; pointer-events:none; transition:opacity .14s ease;
+}
+html.is-single .menu-hint kbd{ font:inherit; color:var(--muted); margin-left:6px; }
+html.is-single.hint-on .menu-hint,
+html.kbd-nav.is-single .menu-hint:focus-visible{ opacity:1; pointer-events:auto; }
+@media (hover:none){ html.is-single .menu-hint{ opacity:1; pointer-events:auto; } }
+@media (hover:hover){ html.is-single .menu-hint:hover{ color:var(--ink); } }
+
+html.is-single .pane-l{
+  position:fixed; z-index:20; inset:0 auto 0 0; width:clamp(280px, 25vw, 640px);
+  transform:translateX(-100%); visibility:hidden;
+  transition:transform .22s cubic-bezier(.32,.72,0,1), visibility 0s linear .22s;
+}
+html.is-single.menu-open .pane-l{
+  transform:none; visibility:visible; border-right:1px solid var(--hair);
+  transition:transform .22s cubic-bezier(.32,.72,0,1), visibility 0s;
+}
+
+/* ── Controls: native elements, flat ────────────────────────────────────── */
+/* slider + checkbox + radio take ink through accent-color, natively */
+input[type="range"], input[type="checkbox"], input[type="radio"]{ accent-color:var(--ink); }
+input[type="range"]{ width:100%; max-width:420px; cursor:pointer; }
+
+/* toggle: a checkbox with role="switch", drawn flat */
+input[type="checkbox"][role="switch"]{
+  -webkit-appearance:none; appearance:none; margin:0; flex:none; cursor:pointer;
+  position:relative; width:40px; height:24px; border-radius:999px;
+  background:var(--hair); transition:background .16s ease;
+}
+input[type="checkbox"][role="switch"]::before{
+  content:""; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:999px;
+  background:var(--ground); transition:transform .18s cubic-bezier(.32,.72,0,1);
+}
+input[type="checkbox"][role="switch"]:checked{ background:var(--ink); }
+input[type="checkbox"][role="switch"]:checked::before{ transform:translateX(16px); }
+
+/* segmented choice: a radio group; the chosen one is heavier ink + a 2px mark */
+.seg{ display:inline-flex; gap:28px; border:0; padding:0; margin:0; }
+.seg label{ position:relative; cursor:pointer; padding:6px 0; color:var(--ink-soft); font-weight:400; }
+.seg input{ position:absolute; opacity:0; width:1px; height:1px; }
+.seg input:checked + span{ color:var(--ink); font-weight:500; }
+.seg input:checked + span::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:2px; background:var(--ink); border-radius:2px;
+}
+html.kbd-nav .seg input:focus-visible + span{ outline:1px solid var(--muted); outline-offset:4px; border-radius:6px; }
+@media (hover:hover){ .seg label:hover span{ color:var(--ink); } }
+
+/* search */
+input[type="search"]{
+  -webkit-appearance:none; appearance:none; width:100%; max-width:420px;
+  font:inherit; font-size:16px; color:var(--ink);
+  background:var(--wall); border:0; border-radius:10px; padding:10px 14px;
+}
+input[type="search"]::placeholder{ color:var(--muted); }
+
+/* buttons: only for real actions — navigation is text */
+button{ font:inherit; cursor:pointer; }
+.btn{ border:0; border-radius:10px; padding:10px 18px; font-weight:500; background:var(--wall); color:var(--ink); }
+.btn.primary{ background:var(--ink); color:var(--ground); }
+.btn:active{ opacity:.6; }
+
+/* ── Multiple-choice questions (quiz.js builds them from JSON) ─────────────
+   State without color: the right answer gets an ink bar and Medium weight,
+   a wrong pick is struck through, everything else recedes to grey. */
+.mcq-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:44px; max-width:760px; }
+.mcq-q{ display:grid; grid-template-columns:2em minmax(0, 1fr); column-gap:10px; outline-offset:8px; }
+.mcq-n{ font-size:clamp(19px, 1.25vw, 24px); line-height:1.45; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+.mcq-body{ display:flex; flex-direction:column; gap:12px; min-width:0; }
+.mcq-text{ margin:0; font-size:clamp(19px, 1.25vw, 24px); line-height:1.45; color:var(--ink); }
+.mcq-text mjx-container[display="true"]{ margin:.5em 0 !important; }
+.mcq-opts{ display:flex; flex-direction:column; gap:2px; }
+.mcq-opt{
+  display:grid; grid-template-columns:1.5em minmax(0, 1fr); align-items:baseline; gap:8px;
+  width:calc(100% + 20px); margin:0 -10px; padding:9px 10px; border:0; border-radius:8px;
+  background:none; text-align:left; font:inherit; font-size:clamp(17px, 1.05vw, 20px); line-height:1.45;
+  color:var(--ink); cursor:pointer;
+}
+.mcq-l{ color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+@media (hover:hover){ .mcq-q:not(.is-done) .mcq-opt:hover{ background:var(--wall); } }
+.mcq-q:not(.is-done) .mcq-opt:active{ opacity:.6; }
+.mcq-q.is-done .mcq-opt{ cursor:default; color:var(--ink-soft); }
+.mcq-q.is-done .mcq-opt.is-answer{ color:var(--ink); font-weight:500; box-shadow:inset 2px 0 0 var(--ink); }
+.mcq-q.is-done .mcq-opt.is-answer .mcq-l{ color:var(--ink); }
+.mcq-q.is-done .mcq-opt.is-chosen:not(.is-answer) .mcq-t{ text-decoration:line-through; text-decoration-thickness:1px; }
+.mcq-fb{ margin:6px 0 0; font-size:17px; font-weight:500; color:var(--ink); }
+.mcq-why{ margin:0; font-size:17px; line-height:1.5; color:var(--ink-soft); max-width:62ch; }
+.mcq-bar{ display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin-top:44px; }
+.mcq-score{ font-size:15px; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+.mcq-fallback{ width:100%; max-width:760px; min-height:160px; margin-top:16px; font:14px/1.5 var(--sans); color:var(--ink);
+  background:var(--wall); border:0; border-radius:10px; padding:12px 14px; }
+/* the question numbers, in the left pane of a quiz page */
+.mcq-nav{ display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:4px; }
+.mcq-nav a{ display:block; padding:8px 0; border-radius:8px; text-align:center; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+@media (hover:hover){ .mcq-nav a:hover{ background:var(--wall); color:var(--ink); } }
+.mcq-nav a.is-right{ color:var(--ink); text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:.25em; }
+.mcq-nav a.is-wrong{ color:var(--ink); text-decoration:line-through; text-decoration-thickness:1px; }
+/* fractions stay full size inline */
+mjx-container[jax="SVG"]:not([display="true"]){ margin:0 .08em; }
+
+/* ── Loading: the one color exception — a thin rainbow ring, only while loading */
+.loading{
+  width:18px; height:18px; border-radius:50%;
+  background:conic-gradient(#ff3b30,#ff9500,#ffcc00,#34c759,#00c7be,#007aff,#af52de,#ff3b30);
+  -webkit-mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+          mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+  animation:mm-spin .9s linear infinite;
+}
+@keyframes mm-spin{ to{ transform:rotate(1turn); } }
+
+@media (prefers-reduced-motion:reduce){
+  *{ animation:none!important; transition:none!important; }
+}
+
+</style>
+<style>
+b, strong{ font-weight:500; }
+p, h1, h2, ol{ margin:0; }
+.pane-l{ display:flex; flex-direction:column; gap:36px; user-select:none; -webkit-user-select:none; }
+.pane-hide{ align-self:flex-start; }
+.book{ display:flex; flex-direction:column; gap:10px; }
+.secs .row{ padding:11px 0; }
+.theme{ margin-top:auto; display:flex; align-items:center; gap:12px; font-size:15px; color:var(--ink-soft); cursor:pointer; }
+.pane-r .body{ max-width:1100px; padding-top:72px; }
+.panel[hidden]{ display:none; }
+.panel{ display:flex; flex-direction:column; gap:72px; }
+.sec{ display:flex; flex-direction:column; gap:20px; }
+.rule{ color:var(--muted); font-size:15px; }
+.qs{ list-style:none; padding:0; display:flex; flex-direction:column; gap:36px; counter-reset:q; }
+.qs li{ display:grid; grid-template-columns:2.4em minmax(0,68ch); font-size:clamp(18px,1.2vw,22px); line-height:1.5; }
+.qs li::before{ content:attr(value); color:var(--muted); font-variant-numeric:tabular-nums; }
+.qs li{ min-width:0; }
+.qa{ display:flex; flex-direction:column; gap:10px; min-width:0; }
+.qa summary{ cursor:pointer; color:var(--muted); font-size:15px; padding:4px 0; }
+.qa details p{ margin-top:8px; color:var(--ink-soft); font-size:clamp(16px,1.05vw,19px); }
+.allans{ align-self:flex-start; font:inherit; font-size:15px; color:var(--ink-soft); background:none; border:0; padding:8px 0; cursor:pointer; text-decoration:underline; text-underline-offset:3px; margin-top:-48px; }
+
+</style><style>
+/* Phone: one pane, one column, a 16px gutter. Applies when html.is-phone is set (see the script below). */
+/* Menu is a flat strip across the top; the reading pane starts below it, so it never covers text */
+html.is-phone{ --bar:calc(env(safe-area-inset-top, 0px) + 46px); }
+html.is-phone .menu-hint{ top:0; left:0; right:0; height:var(--bar); box-sizing:border-box; border-radius:0;
+  padding:calc(env(safe-area-inset-top, 0px) + 12px) max(16px, env(safe-area-inset-right, 0px)) 0 max(16px, env(safe-area-inset-left, 0px));
+  font-size:15px; line-height:22px; border-bottom:1px solid var(--hair-soft); }
+html.is-phone .pane-r{ margin-top:var(--bar); height:calc(100% - var(--bar)); }
+html.is-phone .pane-r .body{ padding:28px max(16px, env(safe-area-inset-right, 0px)) calc(80px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+html.is-phone .menu-hint kbd, html.is-phone .pane-hide{ display:none; }
+html.is-phone .pane-l{ width:min(86vw, 340px); padding:calc(env(safe-area-inset-top, 0px) + 28px) 24px calc(40px + env(safe-area-inset-bottom, 0px)); gap:28px; }
+html.is-phone .row{ font-size:18px; }
+html.is-phone .row.sc{ font-size:16px; padding:9px 0; }
+html.is-phone .theme{ padding-top:8px; }
+
+/* Headings */
+html.is-phone .shead, html.is-phone .quizend .shead{ margin-left:0; margin-bottom:24px; }
+html.is-phone .shead h2, html.is-phone .gsec .shead h2{ font-size:32px; line-height:1.15; }
+html.is-phone .scene + .scene{ margin-top:64px; }
+html.is-phone .gsec + .gsec{ margin-top:64px; }
+html.is-phone .review h3{ font-size:26px; }
+
+/* Annotated text: a narrow number column, then everything else full width */
+html.is-phone .para{ grid-template-columns:1.6em minmax(0, 1fr); column-gap:10px; padding-block:10px; }
+html.is-phone .pnum{ font-size:11px; }
+html.is-phone .pnum::before{ content:""; }
+html.is-phone[data-view="both"] .orig{ padding-left:12px; }
+html.is-phone .pextra{ grid-column:1 / -1; gap:22px; margin:14px 0 10px; }
+html.is-phone .qzh{ grid-template-columns:1.8em minmax(0, 1fr); gap:8px; }
+html.is-phone .qzq{ font-size:19px; }
+html.is-phone .qzmeta, html.is-phone .qzx, html.is-phone .qzgrid{ padding-left:0; }
+html.is-phone .qzgrid{ grid-template-columns:minmax(0, 1fr); gap:14px; }
+html.is-phone .qa{ font-size:16px; }
+html.is-phone .qrev{ padding:8px 0; font-size:16px; }
+html.is-phone .pnotes{ columns:1; }
+html.is-phone .note{ font-size:16px; }
+html.is-phone .qend{ grid-template-columns:minmax(0, 1fr); gap:40px; margin-left:0; }
+
+/* Other sections */
+html.is-phone .sgrid{ columns:1; }
+html.is-phone .sglabel, html.is-phone .egroup h2{ font-size:22px; }
+html.is-phone .ext{ gap:44px; }
+html.is-phone .egroup li{ grid-template-columns:4.2em minmax(0, 1fr); gap:0 10px; }
+html.is-phone .epn{ font-size:12px; }
+html.is-phone .qtools{ gap:4px 22px; }
+html.is-phone .qtool, html.is-phone .qbtn{ padding:10px 0; font-size:16px; }
+html.is-phone .qtext{ font-size:21px; }
+html.is-phone .qcard{ padding-block:22px; }
+html.is-phone .qreveal{ padding-left:12px; }
+html.is-phone .ggrid{ grid-template-columns:minmax(0, 1fr); gap:32px; }
+html.is-phone .gblk ul, html.is-phone .gblk ol{ font-size:17px; }
+html.is-phone .rgrid{ grid-template-columns:minmax(0, 1fr); gap:56px; }
+html.is-phone .people, html.is-phone .practice details{ font-size:17px; }
+html.is-phone table{ font-size:15px; }
+html.is-phone .plaintext{ font-size:18px; }
+html.is-phone .src{ margin-top:80px; }
+</style>
+<script>
+/* Phones (narrow, or a touch screen turned sideways) get the one-pane layout. */
+(function () {
+  var mq = matchMedia("(max-width: 760px), (pointer: coarse) and (max-height: 520px)"), h = document.documentElement;
+  function fit() {
+    h.classList.toggle("is-phone", mq.matches);
+    if (mq.matches) h.setAttribute("data-layout", "single"); else h.removeAttribute("data-layout");
+  }
+  fit();
+  if (mq.addEventListener) mq.addEventListener("change", fit); else mq.addListener(fit);
+})();
+</script>
+
+</head>
+<body>
+<div id="app">
+<nav class="pane-l" aria-label="Tests">
+  <button class="pane-hide" type="button"><span class="hide">Hide</span><span class="keep">Keep open</span><kbd>`</kbd></button>
+  <div class="book"><span class="label">Gatsby test prep</span><div class="secs"><a class="row" href="#t1" data-tab="t1" aria-current="true">Test 1</a><a class="row" href="#t2" data-tab="t2">Test 2</a><a class="row" href="#t3" data-tab="t3">Test 3</a><a class="row" href="#t4" data-tab="t4">Test 4</a><a class="row" href="#t5" data-tab="t5">Test 5</a><a class="row" href="#t6" data-tab="t6">Test 6</a><a class="row" href="#t7" data-tab="t7">Test 7</a><a class="row" href="#t8" data-tab="t8">Test 8</a><a class="row" href="#t9" data-tab="t9">Test 9</a><a class="row" href="#t10" data-tab="t10">Test 10</a></div><div class="secs"><span class="label">Samples</span><a class="row" href="#other" data-tab="other">Other</a></div></div>
+  <label class="theme"><input type="checkbox" role="switch" id="dark">Dark</label>
+</nav>
+<main class="pane-r" id="pane">
+  <a class="menu-hint" href="#">Menu<kbd>`</kbd></a>
+  <div class="body"><section id="panel-t1" class="panel">
+<h1 class="hero">Test 1</h1><button class="allans" type="button">Show all answers</button>
+<div class="sec"><h2 class="label">Short answer</h2><p class="rule">5 points each. 2–3 sentences with specifics.</p><ol class="qs"><li value="1"><div class="qa"><span>Nick says, “Reserving judgements is a matter of infinite hope.” How does this attitude affect how far the reader can trust him as a narrator?</span><details><summary>Answer</summary><p>Nick says he holds back judgment, which makes him seem fair and easy to trust at the start. But he admits his tolerance “has a limit” and calls Gatsby someone who “represented everything for which I have an unaffected scorn.” The reader has to remember that Nick does judge people, and that he chooses to admire Gatsby anyway.</p></details></div></li><li value="2"><div class="qa"><span>Describe the valley of ashes and George Wilson's place in it. What does it show about the people who serve the wealthy?</span><details><summary>Answer</summary><p>The valley of ashes is the dumping ground between West Egg and New York, a “fantastic farm where ashes grow like wheat.” George Wilson runs a run-down garage there and is described as “spiritless.” It shows that the workers who keep the wealthy world running get covered in its waste and never share in its money.</p></details></div></li><li value="3"><div class="qa"><span>What does Tom's reaction to “The Rise of the Coloured Empires” show about how he sees his own position in society?</span><details><summary>Answer</summary><p>Tom tells the table that “it's all scientific” and that “we're Nordics,” which shows he believes white people of his class are naturally superior. He is afraid of losing power, even though he was born with money and has never had to earn his position. His reaction shows that old money protects itself with prejudice.</p></details></div></li><li value="4"><div class="qa"><span>Describe Nick's first view of Daisy and Jordan in Chapter 1. What does the image suggest about them?</span><details><summary>Answer</summary><p>Nick sees them lying on an enormous couch, both dressed in white, “buoyed up as though upon an anchored balloon” while curtains blow around the room. When Tom shuts the windows, they slowly float back to the floor. The white suggests wealth and innocence, but the floating image shows they are light and drifting, with nothing serious holding them down.</p></details></div></li><li value="5"><div class="qa"><span>What interrupts dinner at the Buchanans' in Chapter 1, and what does Jordan tell Nick about it?</span><details><summary>Answer</summary><p>The telephone keeps ringing, Tom leaves the table to answer it, and Daisy follows him out. Jordan tells Nick, “Tom's got some woman in New York,” and says the woman should have “the decency not to telephone him at dinner time.” This shows the Buchanans' perfect-looking marriage is already broken, and everyone seems to know it except Nick.</p></details></div></li></ol></div>
+<div class="sec"><h2 class="label">Paragraphs</h2><p class="rule">25 points each. Analysis, not summary, with specifics from each text.</p><ol class="qs"><li value="6"><div class="qa"><span>Nick says he was “within and without, simultaneously enchanted and repelled.” Analyze how Fitzgerald uses Nick's position as both an insider and an outsider to shape the reader's view of the rich. Use at least two specific moments.</span><details><summary>Answer</summary><p>Fitzgerald makes Nick both part of the rich world and separate from it, which lets the reader see its glamour and its ugliness at the same time. Nick is an insider because he is Daisy's cousin, went to Yale with Tom, and lives next door to Gatsby. He gets invited to the Buchanans' dinner, Myrtle's apartment, and Gatsby's parties. But he is also an outsider, since he rents a small house in West Egg for eighty dollars a month and works selling bonds. At Myrtle's apartment in Chapter 2 he wants to leave but keeps getting pulled back, which is exactly what he means by “within and without.” He enjoys the drinking and the excitement, but he also notices the cheap furniture and sees Tom break Myrtle's nose. Because he is inside, we believe his details. Because he is outside, he can judge. By the end the outsider side wins. He calls Tom and Daisy “careless people” and goes back to the Midwest. This double view keeps the novel from being simple. The reader feels the pull of the parties and the green light the way Nick does, but also sees how empty and cruel this world is under the surface.</p></details></div></li><li value="7"><div class="qa"><span>Analyze how Fitzgerald presents the American Dream through Gatsby's rise and fall. Use at least two specific moments from different chapters.</span><details><summary>Answer</summary><p>Fitzgerald uses Gatsby's life to show that the American Dream promises anyone can rise but cannot deliver what people really want. Gatsby's rise fits the Dream. He starts as James Gatz, the son of poor North Dakota farmers, and as a boy he writes a self-improvement schedule in Hopalong Cassidy that includes “Practise elocution, poise and how to attain it.” At seventeen he reinvents himself on Dan Cody's yacht, and by the summer of 1922 he owns a mansion and throws parties for hundreds of people. On the surface he proves that a poor boy can become rich. But Fitzgerald shows the cracks. Gatsby gets his money through bootlegging with Wolfsheim, the man who “fixed the World's Series,” so his success depends on crime. He also wants the money only to win Daisy, who is really a symbol of the upper class. At the Plaza, Tom calls him “Mr. Nobody from Nowhere,” and Daisy goes back to her husband, which shows that money cannot buy acceptance. His fall is complete when he dies alone in his pool and almost no one comes to his funeral. Fitzgerald suggests that the Dream can give a person wealth, but not belonging or happiness.</p></details></div></li></ol></div>
+</section><section id="panel-t2" class="panel" hidden>
+<h1 class="hero">Test 2</h1><button class="allans" type="button">Show all answers</button>
+<div class="sec"><h2 class="label">Short answer</h2><p class="rule">5 points each. 2–3 sentences with specifics.</p><ol class="qs"><li value="1"><div class="qa"><span>What causes Tom to break Myrtle's nose in Chapter 2, and what does the moment show about their relationship?</span><details><summary>Answer</summary><p>Tom breaks Myrtle's nose with his open hand because she keeps shouting “Daisy! Daisy! Daisy!” after they argue over whether she has any right to say his wife's name. The moment shows that Myrtle thinks the affair makes her Tom's equal, but Tom sees her as beneath Daisy. He uses violence to remind her of her place.</p></details></div></li><li value="2"><div class="qa"><span>What surprises Owl Eyes about the books in Gatsby's library, and what does this suggest about Gatsby?</span><details><summary>Answer</summary><p>Owl Eyes is surprised that the books are “absolutely real” because he expected “nice durable cardboard.” He also points out that Gatsby “didn't cut the pages,” which means the books have never been read. This suggests that Gatsby's image is carefully made, with real objects used to support a fake identity as an educated gentleman.</p></details></div></li><li value="3"><div class="qa"><span>Nick calls himself “one of the few honest people that I have ever known.” How do Jordan's golf story and his treatment of it test this claim?</span><details><summary>Answer</summary><p>Jordan was accused of moving her ball from a bad lie in the semifinal of her first big golf tournament, but the caddy took back his story. Nick decides she is “incurably dishonest” but says he does not blame her deeply. By excusing her cheating right before calling himself honest, Nick shows that his claim is not completely reliable.</p></details></div></li><li value="4"><div class="qa"><span>Describe Gatsby's smile when Nick first meets him. What does it show about Gatsby?</span><details><summary>Answer</summary><p>Nick says it was “one of those rare smiles with a quality of eternal reassurance in it,” the kind you see only four or five times in life. It makes you feel understood and believed in. But the smile disappears and Nick sees “an elegant young roughneck” who chooses his words carefully, so it shows that Gatsby's charm is real but also performed.</p></details></div></li><li value="5"><div class="qa"><span>What happens in the car accident at the end of Gatsby's first party, and why does it matter later?</span><details><summary>Answer</summary><p>A new coupé leaving the party ends up in a ditch, “violently shorn of one wheel.” Owl Eyes climbs out and says, “I wasn't driving,” and the real driver is too drunk to understand the wheel is gone. It foreshadows Myrtle's death, where another careless driver crashes and people blame the wrong person for driving.</p></details></div></li></ol></div>
+<div class="sec"><h2 class="label">Paragraphs</h2><p class="rule">25 points each. Analysis, not summary, with specifics from each text.</p><ol class="qs"><li value="6"><div class="qa"><span>Analyze how Fitzgerald uses Gatsby's parties to criticize the wealthy society of the 1920s. Use at least two specific details.</span><details><summary>Answer</summary><p>Fitzgerald uses Gatsby's parties to show that the rich society of the 1920s is fun on the surface but empty and selfish underneath. The parties look amazing. There is a full orchestra, oranges and lemons delivered every Friday, and cars that carry guests from the city all weekend. But Nick notices that “people were not invited—they went there.” Guests treat the house like a public place, and he says they “conducted themselves according to the rules of behaviour associated with an amusement park.” Most of them never meet Gatsby, and instead they spread rumors that he was a German spy or that “he killed a man once.” They take his food and drinks while talking about him behind his back. The emptiness is clearest at the end. When Gatsby dies, the hundreds of guests disappear, Klipspringer only calls to ask about his tennis shoes, and Owl Eyes is the only one who shows up at the funeral. Even Gatsby's purpose for the parties is lonely, since he throws them hoping Daisy will wander in. Through these details, Fitzgerald criticizes a society that cares about pleasure and gossip, not about real relationships or loyalty.</p></details></div></li><li value="7"><div class="qa"><span>Analyze how Fitzgerald develops the theme of honesty and dishonesty through Nick, Jordan and Gatsby. Use at least two specific moments.</span><details><summary>Answer</summary><p>Fitzgerald shows that almost everyone in the novel is dishonest in some way, even the narrator who claims to be honest. Gatsby's dishonesty is the biggest. In Chapter 4 he tells Nick he is “the son of some wealthy people in the Middle West” and was educated at Oxford, then shows a medal and a photo as proof. Later we learn he is James Gatz from a poor farm family and made his money bootlegging. Jordan is dishonest in smaller ways. She leaves a borrowed car out in the rain with the top down and lies about it, and she was accused of moving her golf ball in a tournament. Nick says she is “incurably dishonest,” but then adds that “dishonesty in a woman is a thing you never blame deeply.” Right after, he calls himself “one of the few honest people that I have ever known.” This is ironic, since he has just excused cheating, and he also helps hide the affair between Gatsby and Daisy. At the end Jordan points out that he is not as honest as he thinks. Fitzgerald seems to suggest that in this world everyone bends the truth, and the real difference is whether they do it to survive like Gatsby or because they can get away with it.</p></details></div></li></ol></div>
+</section><section id="panel-t3" class="panel" hidden>
+<h1 class="hero">Test 3</h1><button class="allans" type="button">Show all answers</button>
+<div class="sec"><h2 class="label">Short answer</h2><p class="rule">5 points each. 2–3 sentences with specifics.</p><ol class="qs"><li value="1"><div class="qa"><span>What two objects does Gatsby show Nick in Chapter 4 as proof of his story, and why do they matter given what the reader later learns?</span><details><summary>Answer</summary><p>Gatsby shows Nick a war medal from Montenegro that says “Orderi di Danilo” and a photo of himself at Oxford in Trinity Quad. They matter because they seem to prove his story is true, and Nick is convinced. Later we learn he is really James Gatz from North Dakota and was at Oxford only briefly after the war, so he stretches real objects into a false life.</p></details></div></li><li value="2"><div class="qa"><span>Who is Meyer Wolfsheim, and what does his connection to the 1919 World Series suggest about Gatsby's money?</span><details><summary>Answer</summary><p>Meyer Wolfsheim is a gambler and Gatsby's business partner, who Gatsby says “fixed the World's Series back in 1919.” He even wears cuff buttons made of “human molars.” Being connected to a man who cheated a whole country's game suggests that Gatsby's money comes from organized crime and not from family wealth, as he claims.</p></details></div></li><li value="3"><div class="qa"><span>What happens the night before Daisy's wedding, and what does it show about her feelings for Gatsby and Tom?</span><details><summary>Answer</summary><p>The day before the wedding Tom gives Daisy pearls worth $350,000. That night Jordan finds her drunk with a bottle of Sauterne and a letter, and Daisy says, “Tell 'em all Daisy's change' her mine.” They put her in a cold bath, and she marries Tom the next day “without so much as a shiver,” which shows she still loved Gatsby but chose security.</p></details></div></li><li value="4"><div class="qa"><span>What does Nick see as he and Gatsby drive into New York over the Queensboro Bridge, and what does the city represent?</span><details><summary>Answer</summary><p>Nick says “the city seen from the Queensboro Bridge is always the city seen for the first time,” full of promise and beauty. He also sees a funeral procession and a limousine with a white chauffeur driving three fashionably dressed Black passengers, and he thinks anything can happen there, even Gatsby. The city represents possibility and reinvention, the idea that anyone can become someone new.</p></details></div></li><li value="5"><div class="qa"><span>How does Gatsby get out of a speeding ticket in Chapter 4, and what does this show about him?</span><details><summary>Answer</summary><p>When a policeman pulls them over, Gatsby shows him a white card and the officer apologizes and lets them go. Gatsby explains, “I was able to do the commissioner a favour once, and he sends me a Christmas card every year.” This shows that Gatsby has powerful connections and is used to being above the law, which hints that his money comes from crime.</p></details></div></li></ol></div>
+<div class="sec"><h2 class="label">Paragraphs</h2><p class="rule">25 points each. Analysis, not summary, with specifics from each text.</p><ol class="qs"><li value="6"><div class="qa"><span>Fitzgerald reveals the truth about Gatsby's past slowly, starting with Gatsby's own story in Chapter 4 and the real story in Chapter 6. Analyze why the order of these revelations matters.</span><details><summary>Answer</summary><p>Fitzgerald reveals Gatsby's past in pieces so the reader experiences the same confusion and fascination that Nick does. In Chapters 1 through 3, Gatsby is a mystery. Party guests say he killed a man or was a German spy, and Nick only sees him reaching toward the green light. In Chapter 4 Gatsby tells his own version, saying he is from a wealthy family in “San Francisco” in “the Middle West,” was educated at Oxford, and lived like “a young rajah” in Europe. Even Nick almost laughs, but then Gatsby shows the Montenegro medal and the Oxford photo, and Nick decides “it was all true.” In Chapter 6 Nick finally tells the truth. Gatsby is James Gatz, son of poor farmers, who invented Jay Gatsby at seventeen when he met Dan Cody. Nick says he is telling it now to clear away “those first wild rumours.” This order matters because the reader admires Gatsby before knowing the truth, so the truth does not destroy him. We see him as a self-made dreamer instead of just a liar. It also matches the novel's theme that appearances come first and reality comes later, which is how the rich world in the book works.</p></details></div></li><li value="7"><div class="qa"><span>Analyze how Fitzgerald uses East Egg and West Egg to show the difference between old money and new money. Use at least two specific details.</span><details><summary>Answer</summary><p>Fitzgerald uses the two Eggs to show that old money and new money may look similar from far away but are separated by class. Nick says they are almost identical in shape, but they show “dissimilarity in every particular except shape and size.” East Egg is where the Buchanans live, in a “cheerful red-and-white Georgian Colonial mansion” overlooking the bay. They were born rich and act like they own the world, such as Tom calling people Nordics and breaking Myrtle's nose without consequences. West Egg is “the less fashionable of the two,” where Gatsby builds his huge imitation French mansion and throws loud parties. His wealth is new and showy, from his pink suit to his yellow car. The difference becomes a real barrier in Chapter 6. When Daisy comes to the party she is “appalled by West Egg” and its “raw vigour.” Tom also calls Gatsby a bootlegger and wonders how he met Daisy. At the Plaza in Chapter 7, Tom wins by reminding everyone that Gatsby is “Mr. Nobody from Nowhere.” The bay between the Eggs, with the green light on one side, becomes a symbol of the distance Gatsby can never cross. Fitzgerald shows that in America, money can be earned, but social class is protected by the people already inside it.</p></details></div></li></ol></div>
+</section><section id="panel-t4" class="panel" hidden>
+<h1 class="hero">Test 4</h1><button class="allans" type="button">Show all answers</button>
+<div class="sec"><h2 class="label">Short answer</h2><p class="rule">5 points each. 2–3 sentences with specifics.</p><ol class="qs"><li value="1"><div class="qa"><span>What happens to the clock on Nick's mantel during the reunion, and what does it represent?</span><details><summary>Answer</summary><p>Gatsby leans back against Nick's mantel so nervously that his head tips the “defunct mantelpiece clock,” and he catches it with trembling fingers. The clock represents time, since Gatsby wants to act as if the five years away from Daisy never happened. It is already broken, and nearly knocking it over shows he can't really stop time or undo the past.</p></details></div></li><li value="2"><div class="qa"><span>Why does Daisy cry over Gatsby's shirts, and what does this show about what she values?</span><details><summary>Answer</summary><p>Daisy sobs, “They're such beautiful shirts,” as Gatsby throws piles of expensive shirts in the air. She has never seemed this moved by Gatsby himself, so her crying shows how much she connects love with wealth and beautiful things. It may also show regret, since she is seeing the riches she gave up by not waiting for him.</p></details></div></li><li value="3"><div class="qa"><span>Nick says the “colossal significance” of the green light has “vanished forever.” Why has it lost its meaning by the end of Chapter 5?</span><details><summary>Answer</summary><p>For years the light was the closest thing Gatsby had to Daisy, so it stood for everything he wanted. Now that Daisy is standing right next to him, Nick says it is “again a green light on a dock.” It has lost its magic because the dream was bigger than the real thing, and his “count of enchanted objects had diminished by one.”</p></details></div></li><li value="4"><div class="qa"><span>What does Gatsby make Klipspringer do at the end of Chapter 5, and what does it suggest?</span><details><summary>Answer</summary><p>Gatsby makes Klipspringer, a man who lives in his house like a boarder, play the piano, and he plays “Ain't we got fun.” The song is about having fun while the rich get richer and the poor get poorer. It suggests that the reunion is like a happy show, and it also reminds the reader of the money and class that sit underneath Gatsby and Daisy's romance.</p></details></div></li><li value="5"><div class="qa"><span>How does Gatsby change after Nick leaves him alone with Daisy in Chapter 5, and what does it show?</span><details><summary>Answer</summary><p>When Nick returns, Daisy's face is wet with tears, and Gatsby “literally glowed,” with a new well-being radiating from him. The rain has also stopped. This shows how completely Gatsby's happiness depends on Daisy, since one conversation changes him from a nervous wreck into someone who seems lit from inside.</p></details></div></li></ol></div>
+<div class="sec"><h2 class="label">Paragraphs</h2><p class="rule">25 points each. Analysis, not summary, with specifics from each text.</p><ol class="qs"><li value="6"><div class="qa"><span>Analyze how Fitzgerald uses the reunion in Chapter 5 to show the gap between Gatsby's dream and reality. Use at least two specific moments.</span><details><summary>Answer</summary><p>Fitzgerald uses the reunion to show that Gatsby's dream is bigger than anything real could be. Before Daisy arrives, Gatsby is a nervous wreck. He has Nick's lawn mowed and sends over “a greenhouse” of flowers, then almost leaves when she is late. When they meet, it is awkward, and he leans on the mantel and nearly knocks over the clock, which shows that you cannot stop time. After they talk, Gatsby “literally glowed,” so for a moment the dream seems to come true. But then the problems appear. He shows Daisy his house and his shirts, and she cries over them, which suggests she is moved by his wealth more than by him. Standing with her, he tells her about the green light, and Nick says its “colossal significance” has “vanished forever.” Nick also guesses there must have been moments that afternoon when Daisy “tumbled short of his dreams,” because Gatsby's dream had gone beyond her. He had built her up for five years into something no real person could match. So the chapter that seems to give Gatsby what he wants is actually the start of losing it. The real Daisy is just a woman, while the dream Daisy can never be reached.</p></details></div></li><li value="7"><div class="qa"><span>Analyze how Fitzgerald uses material objects such as Gatsby's house, car and shirts to show what the characters value. Use at least two specific objects.</span><details><summary>Answer</summary><p>Fitzgerald uses objects to show that the characters measure love and worth through money. Gatsby's house is the clearest example. He bought it so that Daisy would be “just across the bay,” and in Chapter 5 Nick says he “revalued everything in his house according to the measure of response it drew from her.” The house matters only as a way to impress Daisy. His shirts work the same way. He throws them in a pile, and Daisy cries, saying, “They're such beautiful shirts.” She is more emotional about the shirts than about seeing him after five years, which shows what moves her. Gatsby's car also reveals values. It is a giant, “rich cream colour” car that everyone notices, showing that Gatsby wants to be seen as rich. Later the same car kills Myrtle, so the object that stands for his success becomes a weapon. Tom shows his values through objects too, such as the pearls worth $350,000 he gives Daisy before the wedding, and the necklace he buys after Gatsby's death. Through these objects, Fitzgerald suggests that the characters confuse having things with having happiness, and that this belief leads to real damage.</p></details></div></li></ol></div>
+</section><section id="panel-t5" class="panel" hidden>
+<h1 class="hero">Test 5</h1><button class="allans" type="button">Show all answers</button>
+<div class="sec"><h2 class="label">Short answer</h2><p class="rule">5 points each. 2–3 sentences with specifics.</p><ol class="qs"><li value="1"><div class="qa"><span>How does James Gatz become Jay Gatsby? Include Dan Cody and what happens to the money Cody leaves him.</span><details><summary>Answer</summary><p>At seventeen, James Gatz of North Dakota rows out to warn Dan Cody about a wind and gives his name as Jay Gatsby. He works for Cody on the yacht Tuolomee for five years and learns how the rich live. Cody leaves him $25,000, but Ella Kaye gets it through a “legal device,” so Gatsby ends up with only an education and a new name.</p></details></div></li><li value="2"><div class="qa"><span>Why does Daisy dislike Gatsby's party in Chapter 6, and what does this show about the gap between them?</span><details><summary>Answer</summary><p>Daisy is “appalled by West Egg” and its “raw vigour,” and is offended by the guests, though she likes the actress and her director. She finds the party vulgar, while Gatsby thinks it is impressive. This shows the gap between them, since his new-money world, which he built for her, is exactly what her old-money background looks down on.</p></details></div></li><li value="3"><div class="qa"><span>How does Gatsby respond when Nick says you can't repeat the past, and what does his answer reveal?</span><details><summary>Answer</summary><p>Gatsby answers, “Why of course you can!” and looks around “wildly, as if the past were lurking here.” He says he will fix everything “just the way it was before.” This shows he truly believes he can erase Daisy's five years with Tom, and it shows how unrealistic his dream is.</p></details></div></li><li value="4"><div class="qa"><span>What happens when Tom and the Sloanes stop at Gatsby's house in Chapter 6, and what does it show?</span><details><summary>Answer</summary><p>Gatsby eagerly offers them drinks, and when Mrs. Sloane politely invites him to dinner, he takes it seriously and goes to get his car. Tom says, “Doesn't he know she doesn't want him?” and they ride off without him. This shows that Gatsby does not understand old money's unspoken rules, and that they look down on him even while they accept his hospitality.</p></details></div></li><li value="5"><div class="qa"><span>What does Nick say Gatsby gave up when he first kissed Daisy?</span><details><summary>Answer</summary><p>Nick says that when Gatsby kissed Daisy, he “forever wed his unutterable visions to her perishable breath,” and his mind “would never romp again like the mind of God.” Gatsby gave up his unlimited imagination by tying it to one ordinary, mortal girl. From then on, his whole dream depended on Daisy, which is why he can never let go.</p></details></div></li></ol></div>
+<div class="sec"><h2 class="label">Paragraphs</h2><p class="rule">25 points each. Analysis, not summary, with specifics from each text.</p><ol class="qs"><li value="6"><div class="qa"><span>Analyze how Fitzgerald develops the theme of time and the past through Gatsby. Use at least two specific moments.</span><details><summary>Answer</summary><p>Fitzgerald shows that Gatsby is trapped by the past, even though he seems to be building a future. His whole dream is to return to one autumn night in Louisville in 1917, when he kissed Daisy. When Nick tells him, “You can't repeat the past,” Gatsby cries, “Why of course you can!” and looks around “as if the past were lurking here in the shadow of his house.” He wants Daisy to tell Tom she never loved him so they can be married “just as if it were five years ago.” The clock in Chapter 5 shows how impossible this is. Gatsby's head nearly knocks over a “defunct mantelpiece clock,” which suggests that time is already broken and cannot be fixed. The past also beats him at the Plaza. Daisy says, “I did love him once—but I loved you too,” admitting her years with Tom were real. Even Daisy's daughter proves this, since Gatsby looks at the child as if he never “believed in its existence.” Nick ends the novel with “borne back ceaselessly into the past,” saying that everyone is pulled backward like boats against the current. Through Gatsby, Fitzgerald suggests that chasing a perfect past makes a person unable to live in the present.</p></details></div></li><li value="7"><div class="qa"><span>Analyze whether Daisy is a real person or mainly a symbol of Gatsby's dream. Use at least two specific moments.</span><details><summary>Answer</summary><p>Daisy is a real person, but Gatsby turns her into a symbol, and the gap between the two is what destroys him. To Gatsby, Daisy stands for wealth and a world he could never enter. In Louisville she was the first “nice” girl he had known, and her house had a “ripe mystery” of beautiful rooms. Nick says Gatsby “committed himself to the following of a grail,” which makes her sound holy, not human. Later, Gatsby admits that “her voice is full of money,” and Nick thinks of her as “the golden girl” in a white palace. The green light across the bay also stands in for her. But Fitzgerald also shows a real Daisy with her own feelings and flaws. She cries on her wedding eve with Gatsby's letter, then marries Tom anyway. She says she hopes her daughter will be a “beautiful little fool,” which shows she knows how limited her life is. At the Plaza she tells Gatsby, “You want too much!” and admits she loved Tom too. Then she kills Myrtle and leaves town. The real Daisy is weak and selfish, not the perfect dream. Fitzgerald shows that Gatsby loved an idea more than a person, and that no real woman could live up to it.</p></details></div></li></ol></div>
+</section><section id="panel-t6" class="panel" hidden>
+<h1 class="hero">Test 6</h1><button class="allans" type="button">Show all answers</button>
+<div class="sec"><h2 class="label">Short answer</h2><p class="rule">5 points each. 2–3 sentences with specifics.</p><ol class="qs"><li value="1"><div class="qa"><span>How does the heat in Chapter 7 affect the characters and the mood of the chapter?</span><details><summary>Answer</summary><p>Chapter 7 happens on the “broiling” last hot day of summer, and everyone is sweaty and short-tempered. Daisy complains about the heat, and they drive to the Plaza Hotel to get away from it, where the fight breaks out. The heat matches the rising tension, so the chapter feels like everything is about to explode, and then Myrtle dies that evening.</p></details></div></li><li value="2"><div class="qa"><span>How does Tom expose Gatsby at the Plaza Hotel, and how does it affect Daisy?</span><details><summary>Answer</summary><p>Tom calls Gatsby “Mr. Nobody from Nowhere” and reveals that he and Wolfsheim bought drugstores to sell grain alcohol illegally. He also mentions Walter Chase and hints at something worse. As Gatsby defends himself, Daisy pulls “further and further into herself,” and she cannot say she never loved Tom, so Gatsby loses her.</p></details></div></li><li value="3"><div class="qa"><span>Gatsby says, “Her voice is full of money.” What does this line explain about Daisy and about why he wants her?</span><details><summary>Answer</summary><p>Nick realizes this explains the “inexhaustible charm” of her voice: it is the sound of wealth. It shows that Daisy cannot be separated from her money, since her whole charm comes from growing up rich. It also shows Gatsby knows, on some level, that he wants her partly because she represents the upper class he has been trying to enter.</p></details></div></li><li value="4"><div class="qa"><span>Why does Gatsby fire his servants at the start of Chapter 7?</span><details><summary>Answer</summary><p>One Saturday the lights in his house do not go on, and his “career as Trimalchio” is over. He replaces his servants with people sent by Wolfsheim because he wants “somebody who wouldn't gossip,” since Daisy now comes over in the afternoons. This shows he is giving up the parties because he already has Daisy, and that he relies on Wolfsheim's criminal network.</p></details></div></li><li value="5"><div class="qa"><span>How does Gatsby react when he meets Daisy's daughter, and why does it matter?</span><details><summary>Answer</summary><p>When Pammy comes in, Gatsby keeps looking at the child with surprise, and Nick says he does not think Gatsby “had ever really believed in its existence before.” Pammy is living proof that Daisy had a real life with Tom during the five years Gatsby was gone. It matters because it shows Gatsby's dream of repeating the past is impossible.</p></details></div></li></ol></div>
+<div class="sec"><h2 class="label">Paragraphs</h2><p class="rule">25 points each. Analysis, not summary, with specifics from each text.</p><ol class="qs"><li value="6"><div class="qa"><span>Analyze how the confrontation at the Plaza Hotel is the turning point of the novel. Use at least two specific moments.</span><details><summary>Answer</summary><p>The Plaza Hotel scene is the turning point because it is where Gatsby's dream falls apart in front of everyone. Before this, Gatsby seems to be winning, since Daisy visits him and even kisses him in front of Nick. At the Plaza, on the hottest day of the summer, Gatsby finally says what he wants: “Your wife doesn't love you.” He adds, “She's never loved you. She loves me.” He needs Daisy to say she never loved Tom. Tom fights back by attacking Gatsby's class and his crimes. He calls him “Mr. Nobody from Nowhere” and reveals that Gatsby and Wolfsheim bought drugstores to sell illegal alcohol. As Gatsby defends himself, Daisy pulls further away. She says, “I did love him once—but I loved you too,” which destroys Gatsby's plan to erase the past. By the end Tom is so confident that he sends Daisy home with Gatsby, saying the “presumptuous little flirtation is over.” Nick also realizes it is his thirtieth birthday, adding a sense that youth and hope are ending. Everything after this, including Myrtle's death and Gatsby's murder, comes from this scene. It turns the novel from a love story into a tragedy.</p></details></div></li><li value="7"><div class="qa"><span>Analyze how Fitzgerald uses the car accident and what follows to show the carelessness of Tom and Daisy. Use at least two specific details.</span><details><summary>Answer</summary><p>Fitzgerald uses the accident to show that Tom and Daisy destroy other people's lives and then hide behind their money. Daisy is driving Gatsby's yellow car when Myrtle runs into the road, and she hits her and does not stop. The newspapers call it the “death car.” Myrtle dies in the road with her chest torn open, but Daisy never admits anything. That night Nick sees Tom and Daisy at their kitchen table eating cold fried chicken, looking like they are “conspiring together,” while Gatsby stands outside “watching over nothing.” Tom is careless in a different way. When Wilson comes to his house, Tom tells him whose car it was, knowing Wilson is crazy with grief. Wilson shoots Gatsby and then himself. Later Tom tells Nick, “I told him the truth,” and acts like he was the victim, even crying over Myrtle's dog biscuits. Then the Buchanans simply leave town without a forwarding address. Nick sums them up: “they smashed up things and creatures and then retreated back into their money or their vast carelessness.” Through the accident, Fitzgerald shows that wealth lets Tom and Daisy avoid all consequences while Gatsby, Myrtle and Wilson pay with their lives.</p></details></div></li></ol></div>
+</section><section id="panel-t7" class="panel" hidden>
+<h1 class="hero">Test 7</h1><button class="allans" type="button">Show all answers</button>
+<div class="sec"><h2 class="label">Short answer</h2><p class="rule">5 points each. 2–3 sentences with specifics.</p><ol class="qs"><li value="1"><div class="qa"><span>Nick says Daisy was the first “nice” girl Gatsby had known. What drew him to her in Louisville, and what does it show about his dream?</span><details><summary>Answer</summary><p>In Louisville in 1917, young officer Gatsby visits Daisy's house, which has a “ripe mystery” of bedrooms and romance, and other men have already loved her. He has never been around a girl of this class, so loving her and wanting that wealthy world become the same thing. After he kisses her, he feels he has “committed himself to the following of a grail,” which shows his dream is almost religious.</p></details></div></li><li value="2"><div class="qa"><span>Describe what Gatsby does on his last day. What is he waiting for, and why does that matter?</span><details><summary>Answer</summary><p>Gatsby waits outside Daisy's house until morning, then goes home and tells Nick the real story. At two o'clock he takes a pneumatic mattress to the pool and tells the butler to bring any phone message to him. He is waiting for Daisy to call, but she never does, and Wilson shoots him there, so he dies still holding on to his dream.</p></details></div></li><li value="3"><div class="qa"><span>What does Wilson say he told Myrtle about God, and how does Michaelis respond?</span><details><summary>Answer</summary><p>Wilson says he told Myrtle, “God knows what you've been doing, everything you've been doing. You may fool me, but you can't fool God!” He is looking at the eyes of Doctor T. J. Eckleburg as he says it. Michaelis, shocked, tells him, “That's an advertisement,” which shows that Wilson has turned a billboard into God in his grief.</p></details></div></li><li value="4"><div class="qa"><span>What happened between Gatsby and Daisy while he was overseas after the war?</span><details><summary>Answer</summary><p>After the armistice Gatsby tried to get home, but he was sent to Oxford instead. Daisy's letters showed “nervous despair,” because she was feeling “the pressure of the world outside” and wanted her life decided. She married Tom, who was rich and present, which shows that Daisy needed security more than she needed to wait for Gatsby.</p></details></div></li><li value="5"><div class="qa"><span>Nick shouts to Gatsby, “You're worth the whole damn bunch put together.” What does this line show?</span><details><summary>Answer</summary><p>Nick says this on the morning of Gatsby's death, calling the others “a rotten crowd.” He says he was always glad he said it, even though he “disapproved of him from beginning to end.” It shows Nick has decided that Gatsby's hope and loyalty make him better than the careless rich people around him, even with his lies and crimes.</p></details></div></li></ol></div>
+<div class="sec"><h2 class="label">Paragraphs</h2><p class="rule">25 points each. Analysis, not summary, with specifics from each text.</p><ol class="qs"><li value="6"><div class="qa"><span>Analyze how Fitzgerald makes Gatsby both heroic and doomed. Use at least two specific moments.</span><details><summary>Answer</summary><p>Fitzgerald presents Gatsby as a hero because of his hope, but that same hope dooms him. Nick says from the start that Gatsby had “an extraordinary gift for hope, a romantic readiness” that he had never found in anyone else. Gatsby works his way up from nothing, invents himself, and builds his whole life around a single dream. His loyalty is heroic too. After the accident he stands outside Daisy's house all night in case Tom hurts her, and he plans to take the blame for Myrtle's death. Nick tells him, “You're worth the whole damn bunch put together.” But Fitzgerald also shows why Gatsby cannot win. His dream depends on repeating the past, which is impossible. His money comes from crime, which Tom uses against him at the Plaza. Most of all, he is loyal to a woman who is not loyal back. On his last day he waits in the pool for a phone call from Daisy that never comes, and Wilson shoots him there. Nick says he “paid a high price for living too long with a single dream.” Gatsby is heroic because he believes so completely, and doomed for the same reason, since the world he believes in does not exist.</p></details></div></li><li value="7"><div class="qa"><span>Both George Wilson and Gatsby lose everything while chasing what they want. Analyze how Fitzgerald uses these two men to show who the American Dream leaves behind.</span><details><summary>Answer</summary><p>Fitzgerald uses George Wilson and Gatsby to show that the American Dream leaves behind anyone who lacks old money. They seem like opposites, since Wilson is the “spiritless” owner of a garage in the valley of ashes, while Gatsby owns a mansion. But they are similar. Both are obsessed with a woman who has gone to Tom Buchanan, both are lied to, and each fixes on something he treats as sacred. Gatsby stares at the green light, and Wilson stares at the eyes of Doctor T. J. Eckleburg, saying, “God sees everything.” Wilson wants money just to move West with Myrtle, and he keeps begging Tom to sell him a car. Gatsby wants Daisy, and he has money but no acceptance. Tom controls both of them. He strings Wilson along about the car and then tells him whose yellow car killed Myrtle, sending him to Gatsby's pool. Their deaths come on the same day, and Nick says “the holocaust was complete” when Wilson's body is found in the grass. Meanwhile Tom and Daisy leave and are never punished. By connecting these two men, Fitzgerald shows that hard work and new money do not protect you. The poor man and the self-made man are both destroyed, and old money is the only one still standing.</p></details></div></li></ol></div>
+</section><section id="panel-t8" class="panel" hidden>
+<h1 class="hero">Test 8</h1><button class="allans" type="button">Show all answers</button>
+<div class="sec"><h2 class="label">Short answer</h2><p class="rule">5 points each. 2–3 sentences with specifics.</p><ol class="qs"><li value="1"><div class="qa"><span>Who attends Gatsby's funeral, and what does the turnout show about the people at his parties?</span><details><summary>Answer</summary><p>Only Nick, Mr. Gatz, the minister, four or five servants, the postman, and Owl Eyes come, even though hundreds went to his parties. Klipspringer calls only about his tennis shoes, and Wolfsheim refuses to come. Owl Eyes says, “Why, my God! they used to go there by the hundreds,” which shows that the guests only cared about the free fun.</p></details></div></li><li value="2"><div class="qa"><span>What does Mr. Gatz show Nick in Chapter 9, and what does it show about both the father and the son?</span><details><summary>Answer</summary><p>Mr. Gatz shows Nick an old copy of Hopalong Cassidy with a schedule and “General Resolves” that Jimmy wrote on September 12, 1906. It shows the son was disciplined and ambitious from childhood, with goals like “Practise elocution.” It also shows the father's pride, since he says, “Jimmy was bound to get ahead,” and he never sees what the dream really cost.</p></details></div></li><li value="3"><div class="qa"><span>How does Tom justify what he told Wilson, and how does Nick respond in their last meeting?</span><details><summary>Answer</summary><p>Tom says, “I told him the truth,” and claims Gatsby “ran over Myrtle like you'd run over a dog and never even stopped his car.” He thinks he was justified and even says he cried over Myrtle's dog biscuits. Nick says, “I couldn't forgive him or like him,” but he shakes his hand anyway, because he sees it would be pointless to argue with someone so careless.</p></details></div></li><li value="4"><div class="qa"><span>How does Wolfsheim respond when Nick asks him to come to Gatsby's funeral?</span><details><summary>Answer</summary><p>Wolfsheim refuses, saying he cannot get mixed up in Gatsby's death. He tells Nick, “Let us learn to show our friendship for a man when he is alive and not after he is dead.” He also brags that he made Gatsby, which shows that even Gatsby's closest business partner abandons him once he is no longer useful.</p></details></div></li><li value="5"><div class="qa"><span>What does Nick do on his last night when he sees an obscene word on Gatsby's steps, and why?</span><details><summary>Answer</summary><p>Nick sees an obscene word, “scrawled by some boy with a piece of brick,” on the white steps of Gatsby's empty house. He erases it by rubbing his shoe across the stone. This shows that Nick is still protecting Gatsby's memory and wants to keep the dream clean, even after everyone else has walked away.</p></details></div></li></ol></div>
+<div class="sec"><h2 class="label">Paragraphs</h2><p class="rule">25 points each. Analysis, not summary, with specifics from each text.</p><ol class="qs"><li value="6"><div class="qa"><span>Analyze how Nick judges Tom, Daisy and Gatsby by the end of the novel. Use at least two specific moments.</span><details><summary>Answer</summary><p>By the end, Nick drops his habit of reserving judgment and clearly decides who is good and who is not. At the start he says he is “inclined to reserve all judgements,” but the events of the summer change him. He judges Tom and Daisy most harshly. When he meets Tom on Fifth Avenue, he says, “I couldn't forgive him or like him.” He calls them “careless people” who “smashed up things and creatures and then retreated back into their money or their vast carelessness.” He also sees Tom go into a jewelry store as if nothing happened. Nick judges Gatsby much more kindly, even though he admits he “disapproved of him from beginning to end.” He shouts that Gatsby is worth “the whole damn bunch put together,” and in the first chapter he says Gatsby “turned out all right at the end” because of what “preyed on Gatsby.” He even organizes the funeral and erases the obscene word on the steps. Nick seems to judge people by their loyalty and their hope, not their morals in the usual sense. Gatsby lied and broke the law, but he was faithful to Daisy. Tom and Daisy were respectable, but they let others take their blame. Nick's final judgment is a judgment of the whole wealthy class.</p></details></div></li><li value="7"><div class="qa"><span>Analyze how the final pages of the novel connect Gatsby's dream to the larger American Dream. Use at least two specific images.</span><details><summary>Answer</summary><p>In the final pages, Fitzgerald turns Gatsby's personal dream into a symbol of America's dream as a whole. On his last night, Nick looks across the bay and imagines the Dutch sailors who first saw “a fresh, green breast of the new world.” He says the land “pandered in whispers to the last and greatest of all human dreams,” and that it was the last time man faced something “commensurate to his capacity for wonder.” This compares the sailors' hope for a new world to Gatsby's hope for Daisy. Then Nick thinks of Gatsby's wonder when he first saw “the green light at the end of Daisy's dock.” Both dreams are beautiful, but both are already lost. Nick says Gatsby “did not know that it was already behind him.” The trees the sailors saw have vanished, cut down for mansions like Gatsby's, just as Daisy was never the girl Gatsby remembered. The final line, “So we beat on, boats against the current, borne back ceaselessly into the past,” includes everyone with the word “we.” It suggests that Americans keep rowing toward a future that is really a memory. Through these images, Fitzgerald shows that Gatsby's story is America's story of hope and loss.</p></details></div></li></ol></div>
+</section><section id="panel-t9" class="panel" hidden>
+<h1 class="hero">Test 9</h1><button class="allans" type="button">Show all answers</button>
+<div class="sec"><h2 class="label">Short answer</h2><p class="rule">5 points each. 2–3 sentences with specifics.</p><ol class="qs"><li value="1"><div class="qa"><span>Name two moments when the green light appears, and explain how its meaning changes between them.</span><details><summary>Answer</summary><p>In Chapter 1, Nick sees Gatsby reaching toward “a single green light, minute and far away,” which stands for Daisy and his hope. In Chapter 5, with Daisy beside him, Nick says it is “again a green light on a dock.” The meaning changes from a magical goal to an ordinary object once he gets close to what he wanted.</p></details></div></li><li value="2"><div class="qa"><span>What do the eyes of Doctor T. J. Eckleburg come to mean to George Wilson, and how does this drive the ending?</span><details><summary>Answer</summary><p>To Wilson, the eyes become God watching over everything, and he says, “God sees everything,” after Myrtle dies. He told Myrtle she could not fool God, so he decides someone has to be punished for her sin and death. This leads him to find the owner of the yellow car, kill Gatsby, and then kill himself.</p></details></div></li><li value="3"><div class="qa"><span>Explain the significance of the color yellow or gold in the novel, using one specific example.</span><details><summary>Answer</summary><p>Yellow and gold symbolize wealth that looks wonderful but is often false or dangerous. Daisy is called “the king's daughter, the golden girl,” which shows she stands for money to Gatsby. But Gatsby's yellow car is the car that kills Myrtle, so the same glamour that draws people in also destroys them.</p></details></div></li><li value="4"><div class="qa"><span>How does Fitzgerald use the seasons to frame the story?</span><details><summary>Answer</summary><p>The story begins in early summer, when Nick feels that “life was beginning over again with the summer.” The climax happens on the hottest day, which is also Nick's thirtieth birthday, and Gatsby dies as fall begins, when leaves are falling into his pool. The seasons follow Gatsby's dream, which grows in summer and dies with the end of it.</p></details></div></li><li value="5"><div class="qa"><span>What does Gatsby's habit of saying “old sport” show about him?</span><details><summary>Answer</summary><p>Gatsby calls people “old sport” constantly, which is a phrase meant to sound like an upper-class English gentleman. It is part of the identity he invented, like his claim of going to Oxford. Tom notices how fake it sounds and mocks it at the Plaza, showing that old money can tell Gatsby is only acting the part.</p></details></div></li></ol></div>
+<div class="sec"><h2 class="label">Paragraphs</h2><p class="rule">25 points each. Analysis, not summary, with specifics from each text.</p><ol class="qs"><li value="6"><div class="qa"><span>Analyze how Fitzgerald uses the valley of ashes and the eyes of Doctor T. J. Eckleburg to show the moral emptiness of the 1920s. Use at least two specific details.</span><details><summary>Answer</summary><p>Fitzgerald uses the valley of ashes and the billboard eyes to show a world where wealth has replaced morals and nobody is truly watching. The valley lies between West Egg and New York, a “fantastic farm where ashes grow like wheat” where “ash-grey men” move through the dust. It is the waste left over from the rich people's lifestyle, and the people who live there, like George and Myrtle Wilson, are trapped. Above it are the eyes of Doctor T. J. Eckleburg, an old advertisement for an eye doctor who has disappeared. The eyes “brood on over the solemn dumping ground” but cannot actually see or judge. The most important moment comes after Myrtle's death. Wilson stares at the eyes and says, “God sees everything,” remembering that he told Myrtle, “You may fool me, but you can't fool God!” Michaelis has to tell him, “That's an advertisement.” This suggests that in the 1920s, the only god left is commercial, and real justice is missing. That is why Tom and Daisy are never punished, while Wilson takes revenge on the wrong man. Fitzgerald uses these symbols to show that behind the glamour of the age is a spiritual wasteland.</p></details></div></li><li value="7"><div class="qa"><span>Analyze how Fitzgerald contrasts Tom and Gatsby as rivals for Daisy. Use at least two specific moments.</span><details><summary>Answer</summary><p>Fitzgerald contrasts Tom and Gatsby to show the difference between power and hope, and in the end power wins. Tom has everything handed to him. His family is “enormously wealthy,” he has a “cruel body” capable of “enormous leverage,” and he treats people roughly, such as breaking Myrtle's nose. He cheats on Daisy openly but still expects her loyalty. Gatsby is the opposite. He was born poor and built himself up, and he is gentle and patient, waiting five years and throwing parties just for the chance to see her. Tom wants to own Daisy, while Gatsby worships her. Their rivalry comes to a head at the Plaza. Gatsby speaks with his dream, saying Daisy never loved Tom. Tom speaks with facts, reminding Daisy of their history and exposing Gatsby's bootlegging. Daisy chooses Tom because he offers the security of old money, while Gatsby offers only a dream. Even after the accident, Tom acts quickly to protect himself by sending Wilson to Gatsby, while Gatsby stands outside protecting Daisy. Fitzgerald suggests that in this world, the person who loves more loses, and the person who has inherited power keeps it.</p></details></div></li></ol></div>
+</section><section id="panel-t10" class="panel" hidden>
+<h1 class="hero">Test 10</h1><button class="allans" type="button">Show all answers</button>
+<div class="sec"><h2 class="label">Short answer</h2><p class="rule">5 points each. 2–3 sentences with specifics.</p><ol class="qs"><li value="1"><div class="qa"><span>Daisy hopes her daughter will be “a beautiful little fool.” What does this reveal about how she sees her position as a woman?</span><details><summary>Answer</summary><p>Daisy says this after learning her baby is a girl, while Tom is “God knows where.” She seems to believe that women have little power and that a smart woman only suffers from seeing how things are. A “beautiful little fool” can at least be happy, which shows that Daisy knows how trapped she is and still plays along.</p></details></div></li><li value="2"><div class="qa"><span>Why does Nick end things with Jordan, and how does her “bad driver” comment connect to the theme of carelessness?</span><details><summary>Answer</summary><p>Nick ends it because he is disgusted after the summer and wants to “leave things in order” before going home. Jordan had told him a bad driver is only safe until she meets another, and at the end she says, “I met another bad driver,” accusing him of being careless too. It connects because the novel shows careless people hurting others, and now Nick is included.</p></details></div></li><li value="3"><div class="qa"><span>How does Myrtle act differently in the New York apartment, and what does this show about her desire to change class?</span><details><summary>Answer</summary><p>In the apartment Myrtle changes into an expensive dress and her vitality turns into “impressive hauteur.” She complains about servants, buys a dog, and calls her dress “a crazy old thing.” This shows she wants to act like the upper class, but her manners are obviously fake, and Tom still treats her as beneath him.</p></details></div></li><li value="4"><div class="qa"><span>Describe Tom Buchanan as Nick first sees him in Chapter 1. What does the description suggest?</span><details><summary>Answer</summary><p>Nick describes Tom as “a sturdy straw-haired man of thirty, with a rather hard mouth and a supercilious manner” and calls his body “a cruel body” capable of “enormous leverage.” This suggests that Tom is powerful and arrogant and enjoys controlling people. It also foreshadows his violence, such as when he breaks Myrtle's nose in Chapter 2.</p></details></div></li><li value="5"><div class="qa"><span>What does Catherine say at the inquest after Myrtle's death, and why does it matter?</span><details><summary>Answer</summary><p>Catherine swears that her sister had never seen Gatsby and was “completely happy with her husband.” Because of this, Wilson's actions are explained as grief and the case is closed simply. It matters because the truth about Tom's affair and Daisy's driving never comes out, so the rich are protected again.</p></details></div></li></ol></div>
+<div class="sec"><h2 class="label">Paragraphs</h2><p class="rule">25 points each. Analysis, not summary, with specifics from each text.</p><ol class="qs"><li value="6"><div class="qa"><span>Analyze how Fitzgerald portrays women through Daisy, Jordan and Myrtle. Use at least two of these characters.</span><details><summary>Answer</summary><p>Fitzgerald shows women in the 1920s who seem modern and free, but who are still limited by men and money. Daisy is the most trapped. When her daughter is born, she hopes she will be “a beautiful little fool,” because a woman in her world has little power and is better off not noticing. She married Tom for security after Gatsby left, and even though Tom cheats on her, she stays because leaving would cost her everything. Jordan seems more independent. She is a professional golfer, drives her own car, and doesn't care what people think. But she is described as “incurably dishonest,” and she gets ahead by bending rules, such as moving her golf ball. Her independence depends on being clever and careless. Myrtle tries to use a man to climb into a better class. She has an affair with Tom, acts wealthy in their apartment, and buys a dog, but Tom breaks her nose when she says Daisy's name, and she dies in the road. All three women are used by men in different ways and react by becoming careless, fake or trapped. Fitzgerald's portrayal suggests that the freedom of the Jazz Age did not reach women in a real way, especially when their value came from their looks and their husbands' money.</p></details></div></li><li value="7"><div class="qa"><span>Analyze how Nick changes from the beginning of the novel to the end. Use at least two specific moments.</span><details><summary>Answer</summary><p>Nick changes from a hopeful observer who reserves judgment into a disillusioned man who sees the rich clearly and leaves. At the start he moves East in spring 1922 to sell bonds, feeling that “life was beginning over again with the summer.” He says he is “inclined to reserve all judgements” and enjoys being invited into the lives of Tom, Daisy and Gatsby. Through the middle of the novel he is drawn in further. He helps Gatsby by inviting Daisy to tea, he dates Jordan, and he goes along to Myrtle's apartment and the Plaza. But the summer slowly wears him down. On his thirtieth birthday he thinks of “a decade of loneliness.” After the accident and Gatsby's death, he is disgusted by the people around him. He organizes Gatsby's funeral when nobody else will, refuses to forgive Tom, and ends things with Jordan, telling her, “I'm five years too old to lie to myself and call it honour.” He even feels the East is “haunted” and goes back to the Midwest. By the end Nick has lost his innocence about wealth and the American Dream, but he gains moral clarity. He now judges people firmly, calling Tom and Daisy “careless people” and Gatsby worth “the whole damn bunch.”</p></details></div></li></ol></div>
+</section><section id="panel-other" class="panel" hidden><h1 class="hero">Other</h1><button class="allans" type="button">Show all answers</button><div class="sec"><h2 class="label">Identification</h2><p class="rule">20 passages to identify by author and title, 2 points each. Items 2, 11 and 13 were from Gatsby, but the passages aren’t on the answer sheet.</p></div><div class="sec"><h2 class="label">Quote analysis</h2><p class="rule">20 points each.</p><ol class="qs"><li value="21"><div class="qa"><span>“It was after we started with Gatsby toward the house that the gardener saw Wilson’s body a little way off in the grass, and the holocaust was complete.” Explain the context and significance of this quote, then connect it to a theme in another text from the unit.</span><details><summary>Answer</summary><p>Nick says this at the end of Chapter 8, right after finding Gatsby dead in the pool and the gardener finding Wilson's body in the grass. Calling it a “holocaust” makes the deaths of Myrtle, Gatsby and Wilson sound like one huge sacrifice, which shows that it all came from Gatsby's dream and Tom and Daisy's carelessness. Gatsby looked “great” from the outside with his parties and mansion, but he died alone waiting for a phone call. This connects to “Richard Cory” by Robinson, where everyone in town envies a rich man who then kills himself. Both texts show the theme of appearance versus reality, because wealth can hide how empty a person's life is.</p></details></div></li><li value="22"><div class="qa"><span>“Her voice is full of money,” he said suddenly. Explain the context and significance of this quote, then connect it to a theme in another text from the unit.</span><details><summary>Answer</summary><p>Gatsby says this at Tom and Daisy's house in Chapter 7, right after Nick says Daisy has “an indiscreet voice.” Nick then realizes it was “full of money—that was the inexhaustible charm” of her voice. The line shows that Gatsby understands that Daisy's appeal cannot be separated from her wealth, and that he loves her partly because she stands for the class he wants to join. This connects to “For Sale: The Rich Look” by Alder and Abramson, where new millionaires buy ready-made houses so they can look like they belong. Like Gatsby's mansion and shirts, these houses show the theme that wealth can be used as a costume to earn acceptance.</p></details></div></li><li value="23"><div class="qa"><span>“The God damned coward!” he whimpered. “He didn’t even stop his car.” Explain the context and significance of this quote, then connect it to a theme in another text from the unit.</span><details><summary>Answer</summary><p>Tom says this at the end of Chapter 7, crying as he drives away from the garage where Myrtle was killed. He thinks Gatsby was driving and left her in the road, but Daisy was really at the wheel. The line matters because Tom shows real emotion and calls someone a coward, yet he never learns the truth and soon sends Wilson after the wrong person. Also, his grief doesn't stop him from going home and sitting with Daisy as if they are “conspiring together.” This connects to Frost's “Nothing Gold Can Stay,” which says that beautiful things never last. Tom's affair with Myrtle and her life both end suddenly, and the theme is that the golden moments people chase are always temporary.</p></details></div></li></ol></div><p class="rule src">Only the answers survive, so the quotes and wording are rebuilt from them. Each quote matches the book; point values come from the marks on the page.</p></section></div>
+</main>
+</div>
+<script>
+/* minimono.js — the house style's behavior. Include before </body>; no init.
+   1. Two panes or one. Full-screen shows both (left ¼ · right ¾). The page
+      goes to one pane when the window isn't full-screen, or when the person
+      hides the left pane (`, or the pane's own "Hide"). Hiding is
+      remembered. Force the layout with <html data-layout="split|single">.
+   2. In one-pane mode the "Menu" link (.menu-hint) is invisible until the
+      pointer enters the top-left zone (left quarter, top sixth); clicking it,
+      or `, opens the left pane as an overlay. Esc, a click outside, or
+      choosing a row closes it. With no pointer (touch), the link stays shown.
+      The overlay is the SAME .pane-l element, moved by a class — never a
+      copy, never rebuilt — so its scroll position and selection survive.
+   3. Safari: trackpad pinch-zoom is blocked; ⌘+ / ⌘− still work.          */
+(function () {
+  'use strict';
+  var html = document.documentElement;
+  var KEY = 'minimono:pane-hidden';
+  var hidden = false;
+  try { hidden = localStorage.getItem(KEY) === '1'; } catch (e) {}
+
+  /* 1. Two panes or one ---------------------------------------------------- */
+  function isFull() {
+    var forced = html.getAttribute('data-layout');
+    if (forced === 'split') return true;
+    if (forced === 'single') return false;
+    // Full-screen or maximized. At the top level, measure the window itself
+    // (outerWidth): ⌘+ zoom shrinks innerWidth but not the window. Embedded
+    // in a frame, the frame's own width is what's available.
+    var top = true;
+    try { top = window.top === window; } catch (e) { top = false; }
+    var w = top && outerWidth > 0 ? outerWidth : innerWidth;
+    return w >= screen.availWidth - 24;
+  }
+  function layout() {
+    var windowed = !isFull();
+    html.classList.toggle('is-windowed', windowed);
+    var single = windowed || hidden;
+    if (single !== html.classList.contains('is-single')) {
+      if (!single) close(true);
+      html.classList.toggle('is-single', single);
+    }
+  }
+  function setHidden(v) {
+    hidden = v;
+    try { localStorage.setItem(KEY, v ? '1' : '0'); } catch (e) {}
+    close(true);
+    layout();
+  }
+  var raf = 0;
+  addEventListener('resize', function () { if (!raf) raf = requestAnimationFrame(function () { raf = 0; layout(); }); });
+  new MutationObserver(layout).observe(html, { attributes: true, attributeFilter: ['data-layout'] });
+
+  /* 2. The overlay --------------------------------------------------------- */
+  var lastFocus = null;
+  function pane() { return document.querySelector('.pane-l'); }
+  function typing(el) {
+    if (!el || el === document.body) return false;
+    if (el.isContentEditable) return true;
+    if (el.tagName === 'TEXTAREA' || el.tagName === 'SELECT') return true;
+    return el.tagName === 'INPUT' && !/^(button|submit|reset|checkbox|radio|range|color|file|image)$/i.test(el.type);
+  }
+  function single() { return html.classList.contains('is-single'); }
+  function isOpen() { return html.classList.contains('menu-open'); }
+  function open(keyboard) {
+    if (!single() || isOpen()) return;
+    html.classList.remove('hint-on');
+    html.classList.add('menu-open');
+    lastFocus = document.activeElement;
+    if (keyboard) {                                   // keyboard: move focus in
+      var p = pane(), cur = p && (p.querySelector('[aria-current="true"]') || p.querySelector('a,button,input,[tabindex]'));
+      if (cur) cur.focus({ preventScroll: true });
+    }
+  }
+  function close(silent) {
+    if (!isOpen()) return;
+    html.classList.remove('menu-open');
+    var p = pane();
+    if (!silent && lastFocus && lastFocus.focus && lastFocus !== document.body) lastFocus.focus({ preventScroll: true });
+    else if (p && p.contains(document.activeElement)) document.activeElement.blur();
+    lastFocus = null;
+  }
+
+  // the top-left zone: left quarter of the width, top sixth of the height.
+  // Entering it shows the menu link; nothing opens until the link is clicked.
+  function inZone(x, y) { return x <= innerWidth / 4 && y <= innerHeight / 6; }
+  var hintTimer = 0;
+  function hint(on) {
+    clearTimeout(hintTimer);
+    if (on) { html.classList.add('hint-on'); return; }
+    hintTimer = setTimeout(function () { html.classList.remove('hint-on'); }, 200);
+  }
+  addEventListener('pointermove', function (e) {
+    if (e.pointerType !== 'mouse') return;
+    hint(single() && !isOpen() && inZone(e.clientX, e.clientY));
+  }, { passive: true });
+  document.addEventListener('mouseleave', function () { hint(false); });
+
+  addEventListener('keydown', function (e) {
+    // ` (backtick) on its own — left alone while typing in a field
+    if (e.key === '`' && !e.metaKey && !e.ctrlKey && !e.altKey && !typing(document.activeElement)) {
+      e.preventDefault();
+      if (html.classList.contains('is-windowed')) { isOpen() ? close() : open(true); }
+      else setHidden(!hidden);                        // full-screen: hide, or dock it again
+      return;
+    }
+    if (e.key === 'Escape' && isOpen()) { e.preventDefault(); close(); }
+  });
+  addEventListener('pointerdown', function (e) {
+    if (!isOpen()) return;
+    var p = pane();
+    if (p && !p.contains(e.target) && !(e.target.closest && e.target.closest('.menu-hint'))) close();
+  });
+  addEventListener('click', function (e) {
+    var t = e.target.closest ? e.target : e.target.parentElement;
+    if (t.closest('.menu-hint')) { e.preventDefault(); isOpen() ? close() : open(false); return; }
+    if (t.closest('.pane-hide')) {                    // docked: "Hide" · hidden overlay: "Keep open"
+      e.preventDefault(); setHidden(!hidden); return;
+    }
+    if (isOpen() && t.closest('.pane-l .row, .pane-l .mcq-nav a')) close();
+  });
+
+  /* Focus rings: only after Tab. Shift, arrows, Space and clicks never show one. */
+  addEventListener('keydown', function (e) { if (e.key === 'Tab') html.classList.add('kbd-nav'); }, true);
+  addEventListener('pointerdown', function () { html.classList.remove('kbd-nav'); }, true);
+
+  /* 3. Safari pinch-zoom ---------------------------------------------------- */
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (t) {
+    document.addEventListener(t, function (e) { e.preventDefault(); }, { passive: false });
+  });
+
+  layout();
+  window.Minimono = {
+    open: function () { open(true); }, close: close,
+    hide: function () { setHidden(true); }, show: function () { setHidden(false); },
+    relayout: layout
+  };
+})();
+
+</script>
+<script>
+/* smooth-scroll.js — Safari's keyboard scrolling, for every pane.
+   ---------------------------------------------------------------------------
+   A port of WebKit's keyboard-scroll physics (ScrollAnimationKeyboard.cpp,
+   KeyboardScroll.h, macOS constants) so Space, arrows, Page Up/Down and
+   Home/End glide and settle on a spring in every scroller — the page, and
+   each two-pane split pane on its own.
+
+     ↑ / ↓            tap: glide one line (40px) · hold: accelerate to
+                      1000px/s in 0.2s, cruise, then the spring carries the
+                      leftover momentum and settles
+     Space / ⇧Space   the same as ↓ / ↑ (study guides: Space steps a line)
+     PgDn / PgUp      a page as the step (the visible height less 40px of
+                      overlap, never less than 87.5% of it): tap glides at
+                      least a page, hold accelerates
+     Home / End       glide to the top / bottom (also ⌘↑ / ⌘↓ on a Mac)
+   Key repeats are ignored while a key is held, as in WebKit.
+
+   Which scroller moves: the one under the pointer, else the one that holds
+   focus, else the last one clicked, else the page.
+   Left alone: any control that uses these keys itself — text fields,
+   sliders, radio groups, selects, contenteditable, tabs, listboxes — and
+   Space on a button, link, checkbox or anything else Space activates. Any key with ⌥/⌃
+   (and ⌘ except ⌘↑/⌘↓) passes through.
+   Respects prefers-reduced-motion: the same steps, applied instantly.
+   No init call — include before </body>. ~3KB. Exposes window.SmoothScroll.  */
+(function () {
+  'use strict';
+  if (window.SmoothScroll) return;
+
+  /* WebKit macOS KeyboardScrollParameters */
+  var MASS = 1, STIFF = 175, DAMP = 20, MAX_VEL_MULT = 25, TIME_TO_MAX = 0.2;
+  var LINE = 40;                         /* Scrollbar::pixelsPerLineStep()          */
+  var PAGE_MIN_FRACTION = 0.875;         /* Scrollbar::minFractionToStepWhenPaging  */
+  var PAGE_OVERLAP = 40;                 /* Scrollbar::maxOverlapBetweenPages        */
+
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
+  var docEl = function () { return document.scrollingElement || document.documentElement; };
+
+  function canScroll(el) {
+    if (el === docEl()) return el.scrollHeight > el.clientHeight;
+    var s = getComputedStyle(el), o = s.overflowY;
+    return (o === 'auto' || o === 'scroll' || o === 'overlay') && el.scrollHeight > el.clientHeight + 1;
+  }
+  function scrollerFrom(node) {
+    for (var el = node; el && el.nodeType === 1; el = el.parentElement) {
+      if (el === document.body || el === document.documentElement) break;
+      if (canScroll(el)) return el;
+    }
+    return canScroll(docEl()) ? docEl() : null;
+  }
+
+  var hovered = null, clicked = null;
+  addEventListener('pointermove', function (e) { if (e.pointerType === 'mouse') hovered = e.target; }, { passive: true });
+  addEventListener('pointerdown', function (e) { clicked = e.target; }, { passive: true });
+  document.addEventListener('mouseleave', function () { hovered = null; });
+
+  function pickScroller() {
+    var a = document.activeElement;
+    return (hovered && scrollerFrom(hovered)) ||
+           (a && a !== document.body && scrollerFrom(a)) ||
+           (clicked && scrollerFrom(clicked)) ||
+           scrollerFrom(document.body);
+  }
+
+  // controls that use arrows / Page / Home / End themselves keep them
+  function ownsKeys(el) {
+    if (!el || el === document.body) return false;
+    if (el.isContentEditable) return true;
+    var t = el.tagName;
+    if (t === 'TEXTAREA' || t === 'SELECT') return true;
+    if (t === 'INPUT') return !/^(button|submit|reset|checkbox|color|file|image)$/i.test(el.type);
+    var r = el.getAttribute && el.getAttribute('role');
+    return !!r && /^(slider|spinbutton|radio|radiogroup|tab|tablist|listbox|option|menu|menubar|menuitem|combobox|grid|tree|treeitem|textbox)$/.test(r);
+  }
+  function spaceActivates(el) {
+    if (!el || el === document.body) return false;
+    if (/^(BUTTON|A|SUMMARY|INPUT)$/.test(el.tagName)) return true;
+    var r = el.getAttribute && el.getAttribute('role');
+    return !!r && /^(button|link|tab|checkbox|radio|switch|menuitem|option|slider)$/.test(r);
+  }
+
+  /* One animator per scroller ------------------------------------------- */
+  var anims = new WeakMap();
+  function Anim(el) {
+    this.el = el; this.pos = el.scrollTop; this.vel = 0;
+    this.held = null; this.ideal = this.pos; this.minTravel = this.pos;
+    this.raf = 0; this.last = 0;
+  }
+  Anim.prototype.max = function () { return this.el.scrollHeight - this.el.clientHeight; };
+  Anim.prototype.sync = function () {
+    // the user may have scrolled by wheel/trackpad since we last moved it
+    if (!this.raf) { this.pos = this.el.scrollTop; this.ideal = this.pos; this.vel = 0; }
+  };
+  Anim.prototype.run = function () {
+    if (this.raf) return;
+    var self = this; this.last = performance.now();
+    this.raf = requestAnimationFrame(function f(t) { self.step(t) ? (self.raf = requestAnimationFrame(f)) : (self.raf = 0); });
+  };
+  Anim.prototype.stop = function () { if (this.raf) cancelAnimationFrame(this.raf); this.raf = 0; this.vel = 0; this.held = null; };
+  Anim.prototype.write = function () {
+    var max = this.max();
+    if (this.pos <= 0 || this.pos >= max) {          // hit an edge: stop there, no overshoot
+      this.pos = Math.min(Math.max(this.pos, 0), max);
+      this.vel = 0; this.ideal = this.pos;
+      this.el.scrollTop = this.pos;
+      return false;
+    }
+    this.el.scrollTop = this.pos;
+    return true;
+  };
+  /* ScrollAnimationKeyboard::animateScroll */
+  Anim.prototype.step = function (t) {
+    var dt = (t - this.last) / 1000; this.last = t;
+    if (dt <= 0) return true;
+    if (dt > 0.05) dt = 0.05;                          // a stalled frame shouldn't fling
+    var force = 0, spring = true, ideal = this.ideal;
+    if (this.held) {
+      force = this.held.force; spring = false; ideal = this.pos;
+      if (Math.abs(this.vel) >= Math.abs(this.held.maxVel)) force = 0;
+    }
+    var disp = this.pos - ideal;
+    if (spring) force -= disp * STIFF + this.vel * DAMP;
+    this.vel += force / MASS * dt;
+    this.pos += this.vel * dt;
+    var inside = this.write();
+    if (spring && disp * (this.pos - ideal) < 0) { this.vel = 0; this.pos = ideal; this.el.scrollTop = ideal; }
+    if (!inside && !this.held) return false;
+    if (!this.held && this.vel * this.vel < 1 && Math.abs(this.pos - ideal) < 0.5) { this.vel = 0; return false; }
+    return true;
+  };
+  /* startKeyboardScroll — velocity carries over, like WebKit */
+  Anim.prototype.hold = function (dir, step) {
+    var maxVel = step * MAX_VEL_MULT * dir;
+    this.held = { dir: dir, maxVel: maxVel, force: maxVel * MASS / TIME_TO_MAX };
+    this.minTravel = this.pos + step * dir;
+    this.run();
+  };
+  /* stopKeyboardScrollAnimation */
+  Anim.prototype.release = function () {
+    if (!this.held) return;
+    var d = Math.sqrt(this.vel * this.vel * MASS / STIFF) * (this.vel < 0 ? -1 : 1);
+    var settle = this.pos + d;
+    this.ideal = this.held.dir > 0 ? Math.max(settle, this.minTravel) : Math.min(settle, this.minTravel);
+    this.ideal = Math.round(Math.min(Math.max(this.ideal, 0), this.max()));
+    this.held = null;
+    this.run();
+  };
+  /* a jump to a target (top / bottom, or the public API): spring there */
+  Anim.prototype.to = function (target) {
+    var base = this.raf && !this.held ? this.ideal : this.pos;
+    if (typeof target === 'function') target = target(base);
+    this.held = null;
+    this.ideal = Math.round(Math.min(Math.max(target, 0), this.max()));
+    this.run();
+  };
+
+  function anim(el) { var a = anims.get(el); if (!a) { a = new Anim(el); anims.set(el, a); } a.sync(); return a; }
+  function pageStep(el) {
+    var h = el === docEl() ? innerHeight : el.clientHeight;
+    return Math.max(h * PAGE_MIN_FRACTION, h - PAGE_OVERLAP);
+  }
+
+  var heldKey = null, heldAnim = null;
+  function releaseHeld() { if (heldAnim) heldAnim.release(); heldKey = heldAnim = null; }
+
+  addEventListener('keydown', function (e) {
+    if (e.defaultPrevented || e.altKey || e.ctrlKey) return;
+    var k = e.key, cmdArrow = e.metaKey && (k === 'ArrowUp' || k === 'ArrowDown');
+    if (e.metaKey && !cmdArrow) return;
+    if (!/^( |ArrowUp|ArrowDown|PageUp|PageDown|Home|End)$/.test(k)) return;
+    var act = document.activeElement;
+    if (ownsKeys(act)) return;
+    if (k === ' ' && spaceActivates(act)) return;
+    if ((k === 'ArrowUp' || k === 'ArrowDown') && e.shiftKey && !cmdArrow) return;   // leave selection alone
+
+    var el = pickScroller(); if (!el) return;
+    e.preventDefault();
+    var edge = cmdArrow || k === 'Home' || k === 'End';
+    if (!edge && (e.repeat || heldKey)) return;                // WebKit ignores repeats and other keys while one is held
+    var a = anim(el), page = pageStep(el);
+
+    if (reduce && reduce.matches) {                       // same steps, no animation
+      a.stop();
+      var dy = k === 'ArrowDown' ? LINE : k === 'ArrowUp' ? -LINE :
+               k === ' ' ? (e.shiftKey ? -LINE : LINE) : k === 'PageDown' ? page : page * -1;
+      if (k === 'Home' || (cmdArrow && k === 'ArrowUp')) el.scrollTop = 0;
+      else if (k === 'End' || (cmdArrow && k === 'ArrowDown')) el.scrollTop = el.scrollHeight;
+      else el.scrollTop += dy;
+      return;
+    }
+
+    if (edge) {
+      a.to(k === 'Home' || k === 'ArrowUp' ? 0 : a.max());
+    } else if (k === 'ArrowUp' || k === 'ArrowDown') {
+      heldKey = k; heldAnim = a; a.hold(k === 'ArrowDown' ? 1 : -1, LINE);
+    } else {
+      heldKey = k; heldAnim = a;
+      a.hold((k === ' ' && !e.shiftKey) || k === 'PageDown' ? 1 : -1, k === ' ' ? LINE : page);
+    }
+  });
+  addEventListener('keyup', function (e) { if (e.key === heldKey) releaseHeld(); });
+  addEventListener('blur', releaseHeld);
+  document.addEventListener('visibilitychange', function () { if (document.hidden) releaseHeld(); });
+  /* a wheel/trackpad scroll takes over from a gliding key scroll */
+  addEventListener('wheel', function (e) {
+    var el = scrollerFrom(e.target), a = el && anims.get(el);
+    if (a && a.raf && !a.held) a.stop();
+  }, { passive: true });
+
+  window.SmoothScroll = {
+    /* programmatic glide, e.g. SmoothScroll.to(pane, 0) to send a pane home */
+    to: function (el, y) { anim(el || docEl()).to(y); },
+    by: function (el, dy) { var a = anim(el || docEl()); a.to(function (b) { return b + dy; }); }
+  };
+})();
+
+</script>
+<script>
+(function () {
+  var root = document.documentElement, pane = document.getElementById("pane");
+  function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
+  var dark = document.getElementById("dark"), sys = matchMedia("(prefers-color-scheme: dark)");
+  var saved = store("gtp-theme");
+  if (saved === "dark" || saved === "light") root.setAttribute("data-theme", saved);
+  function isDark() { var t = root.getAttribute("data-theme"); return t ? t === "dark" : sys.matches; }
+  dark.checked = isDark();
+  dark.addEventListener("change", function () { var n = dark.checked ? "dark" : "light"; root.setAttribute("data-theme", n); store("gtp-theme", n); });
+  var rows = document.querySelectorAll(".secs .row[data-tab]");
+  function show(id) {
+    rows.forEach(function (r) { var on = r.dataset.tab === id; if (on) r.setAttribute("aria-current", "true"); else r.removeAttribute("aria-current"); });
+    document.querySelectorAll(".panel").forEach(function (p) { p.hidden = p.id !== "panel-" + id; });
+    pane.scrollTop = 0; store("gtp-tab", id);
+  }
+  rows.forEach(function (r) { r.addEventListener("click", function (e) { e.preventDefault(); show(r.dataset.tab); }); });
+  document.querySelectorAll(".allans").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var d = btn.parentNode.querySelectorAll("details"), open = btn.textContent === "Show all answers";
+      d.forEach(function (x) { x.open = open; });
+      btn.textContent = open ? "Hide all answers" : "Show all answers";
+    });
+  });
+  var h = location.hash.slice(1), start = document.getElementById("panel-" + h) ? h : store("gtp-tab");
+  if (start && document.getElementById("panel-" + start)) show(start);
+  if (window.matchMedia("(pointer:fine)").matches === false) {}
+})();
+</script>
+</body>
+</html>
+</body></html>
