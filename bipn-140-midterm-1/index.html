@@ -1,0 +1,1145 @@
+<!doctype html>
+<html lang="en" class="mj-wait">
+<head>
+<meta charset="utf-8">
+<title>BIPN 140 Midterm 1 Practice</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="BIPN 140 Cellular Neurobiology: two 30-minute Midterm 1 practice tests, 30 MCQs and 2 FRQs each.">
+<style>
+/* minimono.css — the house style's base: tokens, type, the two-pane layout,
+   the windowed overlay, and flat native controls.
+   Targets two screens: MacBook Air 15" (1710×1107, 2×) and Dell P2423D
+   (2560×1440, 1×). Every line is 1px — half-pixels vanish on the Dell.     */
+
+/* ── Tokens ─────────────────────────────────────────────────────────────── */
+:root{
+  color-scheme: light dark;            /* native controls + scrollbars follow the theme */
+  --ground:#EEF1F4; --wall:#ffffff;
+  --ink:#0a0a0b; --ink-soft:#5F6368; --muted:#9c9ca3;
+  --hair:rgba(10,10,12,.13); --hair-soft:rgba(10,10,12,.08);
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",system-ui,sans-serif;
+  --pane-l:25%;                        /* the left pane is one quarter, always */
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --ground:#000000; --wall:#161618; --ink:#f6f6f8; --ink-soft:#a0a0a8; --muted:#67676f;
+  --hair:rgba(255,255,255,.16); --hair-soft:rgba(255,255,255,.09);
+}}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#000000; --wall:#161618; --ink:#f6f6f8; --ink-soft:#a0a0a8; --muted:#67676f;
+  --hair:rgba(255,255,255,.16); --hair-soft:rgba(255,255,255,.09);
+}
+:root[data-theme="light"]{ color-scheme: light; }
+
+/* ── Base ───────────────────────────────────────────────────────────────── */
+*,*::before,*::after{ box-sizing:border-box; }
+html,body{ margin:0; height:100%; overflow:hidden; }
+body{
+  background:var(--ground); color:var(--ink);
+  font:16px/1.5 var(--sans); -webkit-font-smoothing:antialiased;
+  font-variant-numeric:tabular-nums;
+}
+:focus, :focus-visible{ outline:none; }
+/* focus shows only after Tab (minimono.js sets .kbd-nav; any click clears it),
+   as a thin grey line — never a bright ring, never from Shift or a click */
+html.kbd-nav :focus-visible{ outline:1px solid var(--muted); outline-offset:3px; border-radius:6px; }
+/* text selection keeps the system highlight — never restyle ::selection */
+a{ color:inherit; text-decoration:none; }
+/* scrollbars: left to macOS — overlay, thin, shown while scrolling. Never hidden. */
+
+/* ── Type (tuned for 1710 and 2560 wide). Weights: 300 · 400 · 500, never more ─ */
+.hero { font-size:clamp(64px, 4.6vw, 112px); font-weight:300; line-height:1.02; letter-spacing:-.035em; margin:0; }
+.h2   { font-size:clamp(28px, 1.9vw, 40px);  font-weight:500; line-height:1.15; letter-spacing:-.02em; margin:0; }
+.text { font-size:clamp(17px, 1.05vw, 20px); line-height:1.55; max-width:68ch; }
+.label{ font-size:13px; font-weight:500; color:var(--ink-soft); letter-spacing:.005em; }
+.num  { font-weight:400; letter-spacing:-.02em; }
+
+/* ── Layout: two panes, left ¼ · right ¾, each its own scroller ─────────── */
+#app{ display:flex; height:100dvh; }
+.pane-l{
+  flex:0 0 var(--pane-l); height:100%; overflow-y:auto; overscroll-behavior:contain;
+  border-right:1px solid var(--hair-soft); background:var(--ground);
+  padding:48px 32px 64px;
+}
+.pane-r{ flex:1 1 auto; min-width:0; height:100%; overflow-y:auto; overscroll-behavior:contain; }
+.pane-r .body{ max-width:1120px; padding:56px clamp(48px, 5vw, 120px) 120px; }
+
+/* the list in the left pane */
+.row{
+  display:block; width:100%; padding:14px 0; border-bottom:1px solid var(--hair-soft);
+  font-size:clamp(17px, 1.15vw, 22px); color:var(--ink-soft); cursor:pointer;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.row:last-child{ border-bottom:0; }
+@media (hover:hover){ .row:hover{ color:var(--ink); } }
+.row[aria-current="true"]{ color:var(--ink); font-weight:500; }
+.row:active{ opacity:.6; }
+
+/* ── One-pane mode: windowed, or the person hid the left pane ────────────
+   The left pane leaves the layout; it comes back as an overlay (the SAME
+   element, moved) when the pointer enters the top-left zone — the left
+   quarter of the width, the top sixth of the height — or on `.           */
+.pane-hide{
+  border:0; background:none; padding:4px 0; margin:0;
+  font:inherit; font-size:13px; color:var(--ink-soft); cursor:pointer; text-align:left;
+}
+.pane-hide kbd{ font:inherit; color:var(--muted); margin-left:6px; }
+.pane-hide .keep{ display:none; }
+html.is-single .pane-hide .hide{ display:none; }
+html.is-single .pane-hide .keep{ display:inline; }
+html.is-windowed .pane-hide{ display:none; }        /* windowed: the overlay is the only way it shows */
+@media (hover:hover){ .pane-hide:hover{ color:var(--ink); } }
+.menu-hint{ display:none; }
+/* one-pane mode: the link sits in the top-left zone, invisible until the
+   pointer enters that zone (or it takes keyboard focus); always shown on touch */
+html.is-single .menu-hint{
+  display:block; position:fixed; z-index:15;
+  top:calc(env(safe-area-inset-top, 0px) + 18px); left:max(16px, env(safe-area-inset-left, 0px), 2vw);
+  padding:6px 10px; margin:0; border-radius:8px; background:var(--ground);
+  font-size:13px; color:var(--ink-soft); cursor:pointer;
+  opacity:0; pointer-events:none; transition:opacity .14s ease;
+}
+html.is-single .menu-hint kbd{ font:inherit; color:var(--muted); margin-left:6px; }
+html.is-single.hint-on .menu-hint,
+html.kbd-nav.is-single .menu-hint:focus-visible{ opacity:1; pointer-events:auto; }
+@media (hover:none){ html.is-single .menu-hint{ opacity:1; pointer-events:auto; } }
+@media (hover:hover){ html.is-single .menu-hint:hover{ color:var(--ink); } }
+
+html.is-single .pane-l{
+  position:fixed; z-index:20; inset:0 auto 0 0; width:clamp(280px, 25vw, 640px);
+  transform:translateX(-100%); visibility:hidden;
+  transition:transform .22s cubic-bezier(.32,.72,0,1), visibility 0s linear .22s;
+}
+html.is-single.menu-open .pane-l{
+  transform:none; visibility:visible; border-right:1px solid var(--hair);
+  transition:transform .22s cubic-bezier(.32,.72,0,1), visibility 0s;
+}
+
+/* ── Controls: native elements, flat ────────────────────────────────────── */
+/* slider + checkbox + radio take ink through accent-color, natively */
+input[type="range"], input[type="checkbox"], input[type="radio"]{ accent-color:var(--ink); }
+input[type="range"]{ width:100%; max-width:420px; cursor:pointer; }
+
+/* toggle: a checkbox with role="switch", drawn flat */
+input[type="checkbox"][role="switch"]{
+  -webkit-appearance:none; appearance:none; margin:0; flex:none; cursor:pointer;
+  position:relative; width:40px; height:24px; border-radius:999px;
+  background:var(--hair); transition:background .16s ease;
+}
+input[type="checkbox"][role="switch"]::before{
+  content:""; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:999px;
+  background:var(--ground); transition:transform .18s cubic-bezier(.32,.72,0,1);
+}
+input[type="checkbox"][role="switch"]:checked{ background:var(--ink); }
+input[type="checkbox"][role="switch"]:checked::before{ transform:translateX(16px); }
+
+/* segmented choice: a radio group; the chosen one is heavier ink + a 2px mark */
+.seg{ display:inline-flex; gap:28px; border:0; padding:0; margin:0; }
+.seg label{ position:relative; cursor:pointer; padding:6px 0; color:var(--ink-soft); font-weight:400; }
+.seg input{ position:absolute; opacity:0; width:1px; height:1px; }
+.seg input:checked + span{ color:var(--ink); font-weight:500; }
+.seg input:checked + span::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:2px; background:var(--ink); border-radius:2px;
+}
+html.kbd-nav .seg input:focus-visible + span{ outline:1px solid var(--muted); outline-offset:4px; border-radius:6px; }
+@media (hover:hover){ .seg label:hover span{ color:var(--ink); } }
+
+/* search */
+input[type="search"]{
+  -webkit-appearance:none; appearance:none; width:100%; max-width:420px;
+  font:inherit; font-size:16px; color:var(--ink);
+  background:var(--wall); border:0; border-radius:10px; padding:10px 14px;
+}
+input[type="search"]::placeholder{ color:var(--muted); }
+
+/* buttons: only for real actions — navigation is text */
+button{ font:inherit; cursor:pointer; }
+.btn{ border:0; border-radius:10px; padding:10px 18px; font-weight:500; background:var(--wall); color:var(--ink); }
+.btn.primary{ background:var(--ink); color:var(--ground); }
+.btn:active{ opacity:.6; }
+
+/* ── Multiple-choice questions (quiz.js builds them from JSON) ─────────────
+   State without color: the right answer gets an ink bar and Medium weight,
+   a wrong pick is struck through, everything else recedes to grey. */
+.mcq-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:44px; max-width:760px; }
+.mcq-q{ display:grid; grid-template-columns:2em minmax(0, 1fr); column-gap:10px; outline-offset:8px; }
+.mcq-n{ font-size:clamp(19px, 1.25vw, 24px); line-height:1.45; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+.mcq-body{ display:flex; flex-direction:column; gap:12px; min-width:0; }
+.mcq-text{ margin:0; font-size:clamp(19px, 1.25vw, 24px); line-height:1.45; color:var(--ink); }
+.mcq-text mjx-container[display="true"]{ margin:.5em 0 !important; }
+.mcq-opts{ display:flex; flex-direction:column; gap:2px; }
+.mcq-opt{
+  display:grid; grid-template-columns:1.5em minmax(0, 1fr); align-items:baseline; gap:8px;
+  width:calc(100% + 20px); margin:0 -10px; padding:9px 10px; border:0; border-radius:8px;
+  background:none; text-align:left; font:inherit; font-size:clamp(17px, 1.05vw, 20px); line-height:1.45;
+  color:var(--ink); cursor:pointer;
+}
+.mcq-l{ color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+@media (hover:hover){ .mcq-q:not(.is-done) .mcq-opt:hover{ background:var(--wall); } }
+.mcq-q:not(.is-done) .mcq-opt:active{ opacity:.6; }
+.mcq-q.is-done .mcq-opt{ cursor:default; color:var(--ink-soft); }
+.mcq-q.is-done .mcq-opt.is-answer{ color:var(--ink); font-weight:500; box-shadow:inset 2px 0 0 var(--ink); }
+.mcq-q.is-done .mcq-opt.is-answer .mcq-l{ color:var(--ink); }
+.mcq-q.is-done .mcq-opt.is-chosen:not(.is-answer) .mcq-t{ text-decoration:line-through; text-decoration-thickness:1px; }
+.mcq-fb{ margin:6px 0 0; font-size:17px; font-weight:500; color:var(--ink); }
+.mcq-why{ margin:0; font-size:17px; line-height:1.5; color:var(--ink-soft); max-width:62ch; }
+.mcq-bar{ display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin-top:44px; }
+.mcq-score{ font-size:15px; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+.mcq-fallback{ width:100%; max-width:760px; min-height:160px; margin-top:16px; font:14px/1.5 var(--sans); color:var(--ink);
+  background:var(--wall); border:0; border-radius:10px; padding:12px 14px; }
+/* the question numbers, in the left pane of a quiz page */
+.mcq-nav{ display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:4px; }
+.mcq-nav a{ display:block; padding:8px 0; border-radius:8px; text-align:center; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+@media (hover:hover){ .mcq-nav a:hover{ background:var(--wall); color:var(--ink); } }
+.mcq-nav a.is-right{ color:var(--ink); text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:.25em; }
+.mcq-nav a.is-wrong{ color:var(--ink); text-decoration:line-through; text-decoration-thickness:1px; }
+/* fractions stay full size inline */
+mjx-container[jax="SVG"]:not([display="true"]){ margin:0 .08em; }
+
+/* ── Loading: the one color exception — a thin rainbow ring, only while loading */
+.loading{
+  width:18px; height:18px; border-radius:50%;
+  background:conic-gradient(#ff3b30,#ff9500,#ffcc00,#34c759,#00c7be,#007aff,#af52de,#ff3b30);
+  -webkit-mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+          mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+  animation:mm-spin .9s linear infinite;
+}
+@keyframes mm-spin{ to{ transform:rotate(1turn); } }
+
+@media (prefers-reduced-motion:reduce){
+  *{ animation:none!important; transition:none!important; }
+}
+
+/* ── This page: a course, two timed tests, MCQs then FRQs ─────────────── */
+[hidden]{ display:none!important; }
+.pane-r{ position:relative; }
+.course{ display:flex; flex-direction:column; gap:6px; margin:28px 0 30px; }
+.course-n{ margin:0; font-size:clamp(36px, 2.6vw, 56px); font-weight:300; line-height:1.12; letter-spacing:-.03em; }
+.course-t{ margin:0; font-size:clamp(17px, 1.15vw, 22px); line-height:1.35; color:var(--ink); }
+.course-s{ margin:0; font-size:14px; line-height:1.5; color:var(--ink-soft); }
+.tests{ margin:0 0 26px; }
+.frq-list{ list-style:none; margin:44px 0 0; padding:0; display:flex; flex-direction:column; gap:44px; max-width:760px; }
+.frq-q{ display:grid; grid-template-columns:2em minmax(0, 1fr); column-gap:10px; outline-offset:8px; }
+.frq-in{ display:block; width:100%; min-height:8.5em; margin:0; resize:vertical; font:inherit; font-size:clamp(17px, 1.05vw, 20px);
+  line-height:1.5; color:var(--ink); background:var(--wall); border:0; border-radius:10px; padding:12px 14px; }
+.frq-act{ display:flex; gap:12px; }
+.frq-ans{ display:flex; flex-direction:column; gap:10px; }
+.frq-ans p{ margin:0; font-size:17px; line-height:1.5; color:var(--ink); max-width:62ch; }
+.frq-pts{ margin:0; padding:0 0 0 1.1em; display:flex; flex-direction:column; gap:6px; font-size:17px; line-height:1.5; color:var(--ink-soft); max-width:62ch; }
+.frq-pts li::marker{ color:var(--muted); }
+.frq-q mjx-container[display="true"]{ margin:.5em 0 !important; }
+.mj-ring{ position:absolute; top:60px; left:clamp(48px, 5vw, 120px); }
+html:not(.mj-wait) .mj-ring{ display:none; }
+html.mj-wait .pane-r .body{ visibility:hidden; }
+
+</style>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']], packages: { '[+]': ['mhchem'] } },
+  svg: { fontCache: 'global' },
+  startup: {
+    pageReady: function () {
+      return MathJax.startup.defaultPageReady().then(function () { if (window.__mathReady) window.__mathReady(); });
+    }
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg-full.js"></script>
+</head>
+<body>
+<div id="app">
+  <nav class="pane-l">
+    <button class="pane-hide" type="button"><span class="hide">Hide</span><span class="keep">Keep open</span><kbd>`</kbd></button>
+    <header class="course">
+      <h1 class="course-n">BIPN 140</h1>
+      <p class="course-t">Cellular Neurobiology</p>
+      <p class="course-s">Midterm 1 &middot; 30 minutes each</p>
+      <p class="course-s">Cells and methods, the passive membrane, the active membrane and how ion channels select and gate.</p>
+    </header>
+    <div class="tests">
+      <a class="row" href="#test-1" data-test="test-1" aria-current="true">Test 1</a>
+<a class="row" href="#test-2" data-test="test-2" aria-current="false">Test 2</a>
+    </div>
+    <nav class="mcq-nav" id="nav-test-1" aria-label="Test 1 questions"></nav>
+<nav class="mcq-nav" id="nav-test-2" aria-label="Test 2 questions" hidden></nav>
+  </nav>
+  <main class="pane-r">
+    <a class="menu-hint" href="#">Menu<kbd>`</kbd></a>
+    <div class="loading mj-ring" aria-hidden="true"></div>
+    <div class="body">
+<section class="test" id="test-1" data-key="bipn140-t1">
+<section class="mcq" data-title="BIPN 140 Midterm 1, Test 1" data-nav="#nav-test-1"><script type="application/json">[{"q": "A neuron's membrane has a specific resistance of 20,000 \\(\\Omega\\cdot\\)cm² and a specific capacitance of 1 µF/cm². What is its membrane time constant?", "options": ["20 ms", "2 ms", "200 ms", "0.2 ms"], "answer": 0, "why": "\\(\\tau = R_m C_m = 20{,}000 \\;\\Omega\\cdot\\text{cm}^2 \\times 10^{-6}\\,\\dfrac{\\text{F}}{\\text{cm}^2} = 0.02\\) s, or 20 ms. The area cancels out, so the time constant does not depend on how big the cell is. A bigger cell has more capacitance but less resistance by the same factor."}, {"q": "A spherical neuron is 20 µm across, with specific resistance 20,000 \\(\\Omega\\cdot\\)cm². Roughly what is its input resistance?", "options": ["1.6 G\\(\\Omega\\)", "16 M\\(\\Omega\\)", "160 G\\(\\Omega\\)", "6.4 G\\(\\Omega\\)"], "answer": 0, "why": "The area of a sphere is \\(\\pi d^2 = \\pi (20 \\times 10^{-4} \\text{ cm})^2 = 1.26 \\times 10^{-5}\\) cm². Input resistance is \\(\\dfrac{R_m}{\\text{area}} = \\dfrac{20{,}000}{1.26 \\times 10^{-5}} = 1.6 \\times 10^{9}\\;\\Omega\\). Small cells have very high input resistance, so a few picoamps of current can change their voltage by many millivolts."}, {"q": "A current step is injected into a passive cell with \\(\\tau = 10\\) ms. How long does the voltage take to reach 90% of its final value?", "options": ["23 ms", "9 ms", "10 ms", "90 ms"], "answer": 0, "why": "The voltage rises as \\(V(t) = V_\\infty\\left(1 - e^{-\\frac{t}{\\tau}}\\right)\\). Setting this to 90% gives \\(e^{-\\frac{t}{\\tau}} = 0.1\\), so \\(t = \\tau \\ln 10 = 2.3\\tau = 23\\) ms. After one time constant, the voltage is only at 63%."}, {"q": "During an action potential upstroke, a 12.6 pF cell depolarizes at 100 V/s. How much current goes into charging the membrane capacitance?", "options": ["1.26 nA", "12.6 pA", "126 nA", "0.126 pA"], "answer": 0, "why": "Capacitive current is \\(I = C \\dfrac{dV}{dt} = 12.6 \\times 10^{-12} \\text{ F} \\times 100\\,\\dfrac{\\text{V}}{\\text{s}} = 1.26 \\times 10^{-9}\\) A. Every bit of voltage change needs charge to be moved onto or off the membrane, so a fast change in voltage needs a large current, even with no change in resistance."}, {"q": "A cell's capacitance jumps by 2 fF each time a vesicle fuses with the plasma membrane. What does the jump measure?", "options": ["The added membrane area, since capacitance per area is constant", "The transmitter released, since charged transmitter adds capacitance", "The \\(\\ce{Ca^{2+}}\\) that enters, since each ion carries a fixed charge", "The channels added, since each channel adds a set capacitance"], "answer": 0, "why": "Biological membranes all have about the same capacitance per area, 1 µF/cm². So total capacitance is a direct readout of surface area. When a vesicle fuses, its membrane becomes part of the cell surface, and capacitance steps up. Recording these steps lets researchers count single fusion events."}, {"q": "Steady current is injected into a long dendrite. At 1 mm away, the voltage change is 37% of its value at the injection site. What is the length constant?", "options": ["1 mm", "0.37 mm", "2.7 mm", "0.5 mm"], "answer": 0, "why": "Steady voltage decays as \\(V(x) = V_0 e^{-\\frac{x}{\\lambda}}\\). At \\(x = \\lambda\\), the voltage is \\(e^{-1} = 0.37\\) of the start. So a 37% reading at 1 mm means \\(\\lambda = 1\\) mm. This is the definition of the length constant."}, {"q": "If the specific membrane resistance of an axon doubles while everything else stays the same, the length constant:", "options": ["Grows by \\(\\sqrt{2}\\) and the time constant doubles", "Doubles and the time constant grows by \\(\\sqrt{2}\\)", "Grows by \\(\\sqrt{2}\\) and the time constant stays fixed", "Doubles and the time constant stays fixed as well"], "answer": 0, "why": "\\(\\lambda = \\sqrt{\\dfrac{r_m}{r_i}}\\), so doubling membrane resistance raises \\(\\lambda\\) by \\(\\sqrt{2}\\). The time constant is \\(R_m C_m\\), so it doubles. A leakier membrane does the opposite: shorter length constant and faster time constant."}, {"q": "Why does a voltage clamp at the soma fail to control the voltage in distant dendrites?", "options": ["The dendrite's own resistance lets its voltage drift from the soma's value", "The clamp amplifier cannot pass current through the soma's membrane", "Dendrites contain no voltage-gated channels for the clamp to work on", "Capacitance in the dendrites stores charge that cancels the clamp current"], "answer": 0, "why": "This is the space clamp problem. The clamp sets the voltage only at the electrode tip. Current must travel down the dendrite's internal resistance and leak across its membrane, so the farther you go, the more the voltage differs from the command value. Fast channel currents far away are badly measured. Hodgkin and Huxley avoided this by threading a wire down the whole squid axon."}, {"q": "What is the main reason to use a voltage clamp to study action potential currents?", "options": ["Holding voltage fixed stops the feedback between voltage and channel opening", "Holding voltage fixed keeps the capacitive current flowing for the whole step", "Holding voltage fixed makes the ion gradients run down to known values", "Holding voltage fixed makes all channels open at once at any voltage"], "answer": 0, "why": "In a free cell, opening \\(\\ce{Na+}\\) channels changes the voltage, which opens more channels, which changes the voltage again. That loop makes the currents impossible to measure cleanly. A voltage clamp holds the voltage at a set value, so the current it injects equals the current through the channels at that voltage. Capacitive current flows only at the instant the voltage steps."}, {"q": "In a voltage-clamp step from −60 to 0 mV, a squid axon shows a brief inward current, then a lasting outward current. Which treatment leaves only the brief inward current?", "options": ["Adding TEA to block the \\(\\ce{K+}\\) channels", "Adding TTX to block the \\(\\ce{Na+}\\) channels", "Replacing outside \\(\\ce{Na+}\\) with choline", "Holding the axon at −20 mV before the step"], "answer": 0, "why": "The early inward current is \\(\\ce{Na+}\\) and the late outward current is \\(\\ce{K+}\\). TEA blocks the delayed-rectifier \\(\\ce{K+}\\) channels, leaving the \\(\\ce{Na+}\\) current. TTX or replacing \\(\\ce{Na+}\\) with choline (which cannot pass) removes the inward current instead. Holding at −20 mV inactivates the \\(\\ce{Na+}\\) channels, so the inward current disappears."}, {"q": "At 0 mV, peak \\(\\ce{Na+}\\) current is −2 mA/cm² and \\(E_{\\ce{Na}} = +55\\) mV. What is \\(g_{\\ce{Na}}\\) at that moment?", "options": ["36 mS/cm²", "110 mS/cm²", "0.036 mS/cm²", "27 mS/cm²"], "answer": 0, "why": "Ohm's law for an ion: \\(I = g(V_m - E)\\). So \\(g = \\dfrac{I}{V_m - E} = \\dfrac{-2}{0 - 55}\\) mA/cm² per mV, which is \\(0.036\\) S/cm², or 36 mS/cm². Both the current and the driving force are negative, so the conductance is positive, as it must be."}, {"q": "In the Hodgkin–Huxley model the \\(\\ce{Na+}\\) conductance is set by \\(m^3 h\\). Why does a long depolarization to −40 mV leave few \\(\\ce{Na+}\\) channels ready to open?", "options": ["\\(h\\) falls toward zero, so inactivation gates close", "\\(m\\) falls toward zero, so activation gates close", "\\(h\\) rises toward one, so inactivation gates open", "\\(m\\) and \\(h\\) both rise, so the gates lock open"], "answer": 0, "why": "\\(m\\) is the fast activation gate, which opens with depolarization. \\(h\\) is the slow inactivation gate, which closes with depolarization. During a held depolarization, \\(h\\) drops toward zero, and the product \\(m^3 h\\) gets small no matter what \\(m\\) does. A hyperpolarizing prepulse brings \\(h\\) back up and makes more channels available."}, {"q": "Before an action potential, a 50 ms step to −100 mV is given. How does the next \\(\\ce{Na+}\\) current compare with one recorded from a resting start at −65 mV?", "options": ["It is larger, because more channels have recovered from inactivation", "It is smaller, because the hyperpolarization inactivates the channels", "It is the same, because \\(\\ce{Na+}\\) current depends on the final voltage", "It is larger, because the hyperpolarization raises \\(E_{\\ce{Na}}\\)"], "answer": 0, "why": "At −65 mV, part of the \\(\\ce{Na+}\\) channel population is inactivated. Hyperpolarizing for a while removes that inactivation (\\(h\\) goes near one), so more channels are ready to open when the cell is depolarized. Equilibrium potentials depend on concentrations, not on the holding voltage."}, {"q": "With ionic currents blocked, a tiny outward current is still seen at the very start of a depolarizing step, before \\(\\ce{Na+}\\) channels would open. What is it?", "options": ["Gating current from charged voltage sensors moving in the membrane", "Leak current from a few \\(\\ce{Na+}\\) channels that TTX did not block", "Capacitive current from the membrane, which can never be subtracted", "Pump current from the \\(\\ce{Na+}\\)–\\(\\ce{K+}\\) ATPase speeding up"], "answer": 0, "why": "Each voltage sensor (the S4 segment) carries several positive charges. When the membrane depolarizes, these charges move outward through the electric field, which is a real but very small current. This gating current comes before the channel opens, so it was the first direct evidence that charged parts of the protein move to open the gate."}, {"q": "Why does the \\(\\ce{K+}\\) channel pass \\(\\ce{K+}\\) about 1000 times better than \\(\\ce{Na+}\\), even though \\(\\ce{Na+}\\) is smaller?", "options": ["Carbonyl oxygens in the filter fit a bare \\(\\ce{K+}\\) like its water shell, but sit too far from \\(\\ce{Na+}\\)", "The pore is too narrow for \\(\\ce{Na+}\\) with its water shell, while \\(\\ce{K+}\\) keeps its water and passes", "Negative charges at the pore's mouth attract \\(\\ce{K+}\\) more strongly, since it has more charge than \\(\\ce{Na+}\\)", "\\(\\ce{Na+}\\) binds the filter so tightly that it plugs the pore and stops any further ions from passing"], "answer": 0, "why": "To enter the narrow filter, an ion has to shed its water. The filter's backbone carbonyl oxygens (from the TVGYG sequence) are spaced to surround a bare \\(\\ce{K+}\\) just as water would, so \\(\\ce{K+}\\) loses its water at almost no cost. \\(\\ce{Na+}\\) is too small to touch all those oxygens at once, so losing its water costs energy it does not get back. Both ions carry the same charge."}, {"q": "The \\(\\ce{K+}\\) channel's selectivity filter holds several \\(\\ce{K+}\\) ions in a row. How does this help it conduct quickly?", "options": ["The ions repel each other, so a new ion entering pushes the far one out", "The ions bind each other, so they travel through the pore as one unit", "The ions cancel the filter's charge, so water can flow through freely", "The ions widen the filter, so later ions pass without touching it"], "answer": 0, "why": "Each ion binds the filter firmly, which gives selectivity. But two or three positive ions packed close together push on each other. When another \\(\\ce{K+}\\) enters at one end, the repulsion knocks the ion at the far end out. This \"knock-on\" lets the channel bind tightly and still move about 10 million ions per second."}, {"q": "In Shaker \\(\\ce{K+}\\) channels, cutting off the N-terminal end of each subunit removes fast inactivation. Adding the free N-terminal peptide to the inside of the cell brings it back. What does this show?", "options": ["A tethered ball on the inside plugs the open pore to inactivate it", "A ball on the outside binds the selectivity filter to block it", "The N-terminus is part of the voltage sensor that opens the gate", "The N-terminus folds over the pore before it opens, preventing it"], "answer": 0, "why": "This is the ball-and-chain model. The N-terminus is a \"ball\" on a flexible \"chain.\" After the channel opens, the ball swings into the pore from the inside and blocks it. Removing the ball removes inactivation, and a free ball peptide still finds and blocks open channels. Since the channel must open first, inactivation follows activation."}, {"q": "Neutralizing several positive charges on the S4 segment of a voltage-gated channel would most likely:", "options": ["Lower the gating charge and make opening less steeply voltage dependent", "Raise the gating charge and make opening more steeply voltage dependent", "Remove selectivity, so the channel passes every cation equally well", "Close the pore permanently, since S4 forms the selectivity filter"], "answer": 0, "why": "S4 is the voltage sensor. Its positive charges feel the membrane's electric field and move when the voltage changes. Fewer charges means less gating charge moves and a weaker grip of voltage on the channel, so its open probability changes less steeply with voltage. The selectivity filter is in the pore loop between S5 and S6, not in S4."}, {"q": "In voltage-gated \\(\\ce{Na+}\\) channels, fast inactivation depends on a three-amino-acid motif (IFM). Where is it?", "options": ["On the inside linker between domains III and IV", "On the outside loop of the domain II pore region", "On the S4 segment of domain I, near the outside", "On the N-terminal ball, as in Shaker \\(\\ce{K+}\\) channels"], "answer": 0, "why": "\\(\\ce{Na+}\\) channels are one long protein with four domains. The short loop joining domains III and IV, on the inside of the membrane, carries the IFM motif, which acts like a hinged lid that closes the pore after it opens. Mutating IFM, or cutting this loop with enzymes inside the axon, removes fast inactivation. Shaker uses a ball on each subunit instead."}, {"q": "A mutation weakens fast inactivation of muscle \\(\\ce{Na+}\\) channels, so a small persistent \\(\\ce{Na+}\\) current remains. After an initial period of extra excitability, attacks of weakness occur. Why?", "options": ["The lasting \\(\\ce{Na+}\\) current depolarizes the fibers, so many channels inactivate", "The lasting \\(\\ce{Na+}\\) current hyperpolarizes the fibers beyond threshold", "The lasting \\(\\ce{Na+}\\) current raises \\(E_{\\ce{Na}}\\), so the spikes grow huge", "The lasting \\(\\ce{Na+}\\) current empties the \\(\\ce{K+}\\) stores inside the cells"], "answer": 0, "why": "A small inward current that does not shut off keeps the membrane depolarized. At first, being closer to threshold makes the fiber fire too easily (stiffness). If the depolarization grows, most remaining \\(\\ce{Na+}\\) channels sit in the inactivated state, so the fiber cannot fire and becomes weak. This is the basis of hyperkalemic periodic paralysis."}, {"q": "How do astrocytes help keep neurons firing normally when they fire a lot?", "options": ["They take up extra \\(\\ce{K+}\\) from around active neurons and spread it away", "They pump \\(\\ce{Na+}\\) into neurons, so the neurons can keep their gradients", "They wrap axons in myelin, so active neurons lose less current to leak", "They release \\(\\ce{K+}\\) into the synapse, which helps transmitter release"], "answer": 0, "why": "Each spike lets some \\(\\ce{K+}\\) out of the neuron into the small space around it. If \\(\\ce{K+}\\) builds up, \\(E_{\\ce{K}}\\) rises and neurons depolarize. Astrocytes have many \\(\\ce{K+}\\) channels (like Kir4.1) and are joined by gap junctions, so they soak up \\(\\ce{K+}\\) where it is high and release it where it is low. This is spatial buffering. Oligodendrocytes and Schwann cells make myelin."}, {"q": "In the CNS, one oligodendrocyte can be destroyed and several axons lose myelin at once. In the PNS, one Schwann cell loss affects just one stretch of one axon. Why?", "options": ["An oligodendrocyte myelinates parts of many axons; a Schwann cell wraps one internode", "An oligodendrocyte myelinates one long axon; a Schwann cell wraps many short axons", "Oligodendrocytes connect by gap junctions; Schwann cells work alone without them", "Oligodendrocytes also make the nodes; Schwann cells make the internodes alone"], "answer": 0, "why": "Each oligodendrocyte sends out many arms, and each arm wraps a segment of a different axon. So losing one cell (as in multiple sclerosis) strips myelin from many axons. Each Schwann cell wraps just one internode of one axon. Schwann cells also help peripheral axons regrow after injury, which is a reason PNS repair is better."}, {"q": "To study how a drug affects a channel by applying it to the channel's inside face, which patch configuration works best?", "options": ["Inside-out patch, with the inner face toward the bath", "Outside-out patch, with the outer face toward the bath", "Cell-attached patch, with the cell intact under the pipette", "Whole-cell recording, with the drug placed in the bath"], "answer": 0, "why": "After forming a tight seal, pulling the pipette away tears off a patch with its inside face pointing into the bath. That inside-out patch lets you change the solution on the cytoplasmic side easily. Outside-out patches expose the outer face. Whole-cell recordings put the bath on the outside of the cell, so only the pipette solution reaches the inside."}, {"q": "In current clamp, what does the experimenter control and what is recorded?", "options": ["The current is set, and the voltage is recorded", "The voltage is set, and the current is recorded", "The conductance is set, and the voltage is recorded", "The voltage is set, and the conductance is recorded"], "answer": 0, "why": "In current clamp, you inject a chosen current (often zero) and watch the membrane voltage, so you see real action potentials and synaptic potentials. In voltage clamp, the amplifier injects whatever current it takes to hold the voltage at the command value, and that current is what you measure."}, {"q": "Channelrhodopsin-2 is put into a group of neurons. What happens when blue light shines on them?", "options": ["A cation channel opens, so the neurons depolarize and fire", "A \\(\\ce{Cl-}\\) pump runs, so the neurons hyperpolarize and stop", "A \\(\\ce{K+}\\) channel opens, so the neurons hyperpolarize and stop", "A G protein turns on, so the neurons slowly release transmitter"], "answer": 0, "why": "Channelrhodopsin-2 comes from algae. It is a light-gated channel that lets cations in when blue light hits it, so the cell depolarizes and fires with millisecond timing. Halorhodopsin is a light-driven \\(\\ce{Cl-}\\) pump that hyperpolarizes neurons in yellow light. Together, they let researchers turn chosen neurons on and off."}, {"q": "In a neuron, threshold is best described as the voltage where:", "options": ["The inward \\(\\ce{Na+}\\) current first exceeds the outward currents", "Every \\(\\ce{Na+}\\) channel in the membrane is open at the same time", "The \\(\\ce{Na+}\\) driving force becomes larger than the \\(\\ce{K+}\\) one", "The cell's voltage first goes above 0 mV in each action potential"], "answer": 0, "why": "Below threshold, a small depolarization opens some \\(\\ce{Na+}\\) channels, but outward \\(\\ce{K+}\\) and leak currents win and bring the voltage back. At threshold, inward \\(\\ce{Na+}\\) current becomes bigger than outward current, so the depolarization feeds itself and runs away. Because it depends on how many channels are available, threshold changes with the cell's recent history."}, {"q": "After a long hyperpolarizing current is suddenly turned off, a neuron fires one action potential with no other stimulus. Why?", "options": ["Removed inactivation and lower \\(\\ce{K+}\\) conductance make the cell overshoot to threshold", "The hyperpolarization raised \\(E_{\\ce{Na}}\\), so the rebound is large enough to fire", "\\(\\ce{K+}\\) built up outside the cell during the step, which depolarizes it afterward", "The capacitive current from the step adds a big depolarizing spike at the end"], "answer": 0, "why": "This is anode break excitation. During the long hyperpolarization, \\(\\ce{Na+}\\) inactivation is removed (more channels are ready) and \\(\\ce{K+}\\) channels close. When the current stops, the voltage rebounds toward rest, but with more \\(\\ce{Na+}\\) channels ready and less \\(\\ce{K+}\\) holding it back, the rebound can cross threshold."}, {"q": "Inward-rectifier \\(\\ce{K+}\\) channels (Kir) pass inward current easily but little outward current. What causes this?", "options": ["Inside \\(\\ce{Mg^{2+}}\\) and polyamines plug the pore when the cell is depolarized", "The channel has an S4 voltage sensor that closes the pore when depolarized", "Outside \\(\\ce{Na+}\\) enters the pore when depolarized and blocks \\(\\ce{K+}\\)", "The channel's ball domain inactivates the pore when the cell is depolarized"], "answer": 0, "why": "Kir channels have no S4 voltage sensor. Their rectification comes from \\(\\ce{Mg^{2+}}\\) and spermine-like polyamines inside the cell. When the cell depolarizes, outward-moving \\(\\ce{K+}\\) carries these blockers into the pore and they get stuck. This keeps the resting potential stable while letting the cell depolarize during action potentials without losing much \\(\\ce{K+}\\)."}, {"q": "Which axon conducts fastest?", "options": ["A myelinated axon 10 µm across", "An unmyelinated axon 10 µm across", "A myelinated axon 2 µm across", "An unmyelinated axon 100 µm across"], "answer": 0, "why": "Myelinated axons conduct at about 6 m/s per µm of diameter, so a 10 µm fiber goes about 60 m/s. Unmyelinated axons speed up only as the square root of diameter, so even a 100 µm one reaches only about 10 m/s, and a 10 µm one about 3 m/s. This is why vertebrates rely on myelin instead of giant axons."}, {"q": "A channel's current–voltage plot is a straight line that crosses zero at −60 mV, with a slope of 5 nS. What current flows through it at −20 mV?", "options": ["200 pA, outward", "200 pA, inward", "100 pA, outward", "400 pA, inward"], "answer": 0, "why": "A straight I–V line means the channel is ohmic: \\(I = g(V - E_{\\text{rev}})\\). Here \\(I = 5 \\text{ nS} \\times (-20 + 60) \\text{ mV} = 200\\) pA. The value is positive, so the current is outward. The zero crossing is the reversal potential, and the slope is the conductance."}]</script></section>
+<script type="application/json" class="frq-data">[{"q": "A spherical neuron is 20 µm across. Its membrane has \\(R_m = 20{,}000\\;\\Omega\\cdot\\)cm² and \\(C_m = 1\\) µF/cm². (a) Find its surface area, total capacitance and input resistance. (b) Find its time constant. (c) A 10 pA current step is injected. Find the final voltage change, and the voltage change at \\(t = \\tau\\) and \\(t = 2\\tau\\).", "answer": "(a) Area \\(= \\pi d^2 = \\pi (20 \\times 10^{-4})^2 = 1.26 \\times 10^{-5}\\) cm². Capacitance \\(= 1\\,\\dfrac{\\text{µF}}{\\text{cm}^2} \\times 1.26 \\times 10^{-5} \\text{ cm}^2 = 12.6\\) pF. Input resistance \\(= \\dfrac{20{,}000}{1.26 \\times 10^{-5}} = 1.6\\) G\\(\\Omega\\). (b) \\(\\tau = R C = 1.6 \\times 10^{9} \\times 12.6 \\times 10^{-12} = 20\\) ms (the same as \\(R_m C_m\\)). (c) Final \\(\\Delta V = I R = 10 \\text{ pA} \\times 1.6 \\text{ G}\\Omega = 16\\) mV. At \\(\\tau\\): \\(16 \\times (1 - e^{-1}) = 10\\) mV. At \\(2\\tau\\): \\(16 \\times (1 - e^{-2}) = 13.8\\) mV.", "points": ["Area 1.26 × 10⁻⁵ cm², capacitance 12.6 pF, input resistance 1.6 GΩ", "Time constant 20 ms, independent of cell size", "Final change 16 mV, about 10 mV at one τ and about 14 mV at two τ", "Uses \\(V(t) = V_\\infty\\left(1 - e^{-\\frac{t}{\\tau}}\\right)\\)"]}, {"q": "Hodgkin and Huxley clamped a squid axon from −60 mV to 0 mV. (a) Describe the current they saw, and explain how they proved which ion carried each part. (b) At 0 mV the peak early current is −1 mA/cm² (\\(E_{\\ce{Na}} = +50\\) mV), and the late current is +1.5 mA/cm² (\\(E_{\\ce{K}} = -75\\) mV). Find each conductance. (c) Explain why the early current is brief while the late one lasts.", "answer": "(a) After a brief capacitive spike, there is an early inward current that peaks in about 1 ms and then decays, followed by a slow outward current that lasts as long as the step. Replacing outside \\(\\ce{Na+}\\) with choline removed the early inward current, so it is carried by \\(\\ce{Na+}\\); later, TTX did the same. TEA removed the late outward current, showing it is carried by \\(\\ce{K+}\\). (b) \\(g_{\\ce{Na}} = \\dfrac{-1}{0 - 50} = 0.02\\) S/cm² (20 mS/cm²) and \\(g_{\\ce{K}} = \\dfrac{1.5}{0 - (-75)} = 0.02\\) S/cm² (20 mS/cm²). (c) \\(\\ce{Na+}\\) channels activate fast but then inactivate (\\(h\\) falls), so the current turns off during the step. Delayed-rectifier \\(\\ce{K+}\\) channels open slowly and do not inactivate quickly, so their current stays on.", "points": ["Early transient inward current, then a sustained outward current", "Ion identity from ion replacement (choline) or blockers (TTX, TEA)", "\\(g_{\\ce{Na}} = 20\\) mS/cm² and \\(g_{\\ce{K}} = 20\\) mS/cm² from \\(g = \\dfrac{I}{V - E}\\)", "Brief because \\(\\ce{Na+}\\) channels inactivate; lasting because \\(\\ce{K+}\\) channels do not"]}]</script>
+</section>
+<section class="test" id="test-2" data-key="bipn140-t2" hidden>
+<section class="mcq" data-title="BIPN 140 Midterm 1, Test 2" data-nav="#nav-test-2"><script type="application/json">[{"q": "Which change makes a neuron's time constant shorter?", "options": ["Opening more leak channels in the membrane", "Making the whole cell twice as large", "Adding more membrane to the dendrites", "Raising the specific membrane resistance"], "answer": 0, "why": "\\(\\tau = R_m C_m\\). Opening channels lowers membrane resistance, so the time constant gets shorter and voltage changes rise and fall faster. Changing cell size leaves \\(R_m C_m\\) the same, because capacitance and resistance per area do not change. This is why strong synaptic input, which opens many channels, makes a neuron respond faster."}, {"q": "Two neurons have the same membrane properties, but one has a much bigger surface area. Which statement is true?", "options": ["The bigger one has lower input resistance and the same time constant", "The bigger one has higher input resistance and a longer time constant", "The bigger one has lower input resistance and a shorter time constant", "Both have the same input resistance and the same time constant"], "answer": 0, "why": "More membrane means more channels in parallel, so input resistance goes down. It also means more capacitance by the same factor, so \\(\\tau = RC\\) is unchanged. In practice, this means bigger neurons need more synaptic current to change their voltage, which is part of why small motor neurons are recruited first."}, {"q": "A 50 pA current step makes a neuron's voltage rise 10 mV at steady state. What is its input resistance?", "options": ["200 M\\(\\Omega\\)", "500 M\\(\\Omega\\)", "5 M\\(\\Omega\\)", "2 G\\(\\Omega\\)"], "answer": 0, "why": "\\(R = \\dfrac{V}{I} = \\dfrac{10 \\times 10^{-3} \\text{ V}}{50 \\times 10^{-12} \\text{ A}} = 2 \\times 10^{8}\\;\\Omega\\), or 200 M\\(\\Omega\\). Input resistance tells how big a voltage change a given current produces, so it sets how sensitive the cell is to synaptic input."}, {"q": "Roughly how many ions must cross the membrane to change the voltage of a 12.6 pF cell by 100 mV?", "options": ["About 8 million, a tiny share of the cell's \\(\\ce{K+}\\)", "About 8 billion, nearly all of the cell's \\(\\ce{K+}\\)", "About 8 thousand, the same as one channel's flux in a second", "About 800, just the ions in one patch of membrane"], "answer": 0, "why": "Charge needed is \\(Q = CV = 12.6 \\times 10^{-12} \\times 0.1 = 1.26 \\times 10^{-12}\\) C. Dividing by the charge of one ion (\\(1.6 \\times 10^{-19}\\) C) gives about \\(8 \\times 10^{6}\\) ions. A cell this size holds about \\(3.5 \\times 10^{11}\\) \\(\\ce{K+}\\) ions, so the share that moves is about 1 in 40,000, and concentrations barely change."}, {"q": "At 20 °C, \\(\\dfrac{2.303RT}{F}\\) is about 58 mV. If a frog neuron has \\(\\ce{K+}\\) 120 mM inside and 2.5 mM outside, what is \\(E_{\\ce{K}}\\)?", "options": ["−98 mV", "−58 mV", "−116 mV", "−68 mV"], "answer": 0, "why": "\\(E_{\\ce{K}} = 58 \\log\\dfrac{2.5}{120} = 58 \\times (-1.68) = -98\\) mV. The 48-fold gradient spans about 1.7 log units. Each tenfold change in the ratio is worth 58 mV at this temperature, compared with 61.5 mV at 37 °C."}, {"q": "A channel is equally permeable to \\(\\ce{Na+}\\) and \\(\\ce{K+}\\). With 150 mM \\(\\ce{Na+}\\) outside, 150 mM \\(\\ce{K+}\\) inside and nothing else permeant, its reversal potential is:", "options": ["0 mV", "+60 mV", "−90 mV", "−30 mV"], "answer": 0, "why": "With equal permeability, the GHK equation becomes \\(V = 61.5\\log\\dfrac{P[\\ce{Na+}]_o}{P[\\ce{K+}]_i} = 61.5\\log\\dfrac{150}{150} = 0\\) mV. Many receptor channels, such as nicotinic ACh and AMPA receptors, pass \\(\\ce{Na+}\\) and \\(\\ce{K+}\\) about equally, which is why they reverse near 0 mV."}, {"q": "A single \\(\\ce{K+}\\) channel has a conductance of 20 pS. The patch is held at −20 mV, with \\(E_{\\ce{K}} = -90\\) mV. What is the current through one open channel?", "options": ["1.4 pA, outward", "1.4 pA, inward", "0.4 pA, outward", "2.2 pA, inward"], "answer": 0, "why": "\\(i = \\gamma (V - E_{\\ce{K}}) = 20 \\times 10^{-12} \\times (-0.020 + 0.090) = 1.4 \\times 10^{-12}\\) A. The value is positive, which means outward current: \\(\\ce{K+}\\) leaves the cell because the membrane is more positive than \\(E_{\\ce{K}}\\)."}, {"q": "A patch holds 1000 of those \\(\\ce{K+}\\) channels, each passing 1.4 pA when open, with an open probability of 0.3. What is the average total current?", "options": ["420 pA", "1400 pA", "4.7 pA", "300 pA"], "answer": 0, "why": "Macroscopic current is \\(I = N \\cdot P_o \\cdot i = 1000 \\times 0.3 \\times 1.4 \\text{ pA} = 420\\) pA. Each channel flips randomly between open and closed, but with many channels the average is smooth. This equation links single-channel recordings to whole-cell currents."}, {"q": "Hodgkin–Huxley write the \\(\\ce{K+}\\) conductance as \\(g_{\\ce{K}} = \\bar{g}_{\\ce{K}} n^4\\). Why does this make \\(\\ce{K+}\\) current start with a delay (an S-shaped rise)?", "options": ["Four independent gates must all open, so early on few channels have all four open", "Each gate must open four times in a row, so each channel opens only after a delay", "Four \\(\\ce{K+}\\) ions must bind the channel first, so the current builds slowly", "\\(n\\) rises slowly to the fourth power of voltage, so higher steps rise more slowly"], "answer": 0, "why": "Each channel has four subunits, and each must be in its open state for the channel to conduct. If one gate opens with a fraction \\(n\\), all four are open with a fraction \\(n^4\\). Early in a step, \\(n\\) is small, so \\(n^4\\) is tiny, and the current rises slowly at first, then quickly. Single exponential gating would rise fastest at the start instead."}, {"q": "After a step from rest to +20 mV, the voltage is stepped back to −50 mV and a decaying \"tail\" current is recorded. The tail current reverses at about −80 mV. What carries it?", "options": ["\\(\\ce{K+}\\), because −80 mV lies close to \\(E_{\\ce{K}}\\)", "\\(\\ce{Na+}\\), because the first step opened \\(\\ce{Na+}\\) channels", "\\(\\ce{Cl-}\\), because tail currents come from \\(\\ce{Cl-}\\) channels", "\\(\\ce{Ca^{2+}}\\), because −80 mV lies close to \\(E_{\\ce{Ca}}\\)"], "answer": 0, "why": "Tail currents come from channels that were opened by the first step and are still closing at the second voltage. Repeating this with second steps to different voltages shows where the tail current changes direction: its reversal potential. A reversal near −80 mV matches \\(E_{\\ce{K}}\\), not \\(E_{\\ce{Na}}\\) (+55) or \\(E_{\\ce{Ca}}\\) (above +100)."}, {"q": "Strong, very short current pulses can fire a neuron, but weaker pulses must last longer. What membrane property explains this?", "options": ["The membrane capacitance, which takes time to charge", "The \\(\\ce{Na+}\\) driving force, which grows over time", "The \\(\\ce{K+}\\) leak, which shuts off as the pulse goes on", "The refractory period, which lasts longer for weak pulses"], "answer": 0, "why": "The membrane has to be charged up to threshold, and charging a capacitor through a resistance takes time set by \\(\\tau\\). A big current charges it quickly, so a short pulse is enough. A small current charges it slowly, so the pulse must be longer. This strength–duration relationship is why defibrillators and nerve stimulators use specific pulse lengths."}, {"q": "In the squid giant axon, removing fast \\(\\ce{Na+}\\) channel inactivation with the enzyme pronase inside the axon would change the action potential how?", "options": ["It would stay depolarized much longer, as a broad plateau", "It would fail to reach threshold, since no channels could open", "It would get shorter, since \\(\\ce{K+}\\) channels would open sooner", "It would stay the same, since \\(\\ce{K+}\\) channels alone end the spike"], "answer": 0, "why": "Inactivation is one of the two forces that end the spike. Without it, \\(\\ce{Na+}\\) channels stay open as long as the membrane is depolarized, fighting the outward \\(\\ce{K+}\\) current, so repolarization is greatly delayed. Pronase applied inside cuts the III–IV linker that carries the inactivation gate. Applied outside it does nothing, which also showed that this gate is on the inside."}, {"q": "A mutation changes the selectivity filter sequence of a \\(\\ce{K+}\\) channel from GYG to GAG, letting \\(\\ce{Na+}\\) pass well. What would expressing it in a neuron do?", "options": ["Depolarize the resting potential, as \\(\\ce{Na+}\\) leaks in", "Hyperpolarize the resting potential, as more \\(\\ce{K+}\\) leaves", "Leave rest unchanged, as the filter only sets conductance", "Speed repolarization, as the channel now passes two ions"], "answer": 0, "why": "The neuron's resting voltage is near \\(E_{\\ce{K}}\\) because most open channels at rest pass \\(\\ce{K+}\\). If some of them also pass \\(\\ce{Na+}\\), they let in \\(\\ce{Na+}\\), and the resting voltage moves toward 0 mV. The weaver mouse has a GIRK channel mutation in this region, which causes cerebellar neurons to die."}, {"q": "Each voltage-gated \\(\\ce{K+}\\) channel is built from four subunits. Each subunit has six transmembrane segments. Which segments form the pore?", "options": ["S5, S6 and the loop between them", "S1 through S4 in each subunit", "S4 together with the S4–S5 linker", "S1 and S2 with the loop between them"], "answer": 0, "why": "In each subunit, S1 to S4 form the voltage-sensing domain. The S5 and S6 helices, with the pore loop (P loop) between them, come together from all four subunits to form the central pore. The P loop holds the selectivity filter, and the inner ends of the S6 helices form the gate that opens and closes. The S4–S5 linker couples the sensor to the gate."}, {"q": "In KcsA, the selectivity filter is near the outer side of the membrane. What lies between it and the cell's inside?", "options": ["A water-filled central cavity, which holds a hydrated \\(\\ce{K+}\\) ion", "A second, narrower filter, which repeats the selection one more time", "The voltage sensor, which pulls the \\(\\ce{K+}\\) ions through by charge", "The ball domain, which lets ions pass only while the channel is closed"], "answer": 0, "why": "MacKinnon's KcsA structure showed a short, narrow filter on the outside and a wide, water-filled cavity in the middle of the membrane. The cavity keeps a \\(\\ce{K+}\\) ion surrounded by water at the center of the membrane, where it would otherwise be energetically costly, and the pore helices point their negative ends at it. This lets ions cross the membrane quickly."}, {"q": "A \\(\\ce{Ca^{2+}}\\) indicator such as GCaMP is used to watch neurons fire. What is its main limit compared with electrodes?", "options": ["It reports slowly, so single spikes in fast bursts blur together", "It reports quickly, so it cannot see slow changes in voltage", "It reports \\(\\ce{Na+}\\) entry, so it misses spikes with no \\(\\ce{Na+}\\)", "It reports exactly, so spikes and synaptic potentials look alike"], "answer": 0, "why": "GCaMP lights up when \\(\\ce{Ca^{2+}}\\) enters through voltage-gated channels during spikes. Its signal rises and falls over tens to hundreds of milliseconds, much slower than a 1 ms spike. So it is great for watching many cells at once, but it can blur fast spike trains and miss subthreshold voltage changes. Electrodes measure voltage directly with fast timing."}, {"q": "Which glial cell is the main immune cell of the brain?", "options": ["Microglial cells", "Astroglial cells", "Ependymal cells", "Oligodendrocytes"], "answer": 0, "why": "Microglia come from blood cell precursors that enter the brain early in development. They watch the tissue, eat debris and dying cells, and prune synapses. Astrocytes support neurons and help form the blood–brain barrier, oligodendrocytes make CNS myelin, and ependymal cells line the ventricles."}, {"q": "A cell-attached patch records single channel openings. Why does this setup leave the cell's own voltage and contents undisturbed?", "options": ["The membrane under the pipette stays intact, so nothing inside is changed", "The pipette opens the cell membrane, so the cell's voltage stays clamped", "The patch is pulled off the cell, so the cell is left with no change at all", "The pipette dissolves into the cell, so no solution reaches the inside"], "answer": 0, "why": "In the cell-attached mode, the pipette is sealed onto the membrane but the patch is not broken. The channels under the pipette are recorded while the cytoplasm, second messengers and the cell's own voltage stay normal. The downside is that the exact voltage across the patch depends on the unknown resting potential of the cell."}, {"q": "A drug shifts the voltage dependence of \\(\\ce{Na+}\\) channel inactivation 10 mV more negative, with no other effect. How does this change a resting neuron at −65 mV?", "options": ["Fewer \\(\\ce{Na+}\\) channels are available, so it is harder to fire", "More \\(\\ce{Na+}\\) channels are available, so it is easier to fire", "Rest becomes 10 mV more negative, as \\(\\ce{Na+}\\) stops leaking", "Spikes become 10 mV taller, as \\(E_{\\ce{Na}}\\) becomes larger"], "answer": 0, "why": "Shifting the inactivation curve to the left means that at −65 mV, more channels are already inactivated than before. With fewer channels ready, a stimulus produces less \\(\\ce{Na+}\\) current, so firing is harder. Several anticonvulsant drugs, such as phenytoin and carbamazepine, work partly this way."}, {"q": "Why is a voltage-gated \\(\\ce{Ca^{2+}}\\) current still inward at +40 mV, when \\(\\ce{Na+}\\) current has reversed?", "options": ["\\(E_{\\ce{Ca}}\\) is above +100 mV, because outside \\(\\ce{Ca^{2+}}\\) is 10,000 times higher", "\\(E_{\\ce{Ca}}\\) is near 0 mV, because \\(\\ce{Ca^{2+}}\\) carries two positive charges", "\\(\\ce{Ca^{2+}}\\) is pumped in at +40 mV, which turns the current inward again", "\\(\\ce{Ca^{2+}}\\) channels have no reversal potential, since they are not pores"], "answer": 0, "why": "Free \\(\\ce{Ca^{2+}}\\) is about 2 mM outside and about 100 nM inside. With a charge of 2, the Nernst factor is halved: \\(E_{\\ce{Ca}} = \\dfrac{61.5}{2}\\log(20{,}000) = 132\\) mV. So at +40 mV the driving force is still strongly inward. This large driving force is what makes \\(\\ce{Ca^{2+}}\\) such a fast, strong signal."}, {"q": "What does a reversal potential reveal about a channel?", "options": ["Which ions it lets through, and in what ratio", "How many of the channels are in the membrane", "How fast the channel opens after a voltage step", "How much current each channel carries at 0 mV"], "answer": 0, "why": "At the reversal potential, the net current through the channel is zero. Comparing it with each ion's equilibrium potential, and seeing how it moves when ion concentrations change, tells you which ions pass and their relative permeability, using the GHK equation. It does not depend on how many channels there are."}, {"q": "An axon's diameter doubles. How does conduction velocity change if the axon is unmyelinated, and if it is myelinated?", "options": ["Unmyelinated: \\(\\sqrt{2}\\) times faster. Myelinated: 2 times faster", "Unmyelinated: 2 times faster. Myelinated: \\(\\sqrt{2}\\) times faster", "Unmyelinated: 4 times faster. Myelinated: 2 times faster", "Unmyelinated: no change. Myelinated: 2 times faster"], "answer": 0, "why": "For unmyelinated axons, speed follows the length constant, which grows as \\(\\sqrt{d}\\). In myelinated axons, the myelin thickness and the internode length scale with diameter, which makes speed grow in proportion to \\(d\\). This is why myelin wins for all but the thinnest axons."}, {"q": "Why can't an action potential start in the middle of a myelinated internode?", "options": ["The internode membrane has very few \\(\\ce{Na+}\\) channels to start a spike", "The internode membrane has no \\(\\ce{K+}\\) channels to set up the resting voltage", "The internode is too far from the soma for current to arrive there at all", "The internode is filled with myelin, so no current can flow through its core"], "answer": 0, "why": "Voltage-gated \\(\\ce{Na+}\\) channels are packed at very high density at the nodes of Ranvier and are rare under the myelin. Without them, the internode can only pass current along passively. That is why the spike \"jumps\" from node to node. If myelin is lost, the bare internode cannot make a spike of its own, and conduction can fail."}, {"q": "In a single-channel recording, raising the voltage step makes a voltage-gated \\(\\ce{Na+}\\) channel open sooner on average. What else is true?", "options": ["Each opening still has the same current at a given voltage", "Each opening has a larger current, since more charge enters", "Each opening lasts as long as the voltage step itself does", "Each opening opens fully only on every fourth step attempt"], "answer": 0, "why": "A single channel is either closed or open. When open, its current is set by its conductance and the driving force, so it has the same size each time at a given voltage. Voltage changes how likely and how soon the channel opens, not how big each opening is. The smooth whole-cell current comes from averaging many random openings."}, {"q": "Which experiment shows that S4 moves outward during depolarization?", "options": ["S4 cysteines react with outside reagents only after depolarizing", "S4 cysteines react with inside reagents only after depolarizing", "Mutating the S4 charges changes which ions the pore will pass", "Deleting the S4 segment makes the pore open at every voltage"], "answer": 0, "why": "In cysteine accessibility experiments, single S4 residues are changed to cysteine, and a chemical reagent that cannot cross the membrane is added to one side. Residues that react from the outside only after depolarization must have moved outward. These experiments, along with gating currents, showed S4 moves through the membrane as the voltage changes."}, {"q": "In a Na⁺-free bath, a neuron still fires action potentials that TTX cannot block. Which current is most likely carrying the upstroke?", "options": ["A voltage-gated \\(\\ce{Ca^{2+}}\\) current", "A voltage-gated \\(\\ce{K+}\\) current", "A voltage-gated \\(\\ce{Cl-}\\) current", "A leak current through \\(\\ce{Na+}\\) channels"], "answer": 0, "why": "Without outside \\(\\ce{Na+}\\) and with TTX present, only another inward current can depolarize the cell. Voltage-gated \\(\\ce{Ca^{2+}}\\) channels can do this because \\(E_{\\ce{Ca}}\\) is very positive. Dendrites of Purkinje cells and many invertebrate muscles fire \\(\\ce{Ca^{2+}}\\) spikes like this. \\(\\ce{K+}\\) and \\(\\ce{Cl-}\\) currents would move the voltage toward their more negative equilibrium potentials."}, {"q": "How do neurons keep their identity as \"excitable\" cells while glia, with similar ion gradients, do not fire action potentials?", "options": ["Neurons have many voltage-gated \\(\\ce{Na+}\\) channels; most glia have few", "Neurons have high inside \\(\\ce{Na+}\\); glia have low inside \\(\\ce{Na+}\\)", "Neurons have no \\(\\ce{K+}\\) leak; glia have a large \\(\\ce{K+}\\) leak", "Neurons have a negative resting potential; glia have a positive one"], "answer": 0, "why": "Both cell types use \\(\\ce{Na+}\\)–\\(\\ce{K+}\\) pumps to keep similar gradients, and both rest at negative voltages (glia often even closer to \\(E_{\\ce{K}}\\)). What makes a cell excitable is having enough voltage-gated \\(\\ce{Na+}\\) (or \\(\\ce{Ca^{2+}}\\)) channels to make a regenerating inward current. Most glia have too few."}, {"q": "Hodgkin and Katz halved the outside \\(\\ce{Na+}\\) around a squid axon. By how much should the action potential peak fall if the peak sits close to \\(E_{\\ce{Na}}\\)? (Use 58 mV per tenfold change at the squid's temperature.)", "options": ["By 17 mV", "By 29 mV", "By 58 mV", "By 6 mV"], "answer": 0, "why": "Halving outside \\(\\ce{Na+}\\) changes \\(E_{\\ce{Na}}\\) by \\(58\\log\\dfrac{1}{2} = -17\\) mV. The peak tracked \\(E_{\\ce{Na}}\\) closely, which was key evidence that the upstroke comes from a large rise in \\(\\ce{Na+}\\) permeability. Taking half of 58 mV (29 mV) is the mistake of treating the log scale as if it were linear."}, {"q": "In the electrical equivalent circuit of a membrane, what does each battery stand for?", "options": ["The equilibrium potential of one ion, in series with its conductance", "The \\(\\ce{Na+}\\)–\\(\\ce{K+}\\) pump, in series with the membrane capacitance", "The resting membrane potential, in parallel with the membrane capacitance", "The charge stored on the membrane, in series with each ion's conductance"], "answer": 0, "why": "Each ion gets its own branch: a resistor (its conductance) in series with a battery set at its equilibrium potential. The branches sit in parallel with each other and with the capacitor (the lipid bilayer). The resting voltage is not a battery of its own. It is the result of all the branches together, weighted by their conductances."}, {"q": "A squid axon's resting \\(V_m\\) changes by about 58 mV per tenfold change in outside \\(\\ce{K+}\\) when outside \\(\\ce{K+}\\) is high, but by much less when it is low. Why?", "options": ["At low outside \\(\\ce{K+}\\), the small \\(\\ce{Na+}\\) leak carries more of the weight", "At low outside \\(\\ce{K+}\\), the \\(\\ce{K+}\\) channels close and stop passing current", "At high outside \\(\\ce{K+}\\), the \\(\\ce{Na+}\\)–\\(\\ce{K+}\\) pump adds a large current", "At high outside \\(\\ce{K+}\\), the \\(\\ce{Na+}\\) leak becomes larger than the \\(\\ce{K+}\\) one"], "answer": 0, "why": "In the GHK equation the top term is \\([\\ce{K+}]_o + \\dfrac{P_{\\ce{Na}}}{P_{\\ce{K}}}[\\ce{Na+}]_o\\). When outside \\(\\ce{K+}\\) is high, it dominates that term, so \\(V_m\\) follows \\(E_{\\ce{K}}\\) closely. When it is low, the small \\(\\ce{Na+}\\) term becomes a big share, so \\(V_m\\) stops following \\(E_{\\ce{K}}\\) and stays less negative than it."}]</script></section>
+<script type="application/json" class="frq-data">[{"q": "(a) Explain how a \\(\\ce{K+}\\) channel selects \\(\\ce{K+}\\) over \\(\\ce{Na+}\\), even though \\(\\ce{Na+}\\) is smaller, and how it still conducts about 10⁷ ions per second. (b) In Shaker channels, describe the result of removing the N-terminus and then adding free N-terminal peptide inside the cell, and what it shows about the mechanism of fast inactivation.", "answer": "(a) Ions must lose their water shell to enter the narrow filter. The filter's backbone carbonyl oxygens (TVGYG) are held at just the right spacing to surround a bare \\(\\ce{K+}\\), replacing its water, so \\(\\ce{K+}\\) enters at almost no energy cost. \\(\\ce{Na+}\\) is too small to be touched by all the oxygens at once, so dehydrating it costs energy that the filter does not repay, and it stays out. Several \\(\\ce{K+}\\) ions sit in the filter at once; their mutual repulsion means an entering ion pushes another out the far end, so binding is tight but flow is fast. (b) Removing the N-terminus (genetically or with trypsin inside) removes fast inactivation, and the current stays on during a step. Adding the free N-terminal peptide to the inside restores inactivation. This shows the N-terminus is a ball on a chain: after the channel opens, the ball reaches into the open pore from the inside and blocks it.", "points": ["Filter oxygens replace the water shell of \\(\\ce{K+}\\) exactly, not \\(\\ce{Na+}\\)", "Energy cost of dehydration explains why the smaller \\(\\ce{Na+}\\) is excluded", "Multiple ions repel each other (knock-on), giving fast flow", "Ball-and-chain: ball blocks the open pore from inside; free peptide restores inactivation"]}, {"q": "A patch contains 5000 identical \\(\\ce{K+}\\) channels with single-channel conductance 10 pS. The patch is held at 0 mV, \\(E_{\\ce{K}} = -90\\) mV, and open probability is 0.4. (a) Find the single-channel current and the total patch current. (b) Outside \\(\\ce{K+}\\) is then raised 10-fold. Find the new \\(E_{\\ce{K}}\\) (37 °C) and the new single-channel current, assuming the conductance does not change. (c) Explain why the open probability might also change in a real voltage-gated channel.", "answer": "(a) \\(i = \\gamma (V - E_{\\ce{K}}) = 10 \\text{ pS} \\times 90 \\text{ mV} = 0.9\\) pA (outward). Total \\(I = N P_o i = 5000 \\times 0.4 \\times 0.9 = 1800\\) pA, or 1.8 nA. (b) A 10-fold change in outside \\(\\ce{K+}\\) shifts \\(E_{\\ce{K}}\\) by \\(+61.5\\) mV, to −28.5 mV. Then \\(i = 10 \\text{ pS} \\times 28.5 \\text{ mV} = 0.29\\) pA, still outward but smaller because the driving force is smaller. (c) Open probability depends on voltage through the gating charges. If the cell is not clamped, the higher \\(\\ce{K+}\\) depolarizes it, which changes open probability. Some \\(\\ce{K+}\\) channels also sense outside \\(\\ce{K+}\\) directly, which can change their gating or their conductance.", "points": ["0.9 pA per channel and 1.8 nA total", "New \\(E_{\\ce{K}}\\) about −28.5 mV", "New single-channel current about 0.29 pA, smaller because the driving force fell", "Open probability depends on voltage (and can depend on outside \\(\\ce{K+}\\))"]}]</script>
+</section>
+    </div>
+  </main>
+</div>
+<script>
+/* minimono.js — the house style's behavior. Include before </body>; no init.
+   1. Two panes or one. Full-screen shows both (left ¼ · right ¾). The page
+      goes to one pane when the window isn't full-screen, or when the person
+      hides the left pane (`, or the pane's own "Hide"). Hiding is
+      remembered. Force the layout with <html data-layout="split|single">.
+   2. In one-pane mode the "Menu" link (.menu-hint) is invisible until the
+      pointer enters the top-left zone (left quarter, top sixth); clicking it,
+      or `, opens the left pane as an overlay. Esc, a click outside, or
+      choosing a row closes it. With no pointer (touch), the link stays shown.
+      The overlay is the SAME .pane-l element, moved by a class — never a
+      copy, never rebuilt — so its scroll position and selection survive.
+   3. Safari: trackpad pinch-zoom is blocked; ⌘+ / ⌘− still work.          */
+(function () {
+  'use strict';
+  var html = document.documentElement;
+  var KEY = 'minimono:pane-hidden';
+  var hidden = false;
+  try { hidden = localStorage.getItem(KEY) === '1'; } catch (e) {}
+
+  /* 1. Two panes or one ---------------------------------------------------- */
+  function isFull() {
+    var forced = html.getAttribute('data-layout');
+    if (forced === 'split') return true;
+    if (forced === 'single') return false;
+    // Full-screen or maximized. At the top level, measure the window itself
+    // (outerWidth): ⌘+ zoom shrinks innerWidth but not the window. Embedded
+    // in a frame, the frame's own width is what's available.
+    var top = true;
+    try { top = window.top === window; } catch (e) { top = false; }
+    var w = top && outerWidth > 0 ? outerWidth : innerWidth;
+    return w >= screen.availWidth - 24;
+  }
+  function layout() {
+    var windowed = !isFull();
+    html.classList.toggle('is-windowed', windowed);
+    var single = windowed || hidden;
+    if (single !== html.classList.contains('is-single')) {
+      if (!single) close(true);
+      html.classList.toggle('is-single', single);
+    }
+  }
+  function setHidden(v) {
+    hidden = v;
+    try { localStorage.setItem(KEY, v ? '1' : '0'); } catch (e) {}
+    close(true);
+    layout();
+  }
+  var raf = 0;
+  addEventListener('resize', function () { if (!raf) raf = requestAnimationFrame(function () { raf = 0; layout(); }); });
+  new MutationObserver(layout).observe(html, { attributes: true, attributeFilter: ['data-layout'] });
+
+  /* 2. The overlay --------------------------------------------------------- */
+  var lastFocus = null;
+  function pane() { return document.querySelector('.pane-l'); }
+  function typing(el) {
+    if (!el || el === document.body) return false;
+    if (el.isContentEditable) return true;
+    if (el.tagName === 'TEXTAREA' || el.tagName === 'SELECT') return true;
+    return el.tagName === 'INPUT' && !/^(button|submit|reset|checkbox|radio|range|color|file|image)$/i.test(el.type);
+  }
+  function single() { return html.classList.contains('is-single'); }
+  function isOpen() { return html.classList.contains('menu-open'); }
+  function open(keyboard) {
+    if (!single() || isOpen()) return;
+    html.classList.remove('hint-on');
+    html.classList.add('menu-open');
+    lastFocus = document.activeElement;
+    if (keyboard) {                                   // keyboard: move focus in
+      var p = pane(), cur = p && (p.querySelector('[aria-current="true"]') || p.querySelector('a,button,input,[tabindex]'));
+      if (cur) cur.focus({ preventScroll: true });
+    }
+  }
+  function close(silent) {
+    if (!isOpen()) return;
+    html.classList.remove('menu-open');
+    var p = pane();
+    if (!silent && lastFocus && lastFocus.focus && lastFocus !== document.body) lastFocus.focus({ preventScroll: true });
+    else if (p && p.contains(document.activeElement)) document.activeElement.blur();
+    lastFocus = null;
+  }
+
+  // the top-left zone: left quarter of the width, top sixth of the height.
+  // Entering it shows the menu link; nothing opens until the link is clicked.
+  function inZone(x, y) { return x <= innerWidth / 4 && y <= innerHeight / 6; }
+  var hintTimer = 0;
+  function hint(on) {
+    clearTimeout(hintTimer);
+    if (on) { html.classList.add('hint-on'); return; }
+    hintTimer = setTimeout(function () { html.classList.remove('hint-on'); }, 200);
+  }
+  addEventListener('pointermove', function (e) {
+    if (e.pointerType !== 'mouse') return;
+    hint(single() && !isOpen() && inZone(e.clientX, e.clientY));
+  }, { passive: true });
+  document.addEventListener('mouseleave', function () { hint(false); });
+
+  addEventListener('keydown', function (e) {
+    // ` (backtick) on its own — left alone while typing in a field
+    if (e.key === '`' && !e.metaKey && !e.ctrlKey && !e.altKey && !typing(document.activeElement)) {
+      e.preventDefault();
+      if (html.classList.contains('is-windowed')) { isOpen() ? close() : open(true); }
+      else setHidden(!hidden);                        // full-screen: hide, or dock it again
+      return;
+    }
+    if (e.key === 'Escape' && isOpen()) { e.preventDefault(); close(); }
+  });
+  addEventListener('pointerdown', function (e) {
+    if (!isOpen()) return;
+    var p = pane();
+    if (p && !p.contains(e.target) && !(e.target.closest && e.target.closest('.menu-hint'))) close();
+  });
+  addEventListener('click', function (e) {
+    var t = e.target.closest ? e.target : e.target.parentElement;
+    if (t.closest('.menu-hint')) { e.preventDefault(); isOpen() ? close() : open(false); return; }
+    if (t.closest('.pane-hide')) {                    // docked: "Hide" · hidden overlay: "Keep open"
+      e.preventDefault(); setHidden(!hidden); return;
+    }
+    if (isOpen() && t.closest('.pane-l .row, .pane-l .mcq-nav a')) close();
+  });
+
+  /* Focus rings: only after Tab. Shift, arrows, Space and clicks never show one. */
+  addEventListener('keydown', function (e) { if (e.key === 'Tab') html.classList.add('kbd-nav'); }, true);
+  addEventListener('pointerdown', function () { html.classList.remove('kbd-nav'); }, true);
+
+  /* 3. Safari pinch-zoom ---------------------------------------------------- */
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (t) {
+    document.addEventListener(t, function (e) { e.preventDefault(); }, { passive: false });
+  });
+
+  layout();
+  window.Minimono = {
+    open: function () { open(true); }, close: close,
+    hide: function () { setHidden(true); }, show: function () { setHidden(false); },
+    relayout: layout
+  };
+})();
+
+</script>
+<script>
+/* smooth-scroll.js — Safari's keyboard scrolling, for every pane.
+   ---------------------------------------------------------------------------
+   A port of WebKit's keyboard-scroll physics (ScrollAnimationKeyboard.cpp,
+   KeyboardScroll.h, macOS constants) so Space, arrows, Page Up/Down and
+   Home/End glide and settle on a spring in every scroller — the page, and
+   each two-pane split pane on its own.
+
+     ↑ / ↓            tap: glide one line (40px) · hold: accelerate to
+                      1000px/s in 0.2s, cruise, then the spring carries the
+                      leftover momentum and settles
+     Space / ⇧Space   the same, with a page as the step (the visible height
+     PgDn / PgUp      less 40px of overlap, never less than 87.5% of it):
+                      tap glides at least a page, hold accelerates
+     Home / End       glide to the top / bottom (also ⌘↑ / ⌘↓ on a Mac)
+   Key repeats are ignored while a key is held, as in WebKit.
+
+   Which scroller moves: the one under the pointer, else the one that holds
+   focus, else the last one clicked, else the page.
+   Left alone: any control that uses these keys itself — text fields,
+   sliders, radio groups, selects, contenteditable, tabs, listboxes — and
+   Space on a button, link, checkbox or anything else Space activates. Any key with ⌥/⌃
+   (and ⌘ except ⌘↑/⌘↓) passes through.
+   Respects prefers-reduced-motion: the same steps, applied instantly.
+   No init call — include before </body>. ~3KB. Exposes window.SmoothScroll.  */
+(function () {
+  'use strict';
+  if (window.SmoothScroll) return;
+
+  /* WebKit macOS KeyboardScrollParameters */
+  var MASS = 1, STIFF = 175, DAMP = 20, MAX_VEL_MULT = 25, TIME_TO_MAX = 0.2;
+  var LINE = 40;                         /* Scrollbar::pixelsPerLineStep()          */
+  var PAGE_MIN_FRACTION = 0.875;         /* Scrollbar::minFractionToStepWhenPaging  */
+  var PAGE_OVERLAP = 40;                 /* Scrollbar::maxOverlapBetweenPages        */
+
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
+  var docEl = function () { return document.scrollingElement || document.documentElement; };
+
+  function canScroll(el) {
+    if (el === docEl()) return el.scrollHeight > el.clientHeight;
+    var s = getComputedStyle(el), o = s.overflowY;
+    return (o === 'auto' || o === 'scroll' || o === 'overlay') && el.scrollHeight > el.clientHeight + 1;
+  }
+  function scrollerFrom(node) {
+    for (var el = node; el && el.nodeType === 1; el = el.parentElement) {
+      if (el === document.body || el === document.documentElement) break;
+      if (canScroll(el)) return el;
+    }
+    return canScroll(docEl()) ? docEl() : null;
+  }
+
+  var hovered = null, clicked = null;
+  addEventListener('pointermove', function (e) { if (e.pointerType === 'mouse') hovered = e.target; }, { passive: true });
+  addEventListener('pointerdown', function (e) { clicked = e.target; }, { passive: true });
+  document.addEventListener('mouseleave', function () { hovered = null; });
+
+  function pickScroller() {
+    var a = document.activeElement;
+    return (hovered && scrollerFrom(hovered)) ||
+           (a && a !== document.body && scrollerFrom(a)) ||
+           (clicked && scrollerFrom(clicked)) ||
+           scrollerFrom(document.body);
+  }
+
+  // controls that use arrows / Page / Home / End themselves keep them
+  function ownsKeys(el) {
+    if (!el || el === document.body) return false;
+    if (el.isContentEditable) return true;
+    var t = el.tagName;
+    if (t === 'TEXTAREA' || t === 'SELECT') return true;
+    if (t === 'INPUT') return !/^(button|submit|reset|checkbox|color|file|image)$/i.test(el.type);
+    var r = el.getAttribute && el.getAttribute('role');
+    return !!r && /^(slider|spinbutton|radio|radiogroup|tab|tablist|listbox|option|menu|menubar|menuitem|combobox|grid|tree|treeitem|textbox)$/.test(r);
+  }
+  function spaceActivates(el) {
+    if (!el || el === document.body) return false;
+    if (/^(BUTTON|A|SUMMARY|INPUT)$/.test(el.tagName)) return true;
+    var r = el.getAttribute && el.getAttribute('role');
+    return !!r && /^(button|link|tab|checkbox|radio|switch|menuitem|option|slider)$/.test(r);
+  }
+
+  /* One animator per scroller ------------------------------------------- */
+  var anims = new WeakMap();
+  function Anim(el) {
+    this.el = el; this.pos = el.scrollTop; this.vel = 0;
+    this.held = null; this.ideal = this.pos; this.minTravel = this.pos;
+    this.raf = 0; this.last = 0;
+  }
+  Anim.prototype.max = function () { return this.el.scrollHeight - this.el.clientHeight; };
+  Anim.prototype.sync = function () {
+    // the user may have scrolled by wheel/trackpad since we last moved it
+    if (!this.raf) { this.pos = this.el.scrollTop; this.ideal = this.pos; this.vel = 0; }
+  };
+  Anim.prototype.run = function () {
+    if (this.raf) return;
+    var self = this; this.last = performance.now();
+    this.raf = requestAnimationFrame(function f(t) { self.step(t) ? (self.raf = requestAnimationFrame(f)) : (self.raf = 0); });
+  };
+  Anim.prototype.stop = function () { if (this.raf) cancelAnimationFrame(this.raf); this.raf = 0; this.vel = 0; this.held = null; };
+  Anim.prototype.write = function () {
+    var max = this.max();
+    if (this.pos <= 0 || this.pos >= max) {          // hit an edge: stop there, no overshoot
+      this.pos = Math.min(Math.max(this.pos, 0), max);
+      this.vel = 0; this.ideal = this.pos;
+      this.el.scrollTop = this.pos;
+      return false;
+    }
+    this.el.scrollTop = this.pos;
+    return true;
+  };
+  /* ScrollAnimationKeyboard::animateScroll */
+  Anim.prototype.step = function (t) {
+    var dt = (t - this.last) / 1000; this.last = t;
+    if (dt <= 0) return true;
+    if (dt > 0.05) dt = 0.05;                          // a stalled frame shouldn't fling
+    var force = 0, spring = true, ideal = this.ideal;
+    if (this.held) {
+      force = this.held.force; spring = false; ideal = this.pos;
+      if (Math.abs(this.vel) >= Math.abs(this.held.maxVel)) force = 0;
+    }
+    var disp = this.pos - ideal;
+    if (spring) force -= disp * STIFF + this.vel * DAMP;
+    this.vel += force / MASS * dt;
+    this.pos += this.vel * dt;
+    var inside = this.write();
+    if (spring && disp * (this.pos - ideal) < 0) { this.vel = 0; this.pos = ideal; this.el.scrollTop = ideal; }
+    if (!inside && !this.held) return false;
+    if (!this.held && this.vel * this.vel < 1 && Math.abs(this.pos - ideal) < 0.5) { this.vel = 0; return false; }
+    return true;
+  };
+  /* startKeyboardScroll — velocity carries over, like WebKit */
+  Anim.prototype.hold = function (dir, step) {
+    var maxVel = step * MAX_VEL_MULT * dir;
+    this.held = { dir: dir, maxVel: maxVel, force: maxVel * MASS / TIME_TO_MAX };
+    this.minTravel = this.pos + step * dir;
+    this.run();
+  };
+  /* stopKeyboardScrollAnimation */
+  Anim.prototype.release = function () {
+    if (!this.held) return;
+    var d = Math.sqrt(this.vel * this.vel * MASS / STIFF) * (this.vel < 0 ? -1 : 1);
+    var settle = this.pos + d;
+    this.ideal = this.held.dir > 0 ? Math.max(settle, this.minTravel) : Math.min(settle, this.minTravel);
+    this.ideal = Math.round(Math.min(Math.max(this.ideal, 0), this.max()));
+    this.held = null;
+    this.run();
+  };
+  /* a jump to a target (top / bottom, or the public API): spring there */
+  Anim.prototype.to = function (target) {
+    var base = this.raf && !this.held ? this.ideal : this.pos;
+    if (typeof target === 'function') target = target(base);
+    this.held = null;
+    this.ideal = Math.round(Math.min(Math.max(target, 0), this.max()));
+    this.run();
+  };
+
+  function anim(el) { var a = anims.get(el); if (!a) { a = new Anim(el); anims.set(el, a); } a.sync(); return a; }
+  function pageStep(el) {
+    var h = el === docEl() ? innerHeight : el.clientHeight;
+    return Math.max(h * PAGE_MIN_FRACTION, h - PAGE_OVERLAP);
+  }
+
+  var heldKey = null, heldAnim = null;
+  function releaseHeld() { if (heldAnim) heldAnim.release(); heldKey = heldAnim = null; }
+
+  addEventListener('keydown', function (e) {
+    if (e.defaultPrevented || e.altKey || e.ctrlKey) return;
+    var k = e.key, cmdArrow = e.metaKey && (k === 'ArrowUp' || k === 'ArrowDown');
+    if (e.metaKey && !cmdArrow) return;
+    if (!/^( |ArrowUp|ArrowDown|PageUp|PageDown|Home|End)$/.test(k)) return;
+    var act = document.activeElement;
+    if (ownsKeys(act)) return;
+    if (k === ' ' && spaceActivates(act)) return;
+    if ((k === 'ArrowUp' || k === 'ArrowDown') && e.shiftKey && !cmdArrow) return;   // leave selection alone
+
+    var el = pickScroller(); if (!el) return;
+    e.preventDefault();
+    var edge = cmdArrow || k === 'Home' || k === 'End';
+    if (!edge && (e.repeat || heldKey)) return;                // WebKit ignores repeats and other keys while one is held
+    var a = anim(el), page = pageStep(el);
+
+    if (reduce && reduce.matches) {                       // same steps, no animation
+      a.stop();
+      var dy = k === 'ArrowDown' ? LINE : k === 'ArrowUp' ? -LINE :
+               (k === ' ' && !e.shiftKey) || k === 'PageDown' ? page : page * -1;
+      if (k === 'Home' || (cmdArrow && k === 'ArrowUp')) el.scrollTop = 0;
+      else if (k === 'End' || (cmdArrow && k === 'ArrowDown')) el.scrollTop = el.scrollHeight;
+      else el.scrollTop += dy;
+      return;
+    }
+
+    if (edge) {
+      a.to(k === 'Home' || k === 'ArrowUp' ? 0 : a.max());
+    } else if (k === 'ArrowUp' || k === 'ArrowDown') {
+      heldKey = k; heldAnim = a; a.hold(k === 'ArrowDown' ? 1 : -1, LINE);
+    } else {
+      heldKey = k; heldAnim = a;
+      a.hold((k === ' ' && !e.shiftKey) || k === 'PageDown' ? 1 : -1, page);
+    }
+  });
+  addEventListener('keyup', function (e) { if (e.key === heldKey) releaseHeld(); });
+  addEventListener('blur', releaseHeld);
+  document.addEventListener('visibilitychange', function () { if (document.hidden) releaseHeld(); });
+  /* a wheel/trackpad scroll takes over from a gliding key scroll */
+  addEventListener('wheel', function (e) {
+    var el = scrollerFrom(e.target), a = el && anims.get(el);
+    if (a && a.raf && !a.held) a.stop();
+  }, { passive: true });
+
+  window.SmoothScroll = {
+    /* programmatic glide, e.g. SmoothScroll.to(pane, 0) to send a pane home */
+    to: function (el, y) { anim(el || docEl()).to(y); },
+    by: function (el, dy) { var a = anim(el || docEl()); a.to(function (b) { return b + dy; }); }
+  };
+})();
+
+</script>
+<script>
+/* quiz.js — multiple-choice questions, the house way. Include before </body>; no init.
+
+   Write each quiz as JSON inside a .mcq element. The page builds it once,
+   at load; answering only changes classes and text.
+
+     <section class="mcq" data-title="Chapter 5 practice">
+       <script type="application/json">[
+         { "q": "If \\(t = \\sqrt{\\dfrac{2h}{g}}\\), how much taller must the table be to double \\(t\\)?",
+           "options": ["\\(2\\times\\)", "\\(4\\times\\)", "\\(8\\times\\)"],
+           "answer": 1,                       (0-based index into options, or a letter)
+           "why": "\\(t \\propto \\sqrt{h}\\), so doubling \\(t\\) takes \\(4h\\)." }
+       ]<\/script>                         (written <\/script here so the file can be inlined)
+     </section>
+
+   Randomized, always: the question order and each question's options are
+   shuffled the first time the quiz opens, kept through reloads (so progress
+   and the letters you talk about stay put), and reshuffled on Start over.
+   Never refer to a letter or a position in a question, option or why.
+
+   Optional: an empty <nav class="mcq-nav"></nav> (the left pane of a quiz
+   page) becomes the question numbers: plain = unanswered, underlined =
+   right, struck through = wrong. Clicking one glides to that question.
+
+   Answer with a click, or press A–F or 1–6. Keys go to the question that
+   holds focus or sits under the pointer, else the first unanswered one on
+   screen. An answer shows Correct / Incorrect, marks the right option,
+   strikes a wrong pick, shows the why, and locks the question. A keyboard
+   answer glides on to the next unanswered question.
+
+   Copy answers is always there: plain text with each question, its
+   options, your answer or Skipped, and the right answer. Math stays LaTeX
+   ($…$) so it pastes cleanly into a chat.
+
+   MCQ.audit() lists anything that gives an answer away: the right option
+   longest or shortest, options of very different length, a hedge only on
+   the right one or an absolute only on the wrong ones, "all/none of the
+   above", duplicates, a missing why, a slash fraction. It must come back
+   empty before a quiz is published; the same list goes to the console.     */
+(function () {
+  'use strict';
+  if (window.MCQ) return;
+  var LETTERS = 'ABCDEF';
+  var quizzes = [];
+  var hoverQ = null;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
+
+  /* ── helpers ──────────────────────────────────────────────────────────── */
+  function make(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  // punctuation right after inline math moves inside it, so a line can't start with ", "
+  function glue(s) { return String(s).replace(/\\\)([.,;:!?])/g, '$1\\)'); }
+  function asPlain(s) { return String(s).replace(/\\\(|\\\)/g, '$').replace(/\\\[|\\\]/g, '$$$$'); }
+  function hash(s) { var h = 0; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); }
+  function newSeed() {
+    try { var a = new Uint32Array(1); crypto.getRandomValues(a); return a[0]; }
+    catch (e) { return (Math.random() * 4294967296) >>> 0; }
+  }
+  function rng(seed) {                                 // mulberry32: small, seedable, even
+    return function () {
+      seed = (seed + 0x6D2B79F5) | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function shuffled(n, rand) {                         // Fisher–Yates
+    var a = []; for (var i = 0; i < n; i++) a.push(i);
+    for (var j = n - 1; j > 0; j--) { var k = Math.floor(rand() * (j + 1)), t = a[j]; a[j] = a[k]; a[k] = t; }
+    return a;
+  }
+  function answerIndex(answer, n) {
+    if (typeof answer === 'number') return answer >= 0 && answer < n ? answer : 0;
+    var j = LETTERS.indexOf(String(answer).trim().toUpperCase());
+    return j >= 0 && j < n ? j : 0;
+  }
+  function scrollerOf(node) {
+    for (var e = node.parentElement; e && e !== document.body; e = e.parentElement) {
+      var o = getComputedStyle(e).overflowY;
+      if ((o === 'auto' || o === 'scroll') && e.scrollHeight > e.clientHeight) return e;
+    }
+    return document.scrollingElement || document.documentElement;
+  }
+  function glideTo(node) {
+    var sc = scrollerOf(node), page = sc === (document.scrollingElement || document.documentElement);
+    var top = node.getBoundingClientRect().top - (page ? 0 : sc.getBoundingClientRect().top);
+    var y = Math.max(0, sc.scrollTop + top - sc.clientHeight * 0.18);
+    if (reduce && reduce.matches) sc.scrollTop = y;
+    else if (window.SmoothScroll) SmoothScroll.to(sc, y);
+    else sc.scrollTo({ top: y, behavior: 'smooth' });
+  }
+  function shown(q) { return q.li.offsetParent !== null; }
+  function onScreen(q) { var r = q.li.getBoundingClientRect(); return r.bottom > 40 && r.top < innerHeight - 40; }
+  function copyText(btn, text, fallback) {
+    var label = btn.firstChild, was = label.nodeValue;
+    function done() { fallback.hidden = true; label.nodeValue = 'Copied'; setTimeout(function () { label.nodeValue = was; }, 1400); }
+    function fail() { fallback.value = text; fallback.hidden = false; fallback.focus(); fallback.select(); }
+    try { navigator.clipboard.writeText(text).then(done, fail); } catch (e) { fail(); }
+  }
+
+  /* ── the giveaway check ───────────────────────────────────────────────── */
+  var HEDGE = /\b(usually|often|generally|typically|mostly|may|might|can|sometimes|tends? to|about|roughly)\b/i;
+  var ABSOLUTE = /\b(always|never|only|all|none|every|completely|entirely|impossible|guaranteed)\b/i;
+  function words(s) {                                  // what a reader sees: LaTeX commands and delimiters out
+    return String(s).replace(/\\[a-zA-Z]+/g, ' ').replace(/[\\{}()\[\]^_$]/g, '').replace(/\s+/g, ' ').trim();
+  }
+  function auditOne(d, i) {
+    var out = [], n = (d.options || []).length, ans = answerIndex(d.answer, n);
+    var say = function (msg) { out.push({ question: i + 1, text: words(d.q).slice(0, 60), issue: msg }); };
+    if (n < 3) say('fewer than 3 options');
+    if (!d.why) say('no why');
+    var opts = (d.options || []).map(words), lens = opts.map(function (o) { return o.length; });
+    if (new Set((d.options || []).map(function (o) { return String(o).replace(/\s+/g, ' ').trim().toLowerCase(); })).size < n) say('two options are the same');
+    if (opts.some(function (o) { return /\b(all|none|both|neither) of (the|these) (above|options)\b/i.test(o); })) say('"all / none / both of the above"');
+    var max = Math.max.apply(null, lens), min = Math.min.apply(null, lens);
+    if (max > 12) {                                    // short answers (numbers, symbols) can't give much away by length
+      if (max / Math.max(min, 1) > 1.5) say('options differ a lot in length (' + min + '–' + max + ' characters)');
+      var others = lens.filter(function (_, j) { return j !== ans; });
+      var nextLong = Math.max.apply(null, others), nextShort = Math.min.apply(null, others);
+      if (lens[ans] > nextLong && lens[ans] >= nextLong * 1.15) say('the right answer is the longest option');
+      if (lens[ans] < nextShort && lens[ans] <= nextShort * 0.85) say('the right answer is the shortest option');
+    }
+    var wrong = opts.filter(function (_, j) { return j !== ans; });
+    if (HEDGE.test(opts[ans]) && !wrong.some(function (o) { return HEDGE.test(o); })) say('only the right answer hedges ("usually", "can"…)');
+    if (!ABSOLUTE.test(opts[ans]) && wrong.length && wrong.every(function (o) { return ABSOLUTE.test(o); })) say('only the wrong answers use absolutes ("always", "never"…)');
+    [d.q, d.why].concat(d.options || []).forEach(function (s) {
+      (String(s || '').match(/\\\(([\s\S]*?)\\\)|\\\[([\s\S]*?)\\\]/g) || []).forEach(function (m) {
+        if (m.indexOf('/') !== -1) say('slash fraction in math: ' + m.slice(0, 30));
+      });
+      if (/\b(?:[Oo]ption|[Aa]nswer(?: is)?|[Cc]hoice|[Ll]etter) [A-F]\b/.test(words(s))) say('refers to a letter, but options are shuffled');
+    });
+    return out;
+  }
+
+  /* ── one quiz ─────────────────────────────────────────────────────────── */
+  function build(root) {
+    var src = root.querySelector('script[type="application/json"]'), data;
+    try { data = JSON.parse(src.textContent); } catch (e) { return; }
+    if (!Array.isArray(data) || !data.length) return;
+    var title = root.getAttribute('data-title') || document.title;
+    var key = 'minimono:mcq2:' + hash(data.map(function (d) { return d.q + '\u0001' + (d.options || []).join('\u0001'); }).join('\n'));
+    var state = null;
+    try { state = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
+    if (!state || typeof state.seed !== 'number' || !Array.isArray(state.answers)) state = { seed: newSeed(), answers: [] };
+
+    var quiz = { root: root, data: data, qs: [], order: [], nav: null };
+    var list = make('ol', 'mcq-list');
+    var nav = document.querySelector(root.getAttribute('data-nav') || '.mcq-nav');  // one nav per test
+    if (nav && !nav.dataset.built) { nav.dataset.built = '1'; quiz.nav = nav; }
+    var base = quizzes.reduce(function (s, z) { return s + z.qs.length; }, 0);
+
+    // every element is made once, here; shuffling only moves them
+    data.forEach(function (d, i) {
+      var li = make('li', 'mcq-q');
+      li.id = 'mcq-' + (base + i + 1);
+      li.tabIndex = -1;                                 // holds focus between answers, so Space still scrolls
+      var num = make('span', 'mcq-n');
+      num.setAttribute('aria-hidden', 'true');
+      var body = make('div', 'mcq-body');
+      var text = make('div', 'mcq-text', glue(d.q));
+      var opts = make('div', 'mcq-opts');
+      opts.setAttribute('role', 'group');
+      var btns = (d.options || []).map(function (o) {
+        var b = make('button', 'mcq-opt');
+        b.type = 'button';
+        var l = make('span', 'mcq-l');
+        b._letter = l.appendChild(document.createTextNode(''));
+        b.append(l, make('span', 'mcq-t', glue(o)));
+        return b;
+      });
+      var fb = make('p', 'mcq-fb');
+      fb.hidden = true;
+      fb.setAttribute('aria-live', 'polite');
+      var fbt = fb.appendChild(document.createTextNode(''));
+      var why = make('p', 'mcq-why', glue(d.why || ''));
+      why.hidden = true;
+      body.append(text, opts, fb, why);
+      li.append(num, body);
+
+      var q = { quiz: quiz, i: i, d: d, li: li, num: num.appendChild(document.createTextNode('')), opts: opts, btns: btns,
+                fb: fb, fbt: fbt, why: why, ans: answerIndex(d.answer, btns.length), chosen: -1, perm: [], navA: null };
+      li._mcq = q;
+      btns.forEach(function (b, o) {                   // o = the option's index in the JSON
+        b.addEventListener('click', function (e) { choose(q, q.perm.indexOf(o), e.detail === 0); });   // detail 0 = Enter / Space
+      });
+      li.addEventListener('pointerenter', function () { hoverQ = q; });
+      li.addEventListener('pointerleave', function () { if (hoverQ === q) hoverQ = null; });
+      if (quiz.nav) {
+        var a = make('a', 'mcq-nav-n');
+        a.href = '#' + li.id;
+        q.navT = a.appendChild(document.createTextNode(''));
+        a.addEventListener('click', function (e) { e.preventDefault(); glideTo(li); li.focus({ preventScroll: true }); });
+        q.navA = a;
+      }
+      quiz.qs.push(q);
+    });
+
+    var bar = make('div', 'mcq-bar');
+    var copyB = make('button', 'btn mcq-copy', 'Copy answers');
+    copyB.type = 'button';
+    var resetB = make('button', 'btn mcq-reset', 'Start over');
+    resetB.type = 'button';
+    var score = make('span', 'mcq-score');
+    score.setAttribute('aria-live', 'polite');
+    var scoreT = score.appendChild(document.createTextNode(''));
+    var fallback = make('textarea', 'mcq-fallback');
+    fallback.readOnly = true;
+    fallback.hidden = true;
+    fallback.setAttribute('aria-label', 'Answers to copy');
+    bar.append(copyB, resetB, score);
+    root.append(list, bar, fallback);
+
+    // lay the questions and options out in the order the seed gives
+    function arrange(seed) {
+      var rand = rng(seed);
+      quiz.order = shuffled(quiz.qs.length, rand).map(function (i) { return quiz.qs[i]; });
+      quiz.qs.forEach(function (q) { q.perm = shuffled(q.btns.length, rand); });
+      quiz.order.forEach(function (q, p) {
+        list.append(q.li);
+        q.num.nodeValue = String(p + 1);
+        q.opts.setAttribute('aria-label', 'Question ' + (p + 1));
+        q.perm.forEach(function (o, j) { q.opts.append(q.btns[o]); q.btns[o]._letter.nodeValue = LETTERS[j]; });
+        if (q.navA) { quiz.nav.append(q.navA); q.navT.nodeValue = String(p + 1); }
+      });
+    }
+    function mark(q) {
+      var done = q.chosen >= 0, right = done && q.chosen === q.ans;
+      q.li.classList.toggle('is-done', done);
+      q.li.classList.toggle('is-wrong', done && !right);
+      q.btns.forEach(function (b, o) {
+        b.classList.toggle('is-chosen', done && o === q.chosen);
+        b.classList.toggle('is-answer', done && o === q.ans);
+        if (done) b.setAttribute('aria-disabled', 'true'); else b.removeAttribute('aria-disabled');
+      });
+      q.fbt.nodeValue = !done ? '' : right ? 'Correct.' : 'Incorrect. The answer is ' + LETTERS[q.perm.indexOf(q.ans)] + '.';
+      q.fb.hidden = !done;
+      q.why.hidden = !done || !q.d.why;
+      if (q.navA) { q.navA.classList.toggle('is-right', right); q.navA.classList.toggle('is-wrong', done && !right); }
+    }
+    function save() {
+      try { localStorage.setItem(key, JSON.stringify({ seed: state.seed, answers: quiz.qs.map(function (q) { return q.chosen; }) })); } catch (e) {}
+    }
+    function tally() {
+      var answered = 0, right = 0;
+      quiz.qs.forEach(function (q) { if (q.chosen >= 0) { answered++; if (q.chosen === q.ans) right++; } });
+      var left = quiz.qs.length - answered;
+      scoreT.nodeValue = !answered ? '' : right + ' of ' + answered + ' correct' + (left ? ' · ' + left + ' left' : '');
+      save();
+    }
+    function next(q) {
+      var p = quiz.order.indexOf(q);
+      var rest = quiz.order.slice(p + 1).concat(quiz.order.slice(0, p)).filter(function (x) { return x.chosen < 0; });
+      if (rest.length) { rest[0].li.focus({ preventScroll: true }); glideTo(rest[0].li); }
+      else { q.li.focus({ preventScroll: true }); glideTo(root.querySelector('.frq-q') || bar); }  // on to the FRQs
+    }
+    function choose(q, j, advance) {                   // j = position on screen
+      if (q.chosen >= 0 || j < 0 || j >= q.btns.length) return;   // answered questions stay locked
+      q.chosen = q.perm[j];
+      mark(q);
+      tally();
+      if (advance) next(q);
+      else q.li.focus({ preventScroll: true });        // off the button, so Space scrolls again
+    }
+    quiz.choose = choose;
+
+    copyB.addEventListener('click', function () {
+      var lines = [title, ''], answered = 0, right = 0;
+      quiz.order.forEach(function (q, p) {
+        lines.push((p + 1) + '. ' + asPlain(q.d.q));
+        q.perm.forEach(function (o, j) { lines.push('   ' + LETTERS[j] + '. ' + asPlain(q.d.options[o])); });
+        var A = LETTERS[q.perm.indexOf(q.ans)];
+        if (q.chosen < 0) lines.push('   Skipped. Answer: ' + A);
+        else {
+          answered++;
+          var C = LETTERS[q.perm.indexOf(q.chosen)];
+          if (q.chosen === q.ans) { right++; lines.push('   Your answer: ' + C + ' (correct)'); }
+          else lines.push('   Your answer: ' + C + ' (incorrect). Answer: ' + A);
+        }
+        lines.push('');
+      });
+      var skipped = quiz.qs.length - answered;
+      lines.push('Score: ' + right + ' of ' + quiz.qs.length + (skipped ? ' (' + skipped + ' skipped)' : ''));
+      copyText(copyB, lines.join('\n'), fallback);
+    });
+    resetB.addEventListener('click', function () {      // a fresh order: same elements, moved
+      quiz.qs.forEach(function (q) { q.chosen = -1; mark(q); });
+      state.seed = newSeed();
+      arrange(state.seed);
+      tally();
+      var first = quiz.order[0];
+      glideTo(first.li);
+      first.li.focus({ preventScroll: true });
+    });
+
+    arrange(state.seed);
+    quiz.qs.forEach(function (q, i) {                  // reopen where you left off
+      var s = state.answers[i];
+      if (typeof s === 'number' && s >= 0 && s < q.btns.length) { q.chosen = s; mark(q); }
+    });
+    tally();
+    quizzes.push(quiz);
+
+    var issues = data.reduce(function (acc, d, i) { return acc.concat(auditOne(d, i)); }, []);
+    if (issues.length && window.console) console.warn('quiz.js: ' + issues.length + ' question(s) give the answer away', issues);
+
+    var MJ = window.MathJax, targets = [root].concat(quiz.nav ? [quiz.nav] : []);
+    if (MJ && MJ.startup && MJ.startup.promise) MJ.startup.promise.then(function () { return MJ.typesetPromise(targets); }).catch(function () {});
+    else if (MJ && typeof MJ.typesetPromise === 'function') MJ.typesetPromise(targets).catch(function () {});
+  }
+
+  /* ── keys: A–F or 1–6 answer the current question ─────────────────────── */
+  function current() {
+    var a = document.activeElement, li = a && a.closest && a.closest('.mcq-q');
+    var q = li && li._mcq;
+    if (q && q.chosen < 0 && shown(q)) return q;
+    if (hoverQ && hoverQ.chosen < 0 && shown(hoverQ)) return hoverQ;
+    var lis = document.querySelectorAll('.mcq-q');      // page order = the shuffled order
+    for (var i = 0; i < lis.length; i++) {
+      var x = lis[i]._mcq;
+      if (x && x.chosen < 0 && shown(x) && onScreen(x)) return x;
+    }
+    return null;
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey || e.repeat || e.defaultPrevented) return;
+    var a = document.activeElement;
+    if (a && (a.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))) return;
+    var j = e.key.length === 1 ? LETTERS.indexOf(e.key.toUpperCase()) : -1;
+    if (j < 0 && /^[1-6]$/.test(e.key)) j = +e.key - 1;
+    if (j < 0) return;
+    var q = current();
+    if (!q || j >= q.btns.length) return;
+    e.preventDefault();
+    q.quiz.choose(q, j, true);
+  });
+
+  function init() {
+    document.querySelectorAll('.mcq').forEach(function (r) {
+      if (!r.dataset.built) { r.dataset.built = '1'; build(r); }
+    });
+  }
+  init();                                               // the quiz markup sits above this script
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+
+  window.MCQ = {
+    init: init,
+    // every giveaway in every quiz on the page; must be empty before publishing
+    audit: function () {
+      return quizzes.reduce(function (acc, z) {
+        return acc.concat(z.data.reduce(function (a2, d, i) { return a2.concat(auditOne(d, i)); }, []));
+      }, []);
+    },
+    _shuffle: function (n, seed) { return shuffled(n, rng(seed)); }   // for tests
+  };
+})();
+
+</script>
+<script>
+
+/* page.js — this page's own behavior: FRQs, switching between the two tests,
+   and holding the questions back until the math is drawn. Everything is made
+   once at load; switching and answering only change attributes and text.  */
+(function () {
+  'use strict';
+  var html = document.documentElement;
+  var pane = document.querySelector('.pane-r');
+  var tests = [].slice.call(document.querySelectorAll('.test'));
+  var rows = [].slice.call(document.querySelectorAll('.pane-l .row[data-test]'));
+  var navs = {}, mem = {}, cur = null;
+
+  function make(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function glue(s) { return String(s).replace(/\\\)([.,;:!?])/g, '$1\\)'); }
+  function asPlain(s) { return String(s).replace(/\\\(|\\\)/g, '$').replace(/\\\[|\\\]/g, '$$$$'); }
+  function glide(el) {
+    var top = el.getBoundingClientRect().top - pane.getBoundingClientRect().top;
+    var y = Math.max(0, pane.scrollTop + top - pane.clientHeight * 0.18);
+    if (window.SmoothScroll) SmoothScroll.to(pane, y); else pane.scrollTop = y;
+  }
+  function copy(btn, text, fallback) {
+    var label = btn.firstChild, was = label.nodeValue;
+    function done() { fallback.hidden = true; label.nodeValue = 'Copied'; setTimeout(function () { label.nodeValue = was; }, 1400); }
+    function fail() { fallback.value = text; fallback.hidden = false; fallback.focus(); fallback.select(); }
+    try { navigator.clipboard.writeText(text).then(done, fail); } catch (e) { fail(); }
+  }
+
+  tests.forEach(function (t) {
+    var root = t.querySelector('.mcq');
+    var nav = document.querySelector(root.getAttribute('data-nav'));
+    navs[t.id] = nav;
+    var data = JSON.parse(t.querySelector('script.frq-data').textContent);
+    var n0 = JSON.parse(root.querySelector('script[type="application/json"]').textContent).length;
+    var key = 'bipn:frq:' + t.getAttribute('data-key');
+    var saved = null;
+    try { saved = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
+    if (!saved || !Array.isArray(saved.text)) saved = { text: [], open: [] };
+
+    var list = make('ol', 'frq-list');
+    var items = data.map(function (d, i) {
+      var n = n0 + i + 1;
+      var li = make('li', 'frq-q');
+      li.id = t.id + '-frq-' + (i + 1);
+      li.tabIndex = -1;
+      var num = make('span', 'mcq-n', String(n));
+      num.setAttribute('aria-hidden', 'true');
+      var body = make('div', 'mcq-body');
+      var text = make('div', 'mcq-text', glue(d.q));
+      var box = make('textarea', 'frq-in');
+      box.id = li.id + '-in';
+      box.rows = 6;
+      box.spellcheck = false;
+      box.setAttribute('aria-label', 'Your answer to question ' + n);
+      box.value = saved.text[i] || '';
+      var act = make('div', 'frq-act');
+      var btn = make('button', 'btn frq-show');
+      btn.type = 'button';
+      var label = btn.appendChild(document.createTextNode('Show answer'));
+      act.append(btn);
+      var ans = make('div', 'frq-ans');
+      ans.append(make('p', null, glue(d.answer)));
+      if (d.points && d.points.length) {
+        var ul = make('ul', 'frq-pts');
+        d.points.forEach(function (p) { ul.append(make('li', null, glue(p))); });
+        ans.append(ul);
+      }
+      body.append(text, box, act, ans);
+      li.append(num, body);
+      list.append(li);
+      var it = { d: d, n: n, li: li, box: box, ans: ans, navA: null };
+      it.open = function (v) {
+        ans.hidden = !v;
+        label.nodeValue = v ? 'Hide answer' : 'Show answer';
+        btn.setAttribute('aria-expanded', v ? 'true' : 'false');
+      };
+      it.open(!!saved.open[i]);
+      btn.addEventListener('click', function () { it.open(ans.hidden); save(); });
+      box.addEventListener('input', save);
+      if (nav) {
+        var a = make('a', 'mcq-nav-n', String(n));
+        a.href = '#' + li.id;
+        a.addEventListener('click', function (e) { e.preventDefault(); glide(li); li.focus({ preventScroll: true }); });
+        it.navA = a;
+      }
+      return it;
+    });
+    function save() {
+      try {
+        localStorage.setItem(key, JSON.stringify({
+          text: items.map(function (x) { return x.box.value; }),
+          open: items.map(function (x) { return !x.ans.hidden; })
+        }));
+      } catch (e) {}
+    }
+    function navTail() { if (nav) items.forEach(function (x) { nav.append(x.navA); }); }
+
+    var bar = root.querySelector('.mcq-bar');
+    var fallback = root.querySelector('.mcq-fallback');
+    var reset = root.querySelector('.mcq-reset');
+    root.insertBefore(list, bar);
+    navTail();
+
+    var copyW = make('button', 'btn frq-copy');
+    copyW.type = 'button';
+    copyW.appendChild(document.createTextNode('Copy written answers'));
+    bar.insertBefore(copyW, reset);
+    copyW.addEventListener('click', function () {
+      var lines = [root.getAttribute('data-title') + ', written answers', ''];
+      items.forEach(function (x) {
+        lines.push(x.n + '. ' + asPlain(x.d.q));
+        lines.push('   Your answer: ' + (x.box.value.trim() || 'Skipped'));
+        lines.push('   Model answer: ' + asPlain(x.d.answer));
+        (x.d.points || []).forEach(function (p) { lines.push('   - ' + asPlain(p)); });
+        lines.push('');
+      });
+      copy(copyW, lines.join('\n'), fallback);
+    });
+    reset.addEventListener('click', function () {   // quiz.js reshuffles first; then clear the written answers
+      items.forEach(function (x) { x.box.value = ''; x.open(false); });
+      save();
+      navTail();
+    });
+  });
+
+  // the two tests already exist; switching only flips `hidden` and aria-current
+  function show(id) {
+    if (!/^test-\d+$/.test(id) || !document.getElementById(id)) id = tests[0].id;
+    if (cur === id) return;
+    if (cur) mem[cur] = pane.scrollTop;
+    tests.forEach(function (t) { t.hidden = t.id !== id; });
+    rows.forEach(function (r) { r.setAttribute('aria-current', r.getAttribute('data-test') === id ? 'true' : 'false'); });
+    Object.keys(navs).forEach(function (k) { if (navs[k]) navs[k].hidden = k !== id; });
+    cur = id;
+    pane.scrollTop = mem[id] || 0;
+  }
+  function fromHash() { show((location.hash || '').slice(1)); }
+  addEventListener('hashchange', fromHash);
+  fromHash();
+
+  // the questions wait behind the loading ring until MathJax has drawn them
+  window.__mathReady = function () { html.classList.remove('mj-wait'); };
+  setTimeout(window.__mathReady, 9000);
+})();
+
+</script>
+</body>
+</html>
