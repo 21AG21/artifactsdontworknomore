@@ -1,0 +1,1145 @@
+<!doctype html>
+<html lang="en" class="mj-wait">
+<head>
+<meta charset="utf-8">
+<title>BIPN 105 Lab Practice</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="BIPN 105 Human Physiology Lab: two 30-minute First-half labs practice tests, 30 MCQs and 2 FRQs each.">
+<style>
+/* minimono.css — the house style's base: tokens, type, the two-pane layout,
+   the windowed overlay, and flat native controls.
+   Targets two screens: MacBook Air 15" (1710×1107, 2×) and Dell P2423D
+   (2560×1440, 1×). Every line is 1px — half-pixels vanish on the Dell.     */
+
+/* ── Tokens ─────────────────────────────────────────────────────────────── */
+:root{
+  color-scheme: light dark;            /* native controls + scrollbars follow the theme */
+  --ground:#EEF1F4; --wall:#ffffff;
+  --ink:#0a0a0b; --ink-soft:#5F6368; --muted:#9c9ca3;
+  --hair:rgba(10,10,12,.13); --hair-soft:rgba(10,10,12,.08);
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",system-ui,sans-serif;
+  --pane-l:25%;                        /* the left pane is one quarter, always */
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --ground:#000000; --wall:#161618; --ink:#f6f6f8; --ink-soft:#a0a0a8; --muted:#67676f;
+  --hair:rgba(255,255,255,.16); --hair-soft:rgba(255,255,255,.09);
+}}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#000000; --wall:#161618; --ink:#f6f6f8; --ink-soft:#a0a0a8; --muted:#67676f;
+  --hair:rgba(255,255,255,.16); --hair-soft:rgba(255,255,255,.09);
+}
+:root[data-theme="light"]{ color-scheme: light; }
+
+/* ── Base ───────────────────────────────────────────────────────────────── */
+*,*::before,*::after{ box-sizing:border-box; }
+html,body{ margin:0; height:100%; overflow:hidden; }
+body{
+  background:var(--ground); color:var(--ink);
+  font:16px/1.5 var(--sans); -webkit-font-smoothing:antialiased;
+  font-variant-numeric:tabular-nums;
+}
+:focus, :focus-visible{ outline:none; }
+/* focus shows only after Tab (minimono.js sets .kbd-nav; any click clears it),
+   as a thin grey line — never a bright ring, never from Shift or a click */
+html.kbd-nav :focus-visible{ outline:1px solid var(--muted); outline-offset:3px; border-radius:6px; }
+/* text selection keeps the system highlight — never restyle ::selection */
+a{ color:inherit; text-decoration:none; }
+/* scrollbars: left to macOS — overlay, thin, shown while scrolling. Never hidden. */
+
+/* ── Type (tuned for 1710 and 2560 wide). Weights: 300 · 400 · 500, never more ─ */
+.hero { font-size:clamp(64px, 4.6vw, 112px); font-weight:300; line-height:1.02; letter-spacing:-.035em; margin:0; }
+.h2   { font-size:clamp(28px, 1.9vw, 40px);  font-weight:500; line-height:1.15; letter-spacing:-.02em; margin:0; }
+.text { font-size:clamp(17px, 1.05vw, 20px); line-height:1.55; max-width:68ch; }
+.label{ font-size:13px; font-weight:500; color:var(--ink-soft); letter-spacing:.005em; }
+.num  { font-weight:400; letter-spacing:-.02em; }
+
+/* ── Layout: two panes, left ¼ · right ¾, each its own scroller ─────────── */
+#app{ display:flex; height:100dvh; }
+.pane-l{
+  flex:0 0 var(--pane-l); height:100%; overflow-y:auto; overscroll-behavior:contain;
+  border-right:1px solid var(--hair-soft); background:var(--ground);
+  padding:48px 32px 64px;
+}
+.pane-r{ flex:1 1 auto; min-width:0; height:100%; overflow-y:auto; overscroll-behavior:contain; }
+.pane-r .body{ max-width:1120px; padding:56px clamp(48px, 5vw, 120px) 120px; }
+
+/* the list in the left pane */
+.row{
+  display:block; width:100%; padding:14px 0; border-bottom:1px solid var(--hair-soft);
+  font-size:clamp(17px, 1.15vw, 22px); color:var(--ink-soft); cursor:pointer;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.row:last-child{ border-bottom:0; }
+@media (hover:hover){ .row:hover{ color:var(--ink); } }
+.row[aria-current="true"]{ color:var(--ink); font-weight:500; }
+.row:active{ opacity:.6; }
+
+/* ── One-pane mode: windowed, or the person hid the left pane ────────────
+   The left pane leaves the layout; it comes back as an overlay (the SAME
+   element, moved) when the pointer enters the top-left zone — the left
+   quarter of the width, the top sixth of the height — or on `.           */
+.pane-hide{
+  border:0; background:none; padding:4px 0; margin:0;
+  font:inherit; font-size:13px; color:var(--ink-soft); cursor:pointer; text-align:left;
+}
+.pane-hide kbd{ font:inherit; color:var(--muted); margin-left:6px; }
+.pane-hide .keep{ display:none; }
+html.is-single .pane-hide .hide{ display:none; }
+html.is-single .pane-hide .keep{ display:inline; }
+html.is-windowed .pane-hide{ display:none; }        /* windowed: the overlay is the only way it shows */
+@media (hover:hover){ .pane-hide:hover{ color:var(--ink); } }
+.menu-hint{ display:none; }
+/* one-pane mode: the link sits in the top-left zone, invisible until the
+   pointer enters that zone (or it takes keyboard focus); always shown on touch */
+html.is-single .menu-hint{
+  display:block; position:fixed; z-index:15;
+  top:calc(env(safe-area-inset-top, 0px) + 18px); left:max(16px, env(safe-area-inset-left, 0px), 2vw);
+  padding:6px 10px; margin:0; border-radius:8px; background:var(--ground);
+  font-size:13px; color:var(--ink-soft); cursor:pointer;
+  opacity:0; pointer-events:none; transition:opacity .14s ease;
+}
+html.is-single .menu-hint kbd{ font:inherit; color:var(--muted); margin-left:6px; }
+html.is-single.hint-on .menu-hint,
+html.kbd-nav.is-single .menu-hint:focus-visible{ opacity:1; pointer-events:auto; }
+@media (hover:none){ html.is-single .menu-hint{ opacity:1; pointer-events:auto; } }
+@media (hover:hover){ html.is-single .menu-hint:hover{ color:var(--ink); } }
+
+html.is-single .pane-l{
+  position:fixed; z-index:20; inset:0 auto 0 0; width:clamp(280px, 25vw, 640px);
+  transform:translateX(-100%); visibility:hidden;
+  transition:transform .22s cubic-bezier(.32,.72,0,1), visibility 0s linear .22s;
+}
+html.is-single.menu-open .pane-l{
+  transform:none; visibility:visible; border-right:1px solid var(--hair);
+  transition:transform .22s cubic-bezier(.32,.72,0,1), visibility 0s;
+}
+
+/* ── Controls: native elements, flat ────────────────────────────────────── */
+/* slider + checkbox + radio take ink through accent-color, natively */
+input[type="range"], input[type="checkbox"], input[type="radio"]{ accent-color:var(--ink); }
+input[type="range"]{ width:100%; max-width:420px; cursor:pointer; }
+
+/* toggle: a checkbox with role="switch", drawn flat */
+input[type="checkbox"][role="switch"]{
+  -webkit-appearance:none; appearance:none; margin:0; flex:none; cursor:pointer;
+  position:relative; width:40px; height:24px; border-radius:999px;
+  background:var(--hair); transition:background .16s ease;
+}
+input[type="checkbox"][role="switch"]::before{
+  content:""; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:999px;
+  background:var(--ground); transition:transform .18s cubic-bezier(.32,.72,0,1);
+}
+input[type="checkbox"][role="switch"]:checked{ background:var(--ink); }
+input[type="checkbox"][role="switch"]:checked::before{ transform:translateX(16px); }
+
+/* segmented choice: a radio group; the chosen one is heavier ink + a 2px mark */
+.seg{ display:inline-flex; gap:28px; border:0; padding:0; margin:0; }
+.seg label{ position:relative; cursor:pointer; padding:6px 0; color:var(--ink-soft); font-weight:400; }
+.seg input{ position:absolute; opacity:0; width:1px; height:1px; }
+.seg input:checked + span{ color:var(--ink); font-weight:500; }
+.seg input:checked + span::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:2px; background:var(--ink); border-radius:2px;
+}
+html.kbd-nav .seg input:focus-visible + span{ outline:1px solid var(--muted); outline-offset:4px; border-radius:6px; }
+@media (hover:hover){ .seg label:hover span{ color:var(--ink); } }
+
+/* search */
+input[type="search"]{
+  -webkit-appearance:none; appearance:none; width:100%; max-width:420px;
+  font:inherit; font-size:16px; color:var(--ink);
+  background:var(--wall); border:0; border-radius:10px; padding:10px 14px;
+}
+input[type="search"]::placeholder{ color:var(--muted); }
+
+/* buttons: only for real actions — navigation is text */
+button{ font:inherit; cursor:pointer; }
+.btn{ border:0; border-radius:10px; padding:10px 18px; font-weight:500; background:var(--wall); color:var(--ink); }
+.btn.primary{ background:var(--ink); color:var(--ground); }
+.btn:active{ opacity:.6; }
+
+/* ── Multiple-choice questions (quiz.js builds them from JSON) ─────────────
+   State without color: the right answer gets an ink bar and Medium weight,
+   a wrong pick is struck through, everything else recedes to grey. */
+.mcq-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:44px; max-width:760px; }
+.mcq-q{ display:grid; grid-template-columns:2em minmax(0, 1fr); column-gap:10px; outline-offset:8px; }
+.mcq-n{ font-size:clamp(19px, 1.25vw, 24px); line-height:1.45; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+.mcq-body{ display:flex; flex-direction:column; gap:12px; min-width:0; }
+.mcq-text{ margin:0; font-size:clamp(19px, 1.25vw, 24px); line-height:1.45; color:var(--ink); }
+.mcq-text mjx-container[display="true"]{ margin:.5em 0 !important; }
+.mcq-opts{ display:flex; flex-direction:column; gap:2px; }
+.mcq-opt{
+  display:grid; grid-template-columns:1.5em minmax(0, 1fr); align-items:baseline; gap:8px;
+  width:calc(100% + 20px); margin:0 -10px; padding:9px 10px; border:0; border-radius:8px;
+  background:none; text-align:left; font:inherit; font-size:clamp(17px, 1.05vw, 20px); line-height:1.45;
+  color:var(--ink); cursor:pointer;
+}
+.mcq-l{ color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+@media (hover:hover){ .mcq-q:not(.is-done) .mcq-opt:hover{ background:var(--wall); } }
+.mcq-q:not(.is-done) .mcq-opt:active{ opacity:.6; }
+.mcq-q.is-done .mcq-opt{ cursor:default; color:var(--ink-soft); }
+.mcq-q.is-done .mcq-opt.is-answer{ color:var(--ink); font-weight:500; box-shadow:inset 2px 0 0 var(--ink); }
+.mcq-q.is-done .mcq-opt.is-answer .mcq-l{ color:var(--ink); }
+.mcq-q.is-done .mcq-opt.is-chosen:not(.is-answer) .mcq-t{ text-decoration:line-through; text-decoration-thickness:1px; }
+.mcq-fb{ margin:6px 0 0; font-size:17px; font-weight:500; color:var(--ink); }
+.mcq-why{ margin:0; font-size:17px; line-height:1.5; color:var(--ink-soft); max-width:62ch; }
+.mcq-bar{ display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin-top:44px; }
+.mcq-score{ font-size:15px; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+.mcq-fallback{ width:100%; max-width:760px; min-height:160px; margin-top:16px; font:14px/1.5 var(--sans); color:var(--ink);
+  background:var(--wall); border:0; border-radius:10px; padding:12px 14px; }
+/* the question numbers, in the left pane of a quiz page */
+.mcq-nav{ display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:4px; }
+.mcq-nav a{ display:block; padding:8px 0; border-radius:8px; text-align:center; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+@media (hover:hover){ .mcq-nav a:hover{ background:var(--wall); color:var(--ink); } }
+.mcq-nav a.is-right{ color:var(--ink); text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:.25em; }
+.mcq-nav a.is-wrong{ color:var(--ink); text-decoration:line-through; text-decoration-thickness:1px; }
+/* fractions stay full size inline */
+mjx-container[jax="SVG"]:not([display="true"]){ margin:0 .08em; }
+
+/* ── Loading: the one color exception — a thin rainbow ring, only while loading */
+.loading{
+  width:18px; height:18px; border-radius:50%;
+  background:conic-gradient(#ff3b30,#ff9500,#ffcc00,#34c759,#00c7be,#007aff,#af52de,#ff3b30);
+  -webkit-mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+          mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+  animation:mm-spin .9s linear infinite;
+}
+@keyframes mm-spin{ to{ transform:rotate(1turn); } }
+
+@media (prefers-reduced-motion:reduce){
+  *{ animation:none!important; transition:none!important; }
+}
+
+/* ── This page: a course, two timed tests, MCQs then FRQs ─────────────── */
+[hidden]{ display:none!important; }
+.pane-r{ position:relative; }
+.course{ display:flex; flex-direction:column; gap:6px; margin:28px 0 30px; }
+.course-n{ margin:0; font-size:clamp(36px, 2.6vw, 56px); font-weight:300; line-height:1.12; letter-spacing:-.03em; }
+.course-t{ margin:0; font-size:clamp(17px, 1.15vw, 22px); line-height:1.35; color:var(--ink); }
+.course-s{ margin:0; font-size:14px; line-height:1.5; color:var(--ink-soft); }
+.tests{ margin:0 0 26px; }
+.frq-list{ list-style:none; margin:44px 0 0; padding:0; display:flex; flex-direction:column; gap:44px; max-width:760px; }
+.frq-q{ display:grid; grid-template-columns:2em minmax(0, 1fr); column-gap:10px; outline-offset:8px; }
+.frq-in{ display:block; width:100%; min-height:8.5em; margin:0; resize:vertical; font:inherit; font-size:clamp(17px, 1.05vw, 20px);
+  line-height:1.5; color:var(--ink); background:var(--wall); border:0; border-radius:10px; padding:12px 14px; }
+.frq-act{ display:flex; gap:12px; }
+.frq-ans{ display:flex; flex-direction:column; gap:10px; }
+.frq-ans p{ margin:0; font-size:17px; line-height:1.5; color:var(--ink); max-width:62ch; }
+.frq-pts{ margin:0; padding:0 0 0 1.1em; display:flex; flex-direction:column; gap:6px; font-size:17px; line-height:1.5; color:var(--ink-soft); max-width:62ch; }
+.frq-pts li::marker{ color:var(--muted); }
+.frq-q mjx-container[display="true"]{ margin:.5em 0 !important; }
+.mj-ring{ position:absolute; top:60px; left:clamp(48px, 5vw, 120px); }
+html:not(.mj-wait) .mj-ring{ display:none; }
+html.mj-wait .pane-r .body{ visibility:hidden; }
+
+</style>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']], packages: { '[+]': ['mhchem'] } },
+  svg: { fontCache: 'global' },
+  startup: {
+    pageReady: function () {
+      return MathJax.startup.defaultPageReady().then(function () { if (window.__mathReady) window.__mathReady(); });
+    }
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg-full.js"></script>
+</head>
+<body>
+<div id="app">
+  <nav class="pane-l">
+    <button class="pane-hide" type="button"><span class="hide">Hide</span><span class="keep">Keep open</span><kbd>`</kbd></button>
+    <header class="course">
+      <h1 class="course-n">BIPN 105</h1>
+      <p class="course-t">Human Physiology Lab</p>
+      <p class="course-s">First-half labs &middot; 30 minutes each</p>
+      <p class="course-s">Instrumentation, red cell membranes, the frog sciatic nerve, the neuromuscular junction, skeletal muscle and the rat uterus.</p>
+    </header>
+    <div class="tests">
+      <a class="row" href="#test-1" data-test="test-1" aria-current="true">Test 1</a>
+<a class="row" href="#test-2" data-test="test-2" aria-current="false">Test 2</a>
+    </div>
+    <nav class="mcq-nav" id="nav-test-1" aria-label="Test 1 questions"></nav>
+<nav class="mcq-nav" id="nav-test-2" aria-label="Test 2 questions" hidden></nav>
+  </nav>
+  <main class="pane-r">
+    <a class="menu-hint" href="#">Menu<kbd>`</kbd></a>
+    <div class="loading mj-ring" aria-hidden="true"></div>
+    <div class="body">
+<section class="test" id="test-1" data-key="bipn105-t1">
+<section class="mcq" data-title="BIPN 105 First-half labs, Test 1" data-nav="#nav-test-1"><script type="application/json">[{"q": "A signal you want to record has frequency components up to 1 kHz. What is the lowest sampling rate that avoids aliasing, by the Nyquist rule?", "options": ["2 kHz", "1 kHz", "500 Hz", "10 kHz"], "answer": 0, "why": "The Nyquist rule says you must sample at more than twice the highest frequency in the signal. Sampling slower makes fast parts of the signal show up as false slow waves (aliasing). In practice labs sample 5 to 10 times faster than the highest frequency to capture the shape well, but 2 kHz is the minimum."}, {"q": "Why are nerve and muscle signals usually recorded with a differential amplifier?", "options": ["It amplifies the difference between two inputs and cancels noise common to both", "It amplifies each input separately and adds them to make the signal larger", "It changes the signal's frequency so it is easier to see on the computer", "It removes the stimulus by subtracting a stored copy of the stimulus pulse"], "answer": 0, "why": "Electrical noise, such as 60 Hz hum from wall wiring, reaches both recording electrodes almost equally. A differential amplifier amplifies only the difference between the two inputs, so this shared noise largely cancels (common-mode rejection), while the biological signal, which differs between the electrodes, is amplified."}, {"q": "A muscle is held in a steady contraction, but the force trace shows a quick rise and then decays back to zero. Which recording setting most likely caused this?", "options": ["A high-pass filter set too high, removing the steady part of the signal", "A low-pass filter set too low, removing the fast part of the signal", "A sampling rate set too high, adding too many points to the trace", "A gain set too high, so the amplifier output went past its limit"], "answer": 0, "why": "A high-pass filter (or AC coupling) removes slow and steady parts of a signal. If its cutoff is too high for a slow signal like force, a steady contraction looks like a brief blip that decays back to baseline. Force is usually recorded with DC coupling. A low-pass filter set too low would round off fast changes instead."}, {"q": "An amplifier has a gain of 1000. A nerve signal of 0.5 mV enters it. How large is the output?", "options": ["0.5 V", "0.5 mV", "50 V", "2 V"], "answer": 0, "why": "Output equals gain times input: \\(1000 \\times 0.5\\) mV \\(= 500\\) mV \\(= 0.5\\) V. Extracellular nerve signals are tiny, often well under a millivolt, so they need large gains before the computer can digitize them well."}, {"q": "You average 100 recordings of the same response. How much does the signal-to-noise ratio improve if the noise is random?", "options": ["About 10 times", "About 100 times", "About 50 times", "It does not improve"], "answer": 0, "why": "The response is the same each time, so it adds up directly, while random noise partly cancels. Averaging \\(N\\) trials improves the signal-to-noise ratio by \\(\\sqrt{N}\\), so 100 trials give \\(\\sqrt{100} = 10\\) times better. To double the improvement, you would need 4 times as many trials."}, {"q": "In an osmotic fragility test, healthy red cells start to burst in about 0.45% NaCl. Cells from a patient with hereditary spherocytosis start to burst at 0.6% NaCl. Why?", "options": ["Sphere-shaped cells have less extra surface area and burst after less swelling", "Sphere-shaped cells have more extra surface area and need more swelling to burst", "Sphere-shaped cells pump in more \\(\\ce{Na+}\\), so they are less concentrated inside", "Sphere-shaped cells have holes in their membranes, so they burst in any solution"], "answer": 0, "why": "A normal red cell is a flat disc with spare membrane, so it can swell into a sphere before the membrane must stretch. Spherocytes are already nearly spherical, with little spare surface, so even a small amount of swelling breaks them. That means they burst in solutions that are only mildly hypotonic."}, {"q": "Red cells are placed in 0.3 M urea, which is about 300 mOsm. What happens, and why?", "options": ["They swell and burst, because urea enters and water follows", "They stay normal, because the solution is about 300 mOsm", "They shrink, because urea pulls water out of the cells", "They swell a little and stop, because urea leaves again"], "answer": 0, "why": "Urea crosses red cell membranes quickly (partly through urea transporters). As it enters, it raises the solute inside, and water follows by osmosis. Since urea keeps entering until inside equals outside, the cell keeps swelling until it bursts. Isosmotic urea acts like pure water: it is hypotonic."}, {"q": "Red cells are put into 0.3 M urea, 0.3 M ethylene glycol and 0.3 M glycerol. Hemolysis is fastest in urea and ethylene glycol and slowest in glycerol. What explains this order?", "options": ["Smaller molecules with fewer hydroxyl groups cross the membrane faster", "Larger molecules with more hydroxyl groups cross the membrane faster", "Glycerol is more lipid soluble, so it is trapped inside the membrane", "Urea is charged, so it is pulled in by the membrane potential"], "answer": 0, "why": "Small molecules that form fewer hydrogen bonds with water leave water and enter the lipid membrane more easily, so they cross faster. Glycerol has three hydroxyl groups and is larger, so it crosses slowly. Urea also has a transporter in red cells. The faster a solute enters, the faster water follows and the faster the cells burst."}, {"q": "How do you know hemolysis has happened in a test tube of blood?", "options": ["The suspension turns clear and red, so print behind it is readable", "The suspension turns cloudy and pale, so print behind it disappears", "The cells sink to the bottom and the liquid above turns clear and pale", "The suspension turns brown, because hemoglobin has lost its iron"], "answer": 0, "why": "Intact red cells scatter light, so a suspension looks cloudy and you cannot read print through it. When cells burst, hemoglobin dissolves into the solution, which becomes clear (but red), and print can be read through the tube. This \"laked\" blood is the endpoint used in the lab."}, {"q": "A solution is isosmotic with red cells but hypotonic to them. What must be true?", "options": ["It contains solutes that cross the membrane, such as urea", "It contains only solutes that cannot cross the membrane", "It contains fewer total particles than the inside of the cells", "It contains more total particles than the inside of the cells"], "answer": 0, "why": "Osmolarity counts all particles. Tonicity depends only on particles that cannot cross the membrane, because those are the ones that hold water in place. If a solution has the same total particles as the cell but some of them cross, those enter the cell and drag water in, so the cell swells. That is what urea does."}, {"q": "In the frog sciatic nerve lab, raising stimulus strength makes the compound action potential (CAP) grow in steps until it levels off. Why?", "options": ["More axons reach threshold, adding their spikes to the total", "Each axon fires a bigger action potential as the stimulus grows", "The nerve sheath stretches, so more current leaks to the recording", "The stimulus gets added to the response, making it grow larger"], "answer": 0, "why": "A CAP is the sum of the action potentials from many axons in the nerve. Each axon has its own threshold, so a weak stimulus fires only the easiest axons. Stronger stimuli recruit more axons, so the CAP grows until all are firing (maximal stimulus). Each single axon still obeys the all-or-none rule."}, {"q": "In the sciatic nerve lab, the CAP has an up phase followed by a down phase. After the nerve is crushed between the two recording electrodes, only the up phase remains. Why?", "options": ["The spike no longer reaches the second electrode, so no opposite phase forms", "Crushing makes the axons fire twice as large at the first electrode", "Crushing blocks the stimulus, so only the stimulus artifact remains", "Crushing reverses the axons' polarity, so the second phase cancels"], "answer": 0, "why": "With two recording electrodes on intact nerve, the spike passes under the first electrode (one deflection) and then under the second (an opposite deflection), giving a biphasic CAP. Crushing the nerve between them stops spikes from reaching the second electrode, so only the first deflection remains (monophasic). Its shape then shows the timing at the first site more clearly."}, {"q": "Two recording electrodes are 20 mm apart along a frog nerve. The CAP peak reaches the second electrode 0.5 ms after the first. What is the conduction velocity?", "options": ["40 m/s", "10 m/s", "4 m/s", "400 m/s"], "answer": 0, "why": "Velocity is distance over time: \\(\\dfrac{20 \\text{ mm}}{0.5 \\text{ ms}} = 40\\) mm per ms. Since 1 mm per ms equals 1 m/s, this is 40 m/s, typical of large myelinated frog A fibers. Using two recording sites avoids errors from the stimulus delay and the time to reach threshold."}, {"q": "At high stimulus strength, a frog nerve's CAP shows a large early peak and a smaller, later peak. What does the later peak most likely come from?", "options": ["Slower-conducting axons, such as thinner myelinated fibers", "A second spike in the same fast axons after their refractory period", "A reflection of the first spike from the cut end of the nerve", "The muscle, which contracts and adds its own electrical signal"], "answer": 0, "why": "A nerve contains fibers of many sizes. Large myelinated fibers have low thresholds and conduct fast, so they make the first peak. Thinner fibers have higher thresholds and slower speeds, so their spikes arrive later and need stronger stimuli. The farther the recording site is from the stimulus, the more these peaks spread apart."}, {"q": "Two stimuli are given to the frog nerve at shorter and shorter intervals. Below about 1.5 ms apart, the second CAP disappears entirely. What does this interval show?", "options": ["The absolute refractory period of the fastest axons", "The relative refractory period of the slowest axons", "The time for \\(\\ce{Na+}\\) to be pumped back out after a spike", "The time for the stimulator to recharge between pulses"], "answer": 0, "why": "Right after a spike, \\(\\ce{Na+}\\) channels are inactivated, so no stimulus can fire the axon (absolute refractory period). At slightly longer intervals, some axons can fire again but need more current, so the second CAP is smaller (relative refractory period). The pump plays no part on this timescale."}, {"q": "A sharp blip appears at the very start of every trace, at the moment of the stimulus, and its size changes with stimulus strength. How do you know it is a stimulus artifact and not a CAP?", "options": ["It has no delay, and it does not shift later when the electrodes are moved farther away", "It has a long delay, and it shifts later when the electrodes are moved farther away", "It appears only at strong stimuli, and it disappears when the nerve is cut in half", "It changes shape with temperature, just as real action potentials of the nerve do"], "answer": 0, "why": "The artifact is current from the stimulator spreading through the bath to the recording electrodes almost instantly. It starts at the stimulus and stays there even if the recording site is moved, and it remains even if the nerve is crushed between stimulus and recording sites. A real CAP has a delay that grows with distance."}, {"q": "Rheobase is the smallest current that fires a nerve with a very long pulse. What is chronaxie?", "options": ["The pulse duration needed to fire the nerve at twice the rheobase current", "The current needed to fire the nerve with a pulse lasting exactly 1 ms", "The pulse duration needed to fire the nerve at half the rheobase current", "The delay between the stimulus and the peak of the action potential"], "answer": 0, "why": "Shorter pulses need more current to reach threshold. Chronaxie is the duration needed at twice rheobase, and it reflects how fast the membrane charges (its time constant). Fibers with shorter chronaxies, such as large myelinated axons, are easier to stimulate with brief pulses."}, {"q": "In the frog nerve–muscle lab, curare is added. Stimulating the nerve no longer makes the muscle twitch, but stimulating the muscle directly still does. Why?", "options": ["Curare blocks nicotinic receptors, so the end-plate potential stays below threshold", "Curare blocks voltage-gated \\(\\ce{Na+}\\) channels in the muscle fiber membrane", "Curare blocks ACh release from the nerve, so no transmitter reaches the muscle", "Curare blocks the ryanodine receptors, so \\(\\ce{Ca^{2+}}\\) is not released in muscle"], "answer": 0, "why": "Curare (d-tubocurarine) competes with ACh for nicotinic receptors at the end plate. With fewer receptors open, the end-plate potential is too small to fire the muscle. The muscle's own action potential and contraction machinery still work, so direct stimulation produces a twitch. This shows the block is at the junction."}, {"q": "After curare, neostigmine is added and nerve stimulation again causes twitches. How?", "options": ["It blocks acetylcholinesterase, so more ACh builds up to outcompete curare", "It blocks curare's binding site, so curare is pushed out of the receptors", "It activates nicotinic receptors directly, replacing the blocked ACh", "It raises \\(\\ce{Ca^{2+}}\\) inside the muscle, so contraction no longer needs ACh"], "answer": 0, "why": "Neostigmine inhibits acetylcholinesterase, so ACh stays in the cleft longer and at higher levels. Because curare is a competitive antagonist, extra ACh can win back enough receptors to bring the end-plate potential above threshold. This is how anesthesiologists reverse curare-like drugs after surgery."}, {"q": "Why can skeletal muscle twitches sum into a stronger contraction, while nerve action potentials cannot?", "options": ["The muscle twitch lasts much longer than its action potential and refractory period", "The muscle action potential lasts longer than the twitch, so spikes overlap", "The muscle has no refractory period, so its action potentials add up together", "The nerve's spikes are too large to sum, while muscle spikes are small enough"], "answer": 0, "why": "A skeletal muscle action potential and its refractory period last a few milliseconds, but the twitch it triggers lasts tens of milliseconds. So a second action potential can arrive while the first twitch is still underway, releasing more \\(\\ce{Ca^{2+}}\\) and stretching the elastic parts further, so force adds up. At high rates, twitches fuse into a smooth tetanus."}, {"q": "Why is the force of a fused tetanus several times larger than a single twitch?", "options": ["\\(\\ce{Ca^{2+}}\\) stays high, so cross-bridges stay engaged while elastic parts are stretched", "More muscle fibers are recruited at high rates, since each stimulus reaches new fibers", "Each action potential in the muscle gets larger at high rates of stimulation", "The muscle's ATP stores rise at high rates, giving each cross-bridge more energy"], "answer": 0, "why": "In a single twitch, \\(\\ce{Ca^{2+}}\\) is pumped back before the muscle can stretch its elastic elements (tendons and cross-bridge springs) fully, so peak force is limited. During a tetanus, \\(\\ce{Ca^{2+}}\\) stays high, troponin stays bound, and cross-bridges keep cycling long enough to fully stretch the elastic parts, so force reaches its maximum. In this lab, the same fibers are stimulated each time."}, {"q": "In the length–tension lab, active force is largest at an intermediate muscle length. Why?", "options": ["At that length, actin and myosin overlap best for cross-bridges", "At that length, the muscle's passive elastic tension is highest", "At that length, the most \\(\\ce{Ca^{2+}}\\) is released by the muscle", "At that length, the action potential travels fastest along fibers"], "answer": 0, "why": "Active force depends on how many myosin heads can reach actin. When the muscle is too stretched, the filaments barely overlap. When it is too short, the thin filaments collide and overlap each other. The best overlap is at an intermediate sarcomere length. Passive tension, from stretching connective tissue and titin, keeps rising at longer lengths."}, {"q": "As the load on a muscle increases, how does its shortening speed change?", "options": ["It falls, reaching zero when the load equals maximal isometric force", "It rises, reaching a maximum when the load equals maximal force", "It stays the same, because each cross-bridge works at a fixed speed", "It falls, reaching zero as soon as any load at all is attached"], "answer": 0, "why": "This is the force–velocity relationship. With no load, the muscle shortens fastest. Heavier loads need more cross-bridges pulling at once, which slows shortening. When the load equals the most force the muscle can make, it cannot shorten at all (isometric). Power output is highest at intermediate loads."}, {"q": "A muscle is stimulated through its nerve until force falls. Direct muscle stimulation then gives almost full force. Where was the fatigue?", "options": ["At the neuromuscular junction, from failing transmission", "Inside the muscle fibers, from lack of ATP for contraction", "In the nerve axons, from running out of \\(\\ce{Na+}\\) gradient", "In the force transducer, from drifting out of calibration"], "answer": 0, "why": "If the muscle itself were fatigued, direct stimulation would also give low force. Since it recovers, the problem was between nerve and muscle: the junction was failing, likely from depleted ACh vesicles at high stimulation rates. Axons themselves are very resistant to fatigue."}, {"q": "There is a short delay (the latent period) between a muscle's action potential and the start of measurable force. What causes it?", "options": ["Time for \\(\\ce{Ca^{2+}}\\) release and for the elastic parts to stretch before force shows", "Time for ATP to be made from glycogen before any cross-bridges can form", "Time for the nerve's action potential to reach the muscle from the spinal cord", "Time for acetylcholine to be made in the terminal after the stimulus arrives"], "answer": 0, "why": "After the muscle action potential, the signal travels down T tubules, \\(\\ce{Ca^{2+}}\\) is released from the sarcoplasmic reticulum, binds troponin, and cross-bridges start forming. The first force goes into stretching tendons and other elastic structures, so force at the transducer starts a few milliseconds later. ATP is already present."}, {"q": "In the rat uterus lab, removing \\(\\ce{Ca^{2+}}\\) from the bath quickly stops contractions. What does this show?", "options": ["Uterine smooth muscle relies heavily on \\(\\ce{Ca^{2+}}\\) entering from outside", "Uterine smooth muscle relies only on \\(\\ce{Ca^{2+}}\\) stored inside the cells", "Uterine smooth muscle contracts through troponin, which needs outside \\(\\ce{Ca^{2+}}\\)", "Uterine smooth muscle is controlled by nerves that need outside \\(\\ce{Ca^{2+}}\\)"], "answer": 0, "why": "Smooth muscle cells are small and have less sarcoplasmic reticulum than skeletal muscle. Much of the \\(\\ce{Ca^{2+}}\\) for contraction enters through L-type \\(\\ce{Ca^{2+}}\\) channels during action potentials. Without outside \\(\\ce{Ca^{2+}}\\), contractions stop. Smooth muscle uses calmodulin and myosin light chain kinase, not troponin."}, {"q": "Oxytocin added to the rat uterus bath makes contractions stronger and more frequent. Through which pathway?", "options": ["\\(\\text{G}_{\\text{q}}\\), raising IP₃ and \\(\\ce{Ca^{2+}}\\) and boosting myosin light chain kinase", "\\(\\text{G}_{\\text{s}}\\), raising cAMP and activating protein kinase A in the muscle", "\\(\\text{G}_{\\text{i}}\\), lowering cAMP and closing \\(\\ce{K+}\\) channels in the muscle", "An ion channel, letting \\(\\ce{Na+}\\) flow in directly through the oxytocin receptor"], "answer": 0, "why": "Oxytocin receptors couple to \\(\\text{G}_{\\text{q}}\\). Phospholipase C makes IP₃, which releases \\(\\ce{Ca^{2+}}\\) from internal stores, and DAG activates PKC. \\(\\ce{Ca^{2+}}\\) binds calmodulin, which activates myosin light chain kinase, so cross-bridges cycle. Oxytocin also makes the cells fire more often. This is why it is used to start or strengthen labor."}, {"q": "Epinephrine relaxes the rat uterus in this lab. Which receptor mainly causes this?", "options": ["\\(\\beta_2\\) adrenergic receptors, raising cAMP", "\\(\\alpha_1\\) adrenergic receptors, raising IP₃", "Muscarinic M3 receptors, raising IP₃", "Nicotinic receptors, opening cation channels"], "answer": 0, "why": "\\(\\beta_2\\) receptors on uterine smooth muscle raise cAMP and activate PKA, which inhibits myosin light chain kinase and helps pump \\(\\ce{Ca^{2+}}\\) away, relaxing the muscle. Drugs that activate \\(\\beta_2\\) receptors have been used to slow preterm labor. \\(\\alpha_1\\) receptors, in contrast, cause contraction."}, {"q": "Why does an isolated uterus keep contracting rhythmically with no nerve or hormone input?", "options": ["Some of its smooth muscle cells act as pacemakers, and gap junctions spread their signals", "Its nerves keep firing on their own after the uterus has been removed from the rat", "Its cells release adrenaline continuously, which drives every contraction", "Its skeletal muscle fibers are stimulated by stretch from the bath fluid"], "answer": 0, "why": "Uterine smooth muscle is a single-unit smooth muscle. Some cells have slowly depolarizing membrane potentials that reach threshold on their own, and gap junctions connect the cells so the excitation spreads and the tissue contracts together. Hormones and drugs change how often and how strongly this happens."}, {"q": "A frog muscle is stimulated directly at increasing voltages. Twitch force rises in steps and then levels off. Why?", "options": ["More muscle fibers are reached and fire as the voltage rises", "Each fiber's action potential gets larger with more voltage", "Each fiber releases more \\(\\ce{Ca^{2+}}\\) as the voltage rises", "The muscle warms up with more voltage and contracts harder"], "answer": 0, "why": "Like axons in a nerve, muscle fibers differ in how easily current from the electrodes reaches and fires them. Stronger stimuli fire more fibers, so force rises until every fiber fires (maximal stimulus). Each fiber's action potential and \\(\\ce{Ca^{2+}}\\) release are all-or-none, so they do not grow with voltage."}]</script></section>
+<script type="application/json" class="frq-data">[{"q": "In the frog sciatic nerve lab, you stimulate at one end and record from two electrodes 25 mm apart near the other end. (a) As stimulus strength rises from zero, describe and explain how the CAP changes. (b) The CAP peak reaches the first electrode at 1.5 ms and the second at 2.1 ms. Calculate the conduction velocity. (c) Predict how the CAP recorded at the first electrode changes if the nerve is crushed between the two electrodes, and explain why.", "answer": "(a) At very low strength, nothing but the stimulus artifact appears. Past threshold for the most excitable axons (usually the largest), a small CAP appears. As strength rises, more axons reach threshold, so the CAP grows in a graded way, and later peaks may appear as slower fibers are recruited. At maximal strength, all axons fire and the CAP stops growing. Each single axon still fires all-or-none. (b) The time between electrodes is \\(2.1 - 1.5 = 0.6\\) ms, so velocity is \\(\\dfrac{25 \\text{ mm}}{0.6 \\text{ ms}} = 42\\) mm per ms, or about 42 m/s. (c) Before crushing, the CAP is biphasic: one phase as the spikes pass the first electrode and the opposite phase as they pass the second. After crushing between them, spikes cannot reach the second electrode, so the second phase disappears and the CAP becomes monophasic, usually looking taller and longer because the two phases no longer partly cancel.", "points": ["Graded growth from recruitment of axons with different thresholds, then a plateau", "About 42 m/s from distance over time difference", "Crushing makes the CAP monophasic", "The second phase came from spikes passing the second electrode"]}, {"q": "A frog sciatic nerve–gastrocnemius preparation is set up. (a) Predict the muscle's response to nerve stimulation and to direct muscle stimulation after d-tubocurarine (curare) is added, and explain. (b) Neostigmine is then added. Predict and explain the change. (c) Explain what would happen if succinylcholine, a nicotinic agonist that is not broken down by acetylcholinesterase, were used instead of curare.", "answer": "(a) Curare competes with ACh at nicotinic receptors on the end plate. Nerve stimulation still releases ACh, but too few receptors open, so the end-plate potential stays below threshold and the muscle does not twitch. Direct stimulation fires the muscle's own action potential, so it still twitches. This shows the block is at the junction, not in the muscle. (b) Neostigmine blocks acetylcholinesterase, so ACh lasts longer and reaches higher levels in the cleft. Because curare's block is competitive, the extra ACh can retake enough receptors to push the end-plate potential above threshold, so nerve stimulation again causes twitches. (c) Succinylcholine opens nicotinic receptors and is not broken down quickly, so it keeps the end plate depolarized. At first, the muscle fibers fire and twitch briefly (fasciculations). Then the membrane around the end plate stays depolarized, \\(\\ce{Na+}\\) channels stay inactivated, and the muscle cannot fire: depolarizing block. Neostigmine would not reverse it and could make it worse.", "points": ["Curare: no response to nerve stimulation, normal response to direct stimulation", "Neostigmine raises ACh, which outcompetes curare", "Succinylcholine: brief twitching, then lasting depolarization", "Block from \\(\\ce{Na+}\\) channel inactivation; not reversed by neostigmine"]}]</script>
+</section>
+<section class="test" id="test-2" data-key="bipn105-t2" hidden>
+<section class="mcq" data-title="BIPN 105 First-half labs, Test 2" data-nav="#nav-test-2"><script type="application/json">[{"q": "A recording shows a large 60 Hz wave on top of the signal. Which fix targets this problem without damaging most biological signals?", "options": ["Better grounding and shielding, then a 60 Hz notch filter if needed", "A low-pass filter set at 10 Hz to remove everything above 10 Hz", "A higher sampling rate so the 60 Hz wave is no longer recorded", "A higher amplifier gain so the signal is larger than the wave"], "answer": 0, "why": "60 Hz noise comes from AC power lines and equipment. The best first steps are good grounding, shielded cables and a Faraday cage, plus a differential amplifier. A narrow notch filter can then remove what remains while leaving other frequencies alone. A 10 Hz low-pass filter would destroy fast signals like action potentials, and higher gain amplifies the noise too."}, {"q": "A signal is sampled too slowly, and a 300 Hz oscillation appears as a slow 20 Hz wave on the screen. What is this called?", "options": ["Aliasing", "Clipping", "Drift", "Crosstalk"], "answer": 0, "why": "When sampling is slower than twice a signal's frequency, the samples land on different parts of each cycle in a pattern that traces out a false, slower wave. This is aliasing. It cannot be fixed after the recording, so the sampling rate (and an anti-aliasing low-pass filter) must be set correctly beforehand."}, {"q": "A force transducer is calibrated with known weights. A 10 g weight gives 50 mV. A muscle twitch gives 120 mV. What force did the muscle produce?", "options": ["24 g", "12 g", "2.4 g", "600 g"], "answer": 0, "why": "The calibration factor is \\(\\dfrac{10 \\text{ g}}{50 \\text{ mV}} = 0.2\\) g per mV. So 120 mV corresponds to \\(120 \\times 0.2 = 24\\) g. Calibration assumes the transducer is linear over the range used, which should be checked with more than one weight."}, {"q": "Why should a force transducer be calibrated at the start of each lab session rather than relying on last week's values?", "options": ["Its baseline and gain drift with temperature, mounting and amplifier settings", "Its output gets permanently stronger each time it is used in the lab", "Its output depends on the type of muscle, so each one needs new weights", "Its calibration cannot be saved, since computers erase it after each use"], "answer": 0, "why": "A transducer's voltage output for a given force depends on amplifier gain, temperature, how it is mounted and other changing factors. Calibrating with known weights each session converts the recorded voltages into real force units for that setup. Small differences add up when you compare results."}, {"q": "A 0.9% NaCl solution is about 308 mOsm. What happens to red cells placed in it?", "options": ["They keep their normal shape and volume", "They swell slowly over about an hour", "They shrink right away into spiky cells", "They burst within a few minutes"], "answer": 0, "why": "0.9% NaCl (normal saline) is about 154 mM NaCl. Each NaCl gives about 2 particles, so it is about 308 mOsm, close to plasma. Because NaCl does not cross the red cell membrane, the solution is both isosmotic and isotonic, so the cells do not change volume. That is why it is used for IV fluids."}, {"q": "Red cells are placed in 0.3 M sucrose. What happens?", "options": ["They keep their size, because sucrose stays outside the cells", "They swell and burst, because sucrose enters and water follows it", "They shrink, because sucrose pulls ions out of the cells over time", "They swell a little at first, then return as sucrose leaves again"], "answer": 0, "why": "Sucrose is too large and polar to cross the red cell membrane. At 0.3 M (about 300 mOsm), it holds water outside about as well as the cell's solutes hold water inside, so the cells keep their volume. It is isotonic. Compare urea at the same concentration, which enters and makes cells burst."}, {"q": "Using the van't Hoff relationship, about how much osmotic pressure difference is created at 37 °C by a 1 mOsm difference across a membrane?", "options": ["About 19 mmHg", "About 1 mmHg", "About 760 mmHg", "About 0.1 mmHg"], "answer": 0, "why": "\\(\\pi = RTC\\). With \\(R = 0.0821\\) L·atm per mol·K, \\(T = 310\\) K and \\(C = 0.001\\) mol per L, \\(\\pi \\approx 0.0255\\) atm, which is about 19 mmHg. So even small concentration differences create large pressures, which is why water moves so readily across cell membranes."}, {"q": "Red cells are placed in a mix of 150 mM NaCl and 100 mM glycerol. What happens over the next hour?", "options": ["They shrink a little at first, then return to normal as glycerol enters", "They swell and burst, because glycerol enters and pulls water in", "They shrink and stay small, because the solution is about 400 mOsm", "They stay normal the whole time, because glycerol never enters"], "answer": 0, "why": "The total is about 400 mOsm, so water leaves first and the cells shrink a bit. Glycerol then slowly enters until it is equal inside and out, and water comes back with it. The NaCl alone (300 mOsm of trapped particles) matches the cell, so the final volume is normal: the solution is hyperosmotic but isotonic."}, {"q": "The stimulating electrode is moved farther from the recording site on a frog nerve. How does the CAP change?", "options": ["It arrives later and becomes wider and lower, as fibers of different speeds spread apart", "It arrives sooner and becomes taller, as more fibers join in along the way", "It arrives at the same time and keeps the same shape, as all fibers share one speed", "It disappears completely, as the spikes die out along the length of the nerve"], "answer": 0, "why": "Every fiber's spike takes longer to arrive, so latency rises. But fast and slow fibers spread out more over a longer distance, so their spikes no longer arrive together. The CAP becomes wider and lower (temporal dispersion), and separate peaks from different fiber groups may appear. Individual spikes do not die out, because they regenerate."}, {"q": "A frog nerve is bathed in high-\\(\\ce{K+}\\) Ringer's solution. What happens to the CAP?", "options": ["It shrinks or disappears, as depolarization inactivates \\(\\ce{Na+}\\) channels", "It grows much larger, as the higher \\(\\ce{K+}\\) adds to the inward current", "It stays the same, as \\(\\ce{K+}\\) has no role in the action potential", "It becomes faster, as depolarization moves axons closer to threshold"], "answer": 0, "why": "High outside \\(\\ce{K+}\\) depolarizes the axons. A small depolarization might briefly make them easier to fire, but sustained depolarization puts many \\(\\ce{Na+}\\) channels into the inactivated state. With fewer channels available, many axons cannot fire, so the CAP shrinks or vanishes. Washing out the \\(\\ce{K+}\\) restores it."}, {"q": "Why is an extracellular CAP only a few millivolts (or less), while an intracellular action potential is about 100 mV?", "options": ["Extracellular electrodes pick up only a small share of the current flowing in the bath", "Extracellular electrodes record from a single axon, which makes a very small spike", "Extracellular electrodes block most \\(\\ce{Na+}\\) channels near their tips", "Extracellular electrodes measure \\(\\ce{Ca^{2+}}\\) instead of the \\(\\ce{Na+}\\) current"], "answer": 0, "why": "An intracellular electrode measures the full voltage across the membrane. Extracellular electrodes measure the small voltage drops made as membrane currents flow through the resistance of the fluid outside the axons. Most of that current stays close to the axon, so the electrodes see only a fraction of it. This is why extracellular recordings need large gains."}, {"q": "A nerve is cooled from 20 °C to 10 °C. How does the CAP change?", "options": ["It arrives later and lasts longer, as channel gating slows", "It arrives sooner and lasts less time, as channels open faster", "It arrives at the same time but is much larger in amplitude", "It disappears, as frog axons cannot conduct below 15 °C"], "answer": 0, "why": "Ion channel gating speeds up with temperature, often 2 to 4 times per 10 °C (the \\(Q_{10}\\)). Cooling slows \\(\\ce{Na+}\\) channel opening, so each node takes longer to reach threshold and conduction slows. Slower inactivation and \\(\\ce{K+}\\) opening also make each spike longer. Frog nerves still conduct at 10 °C, just more slowly."}, {"q": "Stimulating the nerve gives a twitch about 20% weaker than stimulating the muscle directly with a maximal stimulus. Why?", "options": ["Direct stimulation reaches fibers whose nerve branches were missed", "Direct stimulation adds extra ATP to the fibers that it stimulates", "Nerve stimulation releases a transmitter that weakens the muscle", "Nerve stimulation activates the muscle's own stretch receptors too"], "answer": 0, "why": "A maximal nerve stimulus should activate all motor axons, but some branches may be damaged, or the stimulus may not reach every axon. Direct stimulation activates muscle fibers wherever the current reaches them, regardless of their nerve supply. Comparing the two helps check that the preparation is healthy and that the junction is working."}, {"q": "A skeletal muscle action potential lasts about 5 ms, but a twitch lasts about 50–100 ms. What does this difference allow?", "options": ["Summation and tetanus, since new action potentials come before relaxation", "Fatigue resistance, since each twitch uses no more ATP than a spike does", "Faster conduction, since force spreads ahead of the action potential", "Graded spikes, since action potentials grow larger during the twitch"], "answer": 0, "why": "Because the electrical event is so much shorter than the mechanical one, the muscle can be re-excited many times during one twitch. Each new action potential releases more \\(\\ce{Ca^{2+}}\\), so force adds up (summation), and at high rates twitches fuse into a smooth tetanus. Cardiac muscle cannot do this because its action potential lasts almost as long as its contraction."}, {"q": "Repeated stimuli, slow enough that twitches do not overlap, produce slightly stronger twitches at first (the staircase effect). What is a proposed cause?", "options": ["More \\(\\ce{Ca^{2+}}\\) available and myosin light chain phosphorylation", "Fewer active fibers, so each fiber gets more ATP to use", "Less \\(\\ce{Ca^{2+}}\\) released, so troponin binds more strongly", "More \\(\\ce{Na+}\\) inside, so each action potential is larger"], "answer": 0, "why": "In treppe (staircase), \\(\\ce{Ca^{2+}}\\) builds up a little with each twitch, and myosin regulatory light chains are phosphorylated by \\(\\ce{Ca^{2+}}\\)-calmodulin-dependent kinase. Phosphorylated myosin heads move closer to actin and bind more easily, so each twitch produces more force. Warming of the muscle also helps."}, {"q": "The bath contains a rat uterus. ACh is added and contractions get stronger. Atropine is then added, and the ACh effect goes away. What does this show?", "options": ["ACh acts through muscarinic receptors on uterine smooth muscle", "ACh acts through nicotinic receptors on uterine smooth muscle", "ACh acts through \\(\\beta_2\\) receptors on uterine smooth muscle", "ACh acts on nerves that release oxytocin inside the uterus"], "answer": 0, "why": "Atropine is a muscarinic antagonist. Since it blocks the ACh effect, the effect must be muscarinic, most likely through M3 receptors, which couple to \\(\\text{G}_{\\text{q}}\\), raise \\(\\ce{Ca^{2+}}\\) and cause contraction. Nicotinic receptors are found at the neuromuscular junction and in ganglia."}, {"q": "Why does a uterus from an estrogen-primed rat respond more strongly to oxytocin?", "options": ["Estrogen increases oxytocin receptors and gap junctions in the muscle", "Estrogen breaks down oxytocin, so more of it is needed for a response", "Estrogen blocks \\(\\ce{Ca^{2+}}\\) channels, so oxytocin must work harder", "Estrogen turns uterine smooth muscle into skeletal muscle temporarily"], "answer": 0, "why": "Estrogen prepares the uterus to contract. It raises the number of oxytocin receptors and connexin-43 gap junctions, so cells respond more and contract together. This is part of why the uterus becomes much more responsive near the end of pregnancy, when estrogen is high."}, {"q": "A calcium channel blocker like nifedipine is added to the uterus bath. What happens?", "options": ["Contractions get weaker, because less \\(\\ce{Ca^{2+}}\\) enters through L-type channels", "Contractions get stronger, because the cells pump in more \\(\\ce{Ca^{2+}}\\) to compensate", "Nothing changes, because uterine muscle uses only stored \\(\\ce{Ca^{2+}}\\)", "Contractions speed up, because \\(\\ce{K+}\\) channels open more often"], "answer": 0, "why": "Uterine contractions depend on \\(\\ce{Ca^{2+}}\\) entering through L-type channels during action potentials. Blocking these channels reduces that entry, so contractions weaken. Nifedipine is used clinically to slow preterm labor for this reason."}, {"q": "Smooth muscle can hold force for long periods using little ATP (the latch state). How?", "options": ["Dephosphorylated myosin heads stay attached to actin and detach slowly", "Myosin heads release from actin quickly, then rebind using no ATP at all", "Troponin locks the thin filament in place, holding force with no cross-bridges", "Titin stretches to hold the force, so cross-bridges are no longer needed"], "answer": 0, "why": "When myosin light chains are dephosphorylated while cross-bridges are still attached, those cross-bridges cycle very slowly, staying attached longer for each ATP used. So force can be maintained with much less ATP than in skeletal muscle. This is useful for blood vessels and sphincters that must stay contracted for hours."}, {"q": "An EMG is recorded from the biceps as a person lifts heavier weights. Why does the EMG signal grow larger?", "options": ["More motor units are recruited and each fires at a higher rate", "Each motor unit's action potential grows larger with more force", "The muscle fibers stretch, so the electrodes move closer to them", "The skin sweats more, so it conducts the signal more strongly"], "answer": 0, "why": "The surface EMG adds up action potentials from many active muscle fibers. As force rises, the nervous system recruits more motor units (following the size principle) and makes active units fire faster. Both add more electrical activity. Single muscle action potentials do not change size."}, {"q": "An experiment compares the mean twitch force of two groups. Each group has 9 frogs with a standard deviation of 12 g. What is the standard error of each mean?", "options": ["4 g", "12 g", "1.33 g", "36 g"], "answer": 0, "why": "The standard error of the mean is \\(\\dfrac{\\text{SD}}{\\sqrt{n}} = \\dfrac{12}{\\sqrt{9}} = 4\\) g. It describes how precisely the sample mean estimates the true mean. The standard deviation describes how spread out the individual frogs are. More frogs shrink the standard error but do not change the standard deviation."}, {"q": "A t-test comparing two groups gives \\(p = 0.03\\). What does this mean?", "options": ["If there were no real difference, a difference this large would happen 3% of the time", "There is a 3% chance that the measured difference between the groups is real", "There is a 97% chance that the experimental treatment caused the effect", "The difference between the two group means is 3% of the larger mean"], "answer": 0, "why": "A p-value is the probability of seeing a difference at least this large if the null hypothesis (no real difference) were true. It is not the probability that the hypothesis is true, and it says nothing about how big or important the effect is. With the usual cutoff of 0.05, \\(p = 0.03\\) is called statistically significant."}, {"q": "A competitive antagonist is added to the uterus bath, then oxytocin is given in rising doses. How does the dose–response curve change?", "options": ["It shifts to the right, but the maximum response stays the same", "It shifts to the left, and the maximum response becomes larger", "It stays in place, but the maximum response is cut in half", "It flattens to zero, since no dose can overcome the antagonist"], "answer": 0, "why": "A competitive antagonist binds the same site as the agonist reversibly, so enough agonist can push it off. More oxytocin is needed for the same effect (rightward shift), but the highest response can still be reached. A non-competitive antagonist would lower the maximum instead."}, {"q": "Warming the bath for the rat uterus from 30 °C to 37 °C changes the contractions. What is the usual effect?", "options": ["Contractions become more frequent, as pacemaker cells fire faster", "Contractions stop, as the warm bath inactivates all \\(\\ce{Ca^{2+}}\\) channels", "Contractions become less frequent, as the cells' metabolism slows down", "Contractions become identical to skeletal muscle twitches in shape"], "answer": 0, "why": "Higher temperature speeds up ion channels, pumps and enzymes, so pacemaker depolarization reaches threshold sooner and contractions happen more often. The temperature is kept constant during the lab so that changes in contraction come from the drugs being tested, not from temperature drift."}, {"q": "Why is a frog nerve kept moist with Ringer's solution during the lab?", "options": ["It keeps ion gradients and axon health, and stops the nerve from drying out", "It provides glucose that the axons burn to fire each action potential", "It adds extra \\(\\ce{K+}\\), which helps the axons reach threshold", "It insulates the nerve so that no stimulus artifact can be recorded"], "answer": 0, "why": "Frog Ringer's solution has the right concentrations of \\(\\ce{Na+}\\), \\(\\ce{K+}\\), \\(\\ce{Ca^{2+}}\\) and \\(\\ce{Cl-}\\) for frog tissue and the right osmolarity. A dry nerve loses water and its ion balance, and its axons stop working. Too much solution pooled between electrodes, though, can short-circuit the recording, so the nerve should be moist but not flooded."}, {"q": "A muscle is stretched so far that its thick and thin filaments barely overlap. It is then stimulated. Which result is expected?", "options": ["Low active force, but high passive force from stretched elastic tissue", "High active force, and low passive force from stretched elastic tissue", "Maximal active force, with no passive force from the elastic tissue", "No force at all, since the muscle cannot make action potentials"], "answer": 0, "why": "Active force needs cross-bridges, and with little overlap, few myosin heads can reach actin. But stretching the muscle pulls on titin and connective tissue, which push back with passive force even without stimulation. Total measured force is active plus passive, so it can be high even when active force is low."}, {"q": "You compare two stimulus electrode spacings on a frog nerve and measure CAP latency at each. The latency is 1.2 ms at 10 mm and 1.6 ms at 30 mm. What is the conduction velocity?", "options": ["50 m/s", "25 m/s", "8.3 m/s", "19 m/s"], "answer": 0, "why": "Using two distances removes the fixed delays (time for the stimulus to bring axons to threshold, and the recording setup). Velocity is the change in distance over the change in time: \\(\\dfrac{30 - 10 \\text{ mm}}{1.6 - 1.2 \\text{ ms}} = \\dfrac{20}{0.4} = 50\\) mm per ms, or 50 m/s. Dividing one distance by one latency would underestimate it."}, {"q": "A drug that blocks voltage-gated \\(\\ce{K+}\\) channels is added to the frog nerve. How does the CAP change?", "options": ["Each axon's spike lasts longer, so the CAP becomes wider", "Each axon's spike becomes shorter, so the CAP becomes narrower", "The axons stop reaching threshold, so the CAP disappears", "The CAP is unchanged, as \\(\\ce{K+}\\) channels do not affect spikes"], "answer": 0, "why": "\\(\\ce{K+}\\) channels speed repolarization. Blocking them leaves the \\(\\ce{Na+}\\)-driven upstroke intact but slows the return to rest, so each spike lasts longer and the summed CAP widens. In myelinated axons the effect is smaller, since many \\(\\ce{K+}\\) channels sit under the myelin, but it grows if the myelin is damaged."}, {"q": "Why is dissecting the sciatic nerve gently, without stretching it, important for the lab?", "options": ["Stretching damages axons, so fewer of them carry spikes", "Stretching adds myelin, so the axons conduct too quickly", "Stretching raises the nerve's threshold to zero", "Stretching moves the nodes of Ranvier closer together"], "answer": 0, "why": "Pulling or pinching a nerve breaks axons and disrupts their membranes and myelin. Damaged axons cannot conduct, so the CAP will be small, and results like conduction velocity and recruitment will not reflect a healthy nerve. Handling only the ends of the nerve and keeping it moist protects it."}, {"q": "In smooth muscle, what plays the role that troponin plays in skeletal muscle?", "options": ["Calmodulin, which activates myosin light chain kinase", "Tropomyosin, which binds \\(\\ce{Ca^{2+}}\\) to uncover actin", "Titin, which binds \\(\\ce{Ca^{2+}}\\) to stretch the filaments", "Myoglobin, which binds \\(\\ce{Ca^{2+}}\\) to release \\(\\ce{O2}\\)"], "answer": 0, "why": "Smooth muscle has no troponin. \\(\\ce{Ca^{2+}}\\) binds calmodulin, and the \\(\\ce{Ca^{2+}}\\)–calmodulin complex activates myosin light chain kinase, which phosphorylates myosin's regulatory light chains so cross-bridges can cycle. Myosin light chain phosphatase reverses this. So smooth muscle is regulated on the thick filament, not the thin filament."}]</script></section>
+<script type="application/json" class="frq-data">[{"q": "Red cells are added to tubes of these solutions: (1) 0.9% NaCl, (2) 0.3 M urea, (3) 0.3 M glycerol, (4) 0.3 M sucrose, (5) distilled water and (6) 0.6% NaCl. (a) Predict whether hemolysis occurs in each, and rank the ones that hemolyze from fastest to slowest. (b) Explain the difference between osmolarity and tonicity using tubes 2 and 4. (c) Explain why hemolysis in tube 6 may be partial rather than complete.", "answer": "(a) No hemolysis in 1 (isotonic) or 4 (sucrose does not enter). Hemolysis in 5, 2, 3 and possibly 6. Fastest is distilled water, since water rushes in right away. Urea is next, because it enters quickly and water follows. Glycerol is slower, because it crosses more slowly. 0.6% NaCl (about 205 mOsm) is mildly hypotonic, so few or no cells burst. (b) Tubes 2 and 4 are both about 300 mOsm, so they have the same osmolarity as the cells. But urea crosses the membrane while sucrose does not. Urea enters, drags water in and the cells burst, so it is hypotonic. Sucrose stays outside and holds water there, so it is isotonic. Tonicity depends only on solutes that cannot cross. (c) Red cells differ in age, shape and spare surface area. In a mildly hypotonic solution, older or rounder cells, which have less spare surface, burst first, while most cells can swell into spheres without bursting. So only some cells hemolyze. This is the basis of the osmotic fragility curve.", "points": ["No hemolysis in 0.9% NaCl or 0.3 M sucrose", "Order: water, then urea, then glycerol; 0.6% NaCl partial or none", "Same osmolarity, different tonicity, because urea enters and sucrose does not", "Partial hemolysis because cells differ in fragility"]}, {"q": "In the skeletal muscle lab, a frog gastrocnemius is stimulated directly. (a) Describe and explain what happens to force as stimulation frequency rises from 1 Hz to 50 Hz. (b) Describe how active and passive force change as the muscle is set to longer and longer lengths, and explain each. (c) Design a simple experiment, using nerve and direct muscle stimulation, to find whether fatigue happens in the muscle or at the neuromuscular junction.", "answer": "(a) At 1 Hz, each stimulus gives a separate twitch, and the muscle relaxes fully between them. As frequency rises, the next action potential comes before relaxation ends, so twitches add up (summation). At higher frequencies they fuse into a smooth contraction, a fused tetanus, with force several times a single twitch. This happens because \\(\\ce{Ca^{2+}}\\) stays high and the elastic parts of the muscle are fully stretched. (b) Active force first rises with length, peaks at the length with the best overlap of actin and myosin, then falls as overlap decreases at longer lengths. Passive force is near zero at short lengths and rises steeply at long lengths, as titin and connective tissue are stretched. (c) Stimulate the nerve repeatedly until force falls. Then stimulate the muscle directly. If force recovers, the muscle could still contract, so the fatigue was at the neuromuscular junction (for example, ACh depletion). If force stays low, the fatigue is in the muscle itself. Repeat with rest periods and compare with a control preparation.", "points": ["Summation, then a fused tetanus as frequency rises", "Active force peaks at the length of best filament overlap", "Passive force rises at long lengths from stretched titin and connective tissue", "Nerve then direct stimulation separates junction fatigue from muscle fatigue"]}]</script>
+</section>
+    </div>
+  </main>
+</div>
+<script>
+/* minimono.js — the house style's behavior. Include before </body>; no init.
+   1. Two panes or one. Full-screen shows both (left ¼ · right ¾). The page
+      goes to one pane when the window isn't full-screen, or when the person
+      hides the left pane (`, or the pane's own "Hide"). Hiding is
+      remembered. Force the layout with <html data-layout="split|single">.
+   2. In one-pane mode the "Menu" link (.menu-hint) is invisible until the
+      pointer enters the top-left zone (left quarter, top sixth); clicking it,
+      or `, opens the left pane as an overlay. Esc, a click outside, or
+      choosing a row closes it. With no pointer (touch), the link stays shown.
+      The overlay is the SAME .pane-l element, moved by a class — never a
+      copy, never rebuilt — so its scroll position and selection survive.
+   3. Safari: trackpad pinch-zoom is blocked; ⌘+ / ⌘− still work.          */
+(function () {
+  'use strict';
+  var html = document.documentElement;
+  var KEY = 'minimono:pane-hidden';
+  var hidden = false;
+  try { hidden = localStorage.getItem(KEY) === '1'; } catch (e) {}
+
+  /* 1. Two panes or one ---------------------------------------------------- */
+  function isFull() {
+    var forced = html.getAttribute('data-layout');
+    if (forced === 'split') return true;
+    if (forced === 'single') return false;
+    // Full-screen or maximized. At the top level, measure the window itself
+    // (outerWidth): ⌘+ zoom shrinks innerWidth but not the window. Embedded
+    // in a frame, the frame's own width is what's available.
+    var top = true;
+    try { top = window.top === window; } catch (e) { top = false; }
+    var w = top && outerWidth > 0 ? outerWidth : innerWidth;
+    return w >= screen.availWidth - 24;
+  }
+  function layout() {
+    var windowed = !isFull();
+    html.classList.toggle('is-windowed', windowed);
+    var single = windowed || hidden;
+    if (single !== html.classList.contains('is-single')) {
+      if (!single) close(true);
+      html.classList.toggle('is-single', single);
+    }
+  }
+  function setHidden(v) {
+    hidden = v;
+    try { localStorage.setItem(KEY, v ? '1' : '0'); } catch (e) {}
+    close(true);
+    layout();
+  }
+  var raf = 0;
+  addEventListener('resize', function () { if (!raf) raf = requestAnimationFrame(function () { raf = 0; layout(); }); });
+  new MutationObserver(layout).observe(html, { attributes: true, attributeFilter: ['data-layout'] });
+
+  /* 2. The overlay --------------------------------------------------------- */
+  var lastFocus = null;
+  function pane() { return document.querySelector('.pane-l'); }
+  function typing(el) {
+    if (!el || el === document.body) return false;
+    if (el.isContentEditable) return true;
+    if (el.tagName === 'TEXTAREA' || el.tagName === 'SELECT') return true;
+    return el.tagName === 'INPUT' && !/^(button|submit|reset|checkbox|radio|range|color|file|image)$/i.test(el.type);
+  }
+  function single() { return html.classList.contains('is-single'); }
+  function isOpen() { return html.classList.contains('menu-open'); }
+  function open(keyboard) {
+    if (!single() || isOpen()) return;
+    html.classList.remove('hint-on');
+    html.classList.add('menu-open');
+    lastFocus = document.activeElement;
+    if (keyboard) {                                   // keyboard: move focus in
+      var p = pane(), cur = p && (p.querySelector('[aria-current="true"]') || p.querySelector('a,button,input,[tabindex]'));
+      if (cur) cur.focus({ preventScroll: true });
+    }
+  }
+  function close(silent) {
+    if (!isOpen()) return;
+    html.classList.remove('menu-open');
+    var p = pane();
+    if (!silent && lastFocus && lastFocus.focus && lastFocus !== document.body) lastFocus.focus({ preventScroll: true });
+    else if (p && p.contains(document.activeElement)) document.activeElement.blur();
+    lastFocus = null;
+  }
+
+  // the top-left zone: left quarter of the width, top sixth of the height.
+  // Entering it shows the menu link; nothing opens until the link is clicked.
+  function inZone(x, y) { return x <= innerWidth / 4 && y <= innerHeight / 6; }
+  var hintTimer = 0;
+  function hint(on) {
+    clearTimeout(hintTimer);
+    if (on) { html.classList.add('hint-on'); return; }
+    hintTimer = setTimeout(function () { html.classList.remove('hint-on'); }, 200);
+  }
+  addEventListener('pointermove', function (e) {
+    if (e.pointerType !== 'mouse') return;
+    hint(single() && !isOpen() && inZone(e.clientX, e.clientY));
+  }, { passive: true });
+  document.addEventListener('mouseleave', function () { hint(false); });
+
+  addEventListener('keydown', function (e) {
+    // ` (backtick) on its own — left alone while typing in a field
+    if (e.key === '`' && !e.metaKey && !e.ctrlKey && !e.altKey && !typing(document.activeElement)) {
+      e.preventDefault();
+      if (html.classList.contains('is-windowed')) { isOpen() ? close() : open(true); }
+      else setHidden(!hidden);                        // full-screen: hide, or dock it again
+      return;
+    }
+    if (e.key === 'Escape' && isOpen()) { e.preventDefault(); close(); }
+  });
+  addEventListener('pointerdown', function (e) {
+    if (!isOpen()) return;
+    var p = pane();
+    if (p && !p.contains(e.target) && !(e.target.closest && e.target.closest('.menu-hint'))) close();
+  });
+  addEventListener('click', function (e) {
+    var t = e.target.closest ? e.target : e.target.parentElement;
+    if (t.closest('.menu-hint')) { e.preventDefault(); isOpen() ? close() : open(false); return; }
+    if (t.closest('.pane-hide')) {                    // docked: "Hide" · hidden overlay: "Keep open"
+      e.preventDefault(); setHidden(!hidden); return;
+    }
+    if (isOpen() && t.closest('.pane-l .row, .pane-l .mcq-nav a')) close();
+  });
+
+  /* Focus rings: only after Tab. Shift, arrows, Space and clicks never show one. */
+  addEventListener('keydown', function (e) { if (e.key === 'Tab') html.classList.add('kbd-nav'); }, true);
+  addEventListener('pointerdown', function () { html.classList.remove('kbd-nav'); }, true);
+
+  /* 3. Safari pinch-zoom ---------------------------------------------------- */
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (t) {
+    document.addEventListener(t, function (e) { e.preventDefault(); }, { passive: false });
+  });
+
+  layout();
+  window.Minimono = {
+    open: function () { open(true); }, close: close,
+    hide: function () { setHidden(true); }, show: function () { setHidden(false); },
+    relayout: layout
+  };
+})();
+
+</script>
+<script>
+/* smooth-scroll.js — Safari's keyboard scrolling, for every pane.
+   ---------------------------------------------------------------------------
+   A port of WebKit's keyboard-scroll physics (ScrollAnimationKeyboard.cpp,
+   KeyboardScroll.h, macOS constants) so Space, arrows, Page Up/Down and
+   Home/End glide and settle on a spring in every scroller — the page, and
+   each two-pane split pane on its own.
+
+     ↑ / ↓            tap: glide one line (40px) · hold: accelerate to
+                      1000px/s in 0.2s, cruise, then the spring carries the
+                      leftover momentum and settles
+     Space / ⇧Space   the same, with a page as the step (the visible height
+     PgDn / PgUp      less 40px of overlap, never less than 87.5% of it):
+                      tap glides at least a page, hold accelerates
+     Home / End       glide to the top / bottom (also ⌘↑ / ⌘↓ on a Mac)
+   Key repeats are ignored while a key is held, as in WebKit.
+
+   Which scroller moves: the one under the pointer, else the one that holds
+   focus, else the last one clicked, else the page.
+   Left alone: any control that uses these keys itself — text fields,
+   sliders, radio groups, selects, contenteditable, tabs, listboxes — and
+   Space on a button, link, checkbox or anything else Space activates. Any key with ⌥/⌃
+   (and ⌘ except ⌘↑/⌘↓) passes through.
+   Respects prefers-reduced-motion: the same steps, applied instantly.
+   No init call — include before </body>. ~3KB. Exposes window.SmoothScroll.  */
+(function () {
+  'use strict';
+  if (window.SmoothScroll) return;
+
+  /* WebKit macOS KeyboardScrollParameters */
+  var MASS = 1, STIFF = 175, DAMP = 20, MAX_VEL_MULT = 25, TIME_TO_MAX = 0.2;
+  var LINE = 40;                         /* Scrollbar::pixelsPerLineStep()          */
+  var PAGE_MIN_FRACTION = 0.875;         /* Scrollbar::minFractionToStepWhenPaging  */
+  var PAGE_OVERLAP = 40;                 /* Scrollbar::maxOverlapBetweenPages        */
+
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
+  var docEl = function () { return document.scrollingElement || document.documentElement; };
+
+  function canScroll(el) {
+    if (el === docEl()) return el.scrollHeight > el.clientHeight;
+    var s = getComputedStyle(el), o = s.overflowY;
+    return (o === 'auto' || o === 'scroll' || o === 'overlay') && el.scrollHeight > el.clientHeight + 1;
+  }
+  function scrollerFrom(node) {
+    for (var el = node; el && el.nodeType === 1; el = el.parentElement) {
+      if (el === document.body || el === document.documentElement) break;
+      if (canScroll(el)) return el;
+    }
+    return canScroll(docEl()) ? docEl() : null;
+  }
+
+  var hovered = null, clicked = null;
+  addEventListener('pointermove', function (e) { if (e.pointerType === 'mouse') hovered = e.target; }, { passive: true });
+  addEventListener('pointerdown', function (e) { clicked = e.target; }, { passive: true });
+  document.addEventListener('mouseleave', function () { hovered = null; });
+
+  function pickScroller() {
+    var a = document.activeElement;
+    return (hovered && scrollerFrom(hovered)) ||
+           (a && a !== document.body && scrollerFrom(a)) ||
+           (clicked && scrollerFrom(clicked)) ||
+           scrollerFrom(document.body);
+  }
+
+  // controls that use arrows / Page / Home / End themselves keep them
+  function ownsKeys(el) {
+    if (!el || el === document.body) return false;
+    if (el.isContentEditable) return true;
+    var t = el.tagName;
+    if (t === 'TEXTAREA' || t === 'SELECT') return true;
+    if (t === 'INPUT') return !/^(button|submit|reset|checkbox|color|file|image)$/i.test(el.type);
+    var r = el.getAttribute && el.getAttribute('role');
+    return !!r && /^(slider|spinbutton|radio|radiogroup|tab|tablist|listbox|option|menu|menubar|menuitem|combobox|grid|tree|treeitem|textbox)$/.test(r);
+  }
+  function spaceActivates(el) {
+    if (!el || el === document.body) return false;
+    if (/^(BUTTON|A|SUMMARY|INPUT)$/.test(el.tagName)) return true;
+    var r = el.getAttribute && el.getAttribute('role');
+    return !!r && /^(button|link|tab|checkbox|radio|switch|menuitem|option|slider)$/.test(r);
+  }
+
+  /* One animator per scroller ------------------------------------------- */
+  var anims = new WeakMap();
+  function Anim(el) {
+    this.el = el; this.pos = el.scrollTop; this.vel = 0;
+    this.held = null; this.ideal = this.pos; this.minTravel = this.pos;
+    this.raf = 0; this.last = 0;
+  }
+  Anim.prototype.max = function () { return this.el.scrollHeight - this.el.clientHeight; };
+  Anim.prototype.sync = function () {
+    // the user may have scrolled by wheel/trackpad since we last moved it
+    if (!this.raf) { this.pos = this.el.scrollTop; this.ideal = this.pos; this.vel = 0; }
+  };
+  Anim.prototype.run = function () {
+    if (this.raf) return;
+    var self = this; this.last = performance.now();
+    this.raf = requestAnimationFrame(function f(t) { self.step(t) ? (self.raf = requestAnimationFrame(f)) : (self.raf = 0); });
+  };
+  Anim.prototype.stop = function () { if (this.raf) cancelAnimationFrame(this.raf); this.raf = 0; this.vel = 0; this.held = null; };
+  Anim.prototype.write = function () {
+    var max = this.max();
+    if (this.pos <= 0 || this.pos >= max) {          // hit an edge: stop there, no overshoot
+      this.pos = Math.min(Math.max(this.pos, 0), max);
+      this.vel = 0; this.ideal = this.pos;
+      this.el.scrollTop = this.pos;
+      return false;
+    }
+    this.el.scrollTop = this.pos;
+    return true;
+  };
+  /* ScrollAnimationKeyboard::animateScroll */
+  Anim.prototype.step = function (t) {
+    var dt = (t - this.last) / 1000; this.last = t;
+    if (dt <= 0) return true;
+    if (dt > 0.05) dt = 0.05;                          // a stalled frame shouldn't fling
+    var force = 0, spring = true, ideal = this.ideal;
+    if (this.held) {
+      force = this.held.force; spring = false; ideal = this.pos;
+      if (Math.abs(this.vel) >= Math.abs(this.held.maxVel)) force = 0;
+    }
+    var disp = this.pos - ideal;
+    if (spring) force -= disp * STIFF + this.vel * DAMP;
+    this.vel += force / MASS * dt;
+    this.pos += this.vel * dt;
+    var inside = this.write();
+    if (spring && disp * (this.pos - ideal) < 0) { this.vel = 0; this.pos = ideal; this.el.scrollTop = ideal; }
+    if (!inside && !this.held) return false;
+    if (!this.held && this.vel * this.vel < 1 && Math.abs(this.pos - ideal) < 0.5) { this.vel = 0; return false; }
+    return true;
+  };
+  /* startKeyboardScroll — velocity carries over, like WebKit */
+  Anim.prototype.hold = function (dir, step) {
+    var maxVel = step * MAX_VEL_MULT * dir;
+    this.held = { dir: dir, maxVel: maxVel, force: maxVel * MASS / TIME_TO_MAX };
+    this.minTravel = this.pos + step * dir;
+    this.run();
+  };
+  /* stopKeyboardScrollAnimation */
+  Anim.prototype.release = function () {
+    if (!this.held) return;
+    var d = Math.sqrt(this.vel * this.vel * MASS / STIFF) * (this.vel < 0 ? -1 : 1);
+    var settle = this.pos + d;
+    this.ideal = this.held.dir > 0 ? Math.max(settle, this.minTravel) : Math.min(settle, this.minTravel);
+    this.ideal = Math.round(Math.min(Math.max(this.ideal, 0), this.max()));
+    this.held = null;
+    this.run();
+  };
+  /* a jump to a target (top / bottom, or the public API): spring there */
+  Anim.prototype.to = function (target) {
+    var base = this.raf && !this.held ? this.ideal : this.pos;
+    if (typeof target === 'function') target = target(base);
+    this.held = null;
+    this.ideal = Math.round(Math.min(Math.max(target, 0), this.max()));
+    this.run();
+  };
+
+  function anim(el) { var a = anims.get(el); if (!a) { a = new Anim(el); anims.set(el, a); } a.sync(); return a; }
+  function pageStep(el) {
+    var h = el === docEl() ? innerHeight : el.clientHeight;
+    return Math.max(h * PAGE_MIN_FRACTION, h - PAGE_OVERLAP);
+  }
+
+  var heldKey = null, heldAnim = null;
+  function releaseHeld() { if (heldAnim) heldAnim.release(); heldKey = heldAnim = null; }
+
+  addEventListener('keydown', function (e) {
+    if (e.defaultPrevented || e.altKey || e.ctrlKey) return;
+    var k = e.key, cmdArrow = e.metaKey && (k === 'ArrowUp' || k === 'ArrowDown');
+    if (e.metaKey && !cmdArrow) return;
+    if (!/^( |ArrowUp|ArrowDown|PageUp|PageDown|Home|End)$/.test(k)) return;
+    var act = document.activeElement;
+    if (ownsKeys(act)) return;
+    if (k === ' ' && spaceActivates(act)) return;
+    if ((k === 'ArrowUp' || k === 'ArrowDown') && e.shiftKey && !cmdArrow) return;   // leave selection alone
+
+    var el = pickScroller(); if (!el) return;
+    e.preventDefault();
+    var edge = cmdArrow || k === 'Home' || k === 'End';
+    if (!edge && (e.repeat || heldKey)) return;                // WebKit ignores repeats and other keys while one is held
+    var a = anim(el), page = pageStep(el);
+
+    if (reduce && reduce.matches) {                       // same steps, no animation
+      a.stop();
+      var dy = k === 'ArrowDown' ? LINE : k === 'ArrowUp' ? -LINE :
+               (k === ' ' && !e.shiftKey) || k === 'PageDown' ? page : page * -1;
+      if (k === 'Home' || (cmdArrow && k === 'ArrowUp')) el.scrollTop = 0;
+      else if (k === 'End' || (cmdArrow && k === 'ArrowDown')) el.scrollTop = el.scrollHeight;
+      else el.scrollTop += dy;
+      return;
+    }
+
+    if (edge) {
+      a.to(k === 'Home' || k === 'ArrowUp' ? 0 : a.max());
+    } else if (k === 'ArrowUp' || k === 'ArrowDown') {
+      heldKey = k; heldAnim = a; a.hold(k === 'ArrowDown' ? 1 : -1, LINE);
+    } else {
+      heldKey = k; heldAnim = a;
+      a.hold((k === ' ' && !e.shiftKey) || k === 'PageDown' ? 1 : -1, page);
+    }
+  });
+  addEventListener('keyup', function (e) { if (e.key === heldKey) releaseHeld(); });
+  addEventListener('blur', releaseHeld);
+  document.addEventListener('visibilitychange', function () { if (document.hidden) releaseHeld(); });
+  /* a wheel/trackpad scroll takes over from a gliding key scroll */
+  addEventListener('wheel', function (e) {
+    var el = scrollerFrom(e.target), a = el && anims.get(el);
+    if (a && a.raf && !a.held) a.stop();
+  }, { passive: true });
+
+  window.SmoothScroll = {
+    /* programmatic glide, e.g. SmoothScroll.to(pane, 0) to send a pane home */
+    to: function (el, y) { anim(el || docEl()).to(y); },
+    by: function (el, dy) { var a = anim(el || docEl()); a.to(function (b) { return b + dy; }); }
+  };
+})();
+
+</script>
+<script>
+/* quiz.js — multiple-choice questions, the house way. Include before </body>; no init.
+
+   Write each quiz as JSON inside a .mcq element. The page builds it once,
+   at load; answering only changes classes and text.
+
+     <section class="mcq" data-title="Chapter 5 practice">
+       <script type="application/json">[
+         { "q": "If \\(t = \\sqrt{\\dfrac{2h}{g}}\\), how much taller must the table be to double \\(t\\)?",
+           "options": ["\\(2\\times\\)", "\\(4\\times\\)", "\\(8\\times\\)"],
+           "answer": 1,                       (0-based index into options, or a letter)
+           "why": "\\(t \\propto \\sqrt{h}\\), so doubling \\(t\\) takes \\(4h\\)." }
+       ]<\/script>                         (written <\/script here so the file can be inlined)
+     </section>
+
+   Randomized, always: the question order and each question's options are
+   shuffled the first time the quiz opens, kept through reloads (so progress
+   and the letters you talk about stay put), and reshuffled on Start over.
+   Never refer to a letter or a position in a question, option or why.
+
+   Optional: an empty <nav class="mcq-nav"></nav> (the left pane of a quiz
+   page) becomes the question numbers: plain = unanswered, underlined =
+   right, struck through = wrong. Clicking one glides to that question.
+
+   Answer with a click, or press A–F or 1–6. Keys go to the question that
+   holds focus or sits under the pointer, else the first unanswered one on
+   screen. An answer shows Correct / Incorrect, marks the right option,
+   strikes a wrong pick, shows the why, and locks the question. A keyboard
+   answer glides on to the next unanswered question.
+
+   Copy answers is always there: plain text with each question, its
+   options, your answer or Skipped, and the right answer. Math stays LaTeX
+   ($…$) so it pastes cleanly into a chat.
+
+   MCQ.audit() lists anything that gives an answer away: the right option
+   longest or shortest, options of very different length, a hedge only on
+   the right one or an absolute only on the wrong ones, "all/none of the
+   above", duplicates, a missing why, a slash fraction. It must come back
+   empty before a quiz is published; the same list goes to the console.     */
+(function () {
+  'use strict';
+  if (window.MCQ) return;
+  var LETTERS = 'ABCDEF';
+  var quizzes = [];
+  var hoverQ = null;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
+
+  /* ── helpers ──────────────────────────────────────────────────────────── */
+  function make(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  // punctuation right after inline math moves inside it, so a line can't start with ", "
+  function glue(s) { return String(s).replace(/\\\)([.,;:!?])/g, '$1\\)'); }
+  function asPlain(s) { return String(s).replace(/\\\(|\\\)/g, '$').replace(/\\\[|\\\]/g, '$$$$'); }
+  function hash(s) { var h = 0; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); }
+  function newSeed() {
+    try { var a = new Uint32Array(1); crypto.getRandomValues(a); return a[0]; }
+    catch (e) { return (Math.random() * 4294967296) >>> 0; }
+  }
+  function rng(seed) {                                 // mulberry32: small, seedable, even
+    return function () {
+      seed = (seed + 0x6D2B79F5) | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function shuffled(n, rand) {                         // Fisher–Yates
+    var a = []; for (var i = 0; i < n; i++) a.push(i);
+    for (var j = n - 1; j > 0; j--) { var k = Math.floor(rand() * (j + 1)), t = a[j]; a[j] = a[k]; a[k] = t; }
+    return a;
+  }
+  function answerIndex(answer, n) {
+    if (typeof answer === 'number') return answer >= 0 && answer < n ? answer : 0;
+    var j = LETTERS.indexOf(String(answer).trim().toUpperCase());
+    return j >= 0 && j < n ? j : 0;
+  }
+  function scrollerOf(node) {
+    for (var e = node.parentElement; e && e !== document.body; e = e.parentElement) {
+      var o = getComputedStyle(e).overflowY;
+      if ((o === 'auto' || o === 'scroll') && e.scrollHeight > e.clientHeight) return e;
+    }
+    return document.scrollingElement || document.documentElement;
+  }
+  function glideTo(node) {
+    var sc = scrollerOf(node), page = sc === (document.scrollingElement || document.documentElement);
+    var top = node.getBoundingClientRect().top - (page ? 0 : sc.getBoundingClientRect().top);
+    var y = Math.max(0, sc.scrollTop + top - sc.clientHeight * 0.18);
+    if (reduce && reduce.matches) sc.scrollTop = y;
+    else if (window.SmoothScroll) SmoothScroll.to(sc, y);
+    else sc.scrollTo({ top: y, behavior: 'smooth' });
+  }
+  function shown(q) { return q.li.offsetParent !== null; }
+  function onScreen(q) { var r = q.li.getBoundingClientRect(); return r.bottom > 40 && r.top < innerHeight - 40; }
+  function copyText(btn, text, fallback) {
+    var label = btn.firstChild, was = label.nodeValue;
+    function done() { fallback.hidden = true; label.nodeValue = 'Copied'; setTimeout(function () { label.nodeValue = was; }, 1400); }
+    function fail() { fallback.value = text; fallback.hidden = false; fallback.focus(); fallback.select(); }
+    try { navigator.clipboard.writeText(text).then(done, fail); } catch (e) { fail(); }
+  }
+
+  /* ── the giveaway check ───────────────────────────────────────────────── */
+  var HEDGE = /\b(usually|often|generally|typically|mostly|may|might|can|sometimes|tends? to|about|roughly)\b/i;
+  var ABSOLUTE = /\b(always|never|only|all|none|every|completely|entirely|impossible|guaranteed)\b/i;
+  function words(s) {                                  // what a reader sees: LaTeX commands and delimiters out
+    return String(s).replace(/\\[a-zA-Z]+/g, ' ').replace(/[\\{}()\[\]^_$]/g, '').replace(/\s+/g, ' ').trim();
+  }
+  function auditOne(d, i) {
+    var out = [], n = (d.options || []).length, ans = answerIndex(d.answer, n);
+    var say = function (msg) { out.push({ question: i + 1, text: words(d.q).slice(0, 60), issue: msg }); };
+    if (n < 3) say('fewer than 3 options');
+    if (!d.why) say('no why');
+    var opts = (d.options || []).map(words), lens = opts.map(function (o) { return o.length; });
+    if (new Set((d.options || []).map(function (o) { return String(o).replace(/\s+/g, ' ').trim().toLowerCase(); })).size < n) say('two options are the same');
+    if (opts.some(function (o) { return /\b(all|none|both|neither) of (the|these) (above|options)\b/i.test(o); })) say('"all / none / both of the above"');
+    var max = Math.max.apply(null, lens), min = Math.min.apply(null, lens);
+    if (max > 12) {                                    // short answers (numbers, symbols) can't give much away by length
+      if (max / Math.max(min, 1) > 1.5) say('options differ a lot in length (' + min + '–' + max + ' characters)');
+      var others = lens.filter(function (_, j) { return j !== ans; });
+      var nextLong = Math.max.apply(null, others), nextShort = Math.min.apply(null, others);
+      if (lens[ans] > nextLong && lens[ans] >= nextLong * 1.15) say('the right answer is the longest option');
+      if (lens[ans] < nextShort && lens[ans] <= nextShort * 0.85) say('the right answer is the shortest option');
+    }
+    var wrong = opts.filter(function (_, j) { return j !== ans; });
+    if (HEDGE.test(opts[ans]) && !wrong.some(function (o) { return HEDGE.test(o); })) say('only the right answer hedges ("usually", "can"…)');
+    if (!ABSOLUTE.test(opts[ans]) && wrong.length && wrong.every(function (o) { return ABSOLUTE.test(o); })) say('only the wrong answers use absolutes ("always", "never"…)');
+    [d.q, d.why].concat(d.options || []).forEach(function (s) {
+      (String(s || '').match(/\\\(([\s\S]*?)\\\)|\\\[([\s\S]*?)\\\]/g) || []).forEach(function (m) {
+        if (m.indexOf('/') !== -1) say('slash fraction in math: ' + m.slice(0, 30));
+      });
+      if (/\b(?:[Oo]ption|[Aa]nswer(?: is)?|[Cc]hoice|[Ll]etter) [A-F]\b/.test(words(s))) say('refers to a letter, but options are shuffled');
+    });
+    return out;
+  }
+
+  /* ── one quiz ─────────────────────────────────────────────────────────── */
+  function build(root) {
+    var src = root.querySelector('script[type="application/json"]'), data;
+    try { data = JSON.parse(src.textContent); } catch (e) { return; }
+    if (!Array.isArray(data) || !data.length) return;
+    var title = root.getAttribute('data-title') || document.title;
+    var key = 'minimono:mcq2:' + hash(data.map(function (d) { return d.q + '\u0001' + (d.options || []).join('\u0001'); }).join('\n'));
+    var state = null;
+    try { state = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
+    if (!state || typeof state.seed !== 'number' || !Array.isArray(state.answers)) state = { seed: newSeed(), answers: [] };
+
+    var quiz = { root: root, data: data, qs: [], order: [], nav: null };
+    var list = make('ol', 'mcq-list');
+    var nav = document.querySelector(root.getAttribute('data-nav') || '.mcq-nav');  // one nav per test
+    if (nav && !nav.dataset.built) { nav.dataset.built = '1'; quiz.nav = nav; }
+    var base = quizzes.reduce(function (s, z) { return s + z.qs.length; }, 0);
+
+    // every element is made once, here; shuffling only moves them
+    data.forEach(function (d, i) {
+      var li = make('li', 'mcq-q');
+      li.id = 'mcq-' + (base + i + 1);
+      li.tabIndex = -1;                                 // holds focus between answers, so Space still scrolls
+      var num = make('span', 'mcq-n');
+      num.setAttribute('aria-hidden', 'true');
+      var body = make('div', 'mcq-body');
+      var text = make('div', 'mcq-text', glue(d.q));
+      var opts = make('div', 'mcq-opts');
+      opts.setAttribute('role', 'group');
+      var btns = (d.options || []).map(function (o) {
+        var b = make('button', 'mcq-opt');
+        b.type = 'button';
+        var l = make('span', 'mcq-l');
+        b._letter = l.appendChild(document.createTextNode(''));
+        b.append(l, make('span', 'mcq-t', glue(o)));
+        return b;
+      });
+      var fb = make('p', 'mcq-fb');
+      fb.hidden = true;
+      fb.setAttribute('aria-live', 'polite');
+      var fbt = fb.appendChild(document.createTextNode(''));
+      var why = make('p', 'mcq-why', glue(d.why || ''));
+      why.hidden = true;
+      body.append(text, opts, fb, why);
+      li.append(num, body);
+
+      var q = { quiz: quiz, i: i, d: d, li: li, num: num.appendChild(document.createTextNode('')), opts: opts, btns: btns,
+                fb: fb, fbt: fbt, why: why, ans: answerIndex(d.answer, btns.length), chosen: -1, perm: [], navA: null };
+      li._mcq = q;
+      btns.forEach(function (b, o) {                   // o = the option's index in the JSON
+        b.addEventListener('click', function (e) { choose(q, q.perm.indexOf(o), e.detail === 0); });   // detail 0 = Enter / Space
+      });
+      li.addEventListener('pointerenter', function () { hoverQ = q; });
+      li.addEventListener('pointerleave', function () { if (hoverQ === q) hoverQ = null; });
+      if (quiz.nav) {
+        var a = make('a', 'mcq-nav-n');
+        a.href = '#' + li.id;
+        q.navT = a.appendChild(document.createTextNode(''));
+        a.addEventListener('click', function (e) { e.preventDefault(); glideTo(li); li.focus({ preventScroll: true }); });
+        q.navA = a;
+      }
+      quiz.qs.push(q);
+    });
+
+    var bar = make('div', 'mcq-bar');
+    var copyB = make('button', 'btn mcq-copy', 'Copy answers');
+    copyB.type = 'button';
+    var resetB = make('button', 'btn mcq-reset', 'Start over');
+    resetB.type = 'button';
+    var score = make('span', 'mcq-score');
+    score.setAttribute('aria-live', 'polite');
+    var scoreT = score.appendChild(document.createTextNode(''));
+    var fallback = make('textarea', 'mcq-fallback');
+    fallback.readOnly = true;
+    fallback.hidden = true;
+    fallback.setAttribute('aria-label', 'Answers to copy');
+    bar.append(copyB, resetB, score);
+    root.append(list, bar, fallback);
+
+    // lay the questions and options out in the order the seed gives
+    function arrange(seed) {
+      var rand = rng(seed);
+      quiz.order = shuffled(quiz.qs.length, rand).map(function (i) { return quiz.qs[i]; });
+      quiz.qs.forEach(function (q) { q.perm = shuffled(q.btns.length, rand); });
+      quiz.order.forEach(function (q, p) {
+        list.append(q.li);
+        q.num.nodeValue = String(p + 1);
+        q.opts.setAttribute('aria-label', 'Question ' + (p + 1));
+        q.perm.forEach(function (o, j) { q.opts.append(q.btns[o]); q.btns[o]._letter.nodeValue = LETTERS[j]; });
+        if (q.navA) { quiz.nav.append(q.navA); q.navT.nodeValue = String(p + 1); }
+      });
+    }
+    function mark(q) {
+      var done = q.chosen >= 0, right = done && q.chosen === q.ans;
+      q.li.classList.toggle('is-done', done);
+      q.li.classList.toggle('is-wrong', done && !right);
+      q.btns.forEach(function (b, o) {
+        b.classList.toggle('is-chosen', done && o === q.chosen);
+        b.classList.toggle('is-answer', done && o === q.ans);
+        if (done) b.setAttribute('aria-disabled', 'true'); else b.removeAttribute('aria-disabled');
+      });
+      q.fbt.nodeValue = !done ? '' : right ? 'Correct.' : 'Incorrect. The answer is ' + LETTERS[q.perm.indexOf(q.ans)] + '.';
+      q.fb.hidden = !done;
+      q.why.hidden = !done || !q.d.why;
+      if (q.navA) { q.navA.classList.toggle('is-right', right); q.navA.classList.toggle('is-wrong', done && !right); }
+    }
+    function save() {
+      try { localStorage.setItem(key, JSON.stringify({ seed: state.seed, answers: quiz.qs.map(function (q) { return q.chosen; }) })); } catch (e) {}
+    }
+    function tally() {
+      var answered = 0, right = 0;
+      quiz.qs.forEach(function (q) { if (q.chosen >= 0) { answered++; if (q.chosen === q.ans) right++; } });
+      var left = quiz.qs.length - answered;
+      scoreT.nodeValue = !answered ? '' : right + ' of ' + answered + ' correct' + (left ? ' · ' + left + ' left' : '');
+      save();
+    }
+    function next(q) {
+      var p = quiz.order.indexOf(q);
+      var rest = quiz.order.slice(p + 1).concat(quiz.order.slice(0, p)).filter(function (x) { return x.chosen < 0; });
+      if (rest.length) { rest[0].li.focus({ preventScroll: true }); glideTo(rest[0].li); }
+      else { q.li.focus({ preventScroll: true }); glideTo(root.querySelector('.frq-q') || bar); }  // on to the FRQs
+    }
+    function choose(q, j, advance) {                   // j = position on screen
+      if (q.chosen >= 0 || j < 0 || j >= q.btns.length) return;   // answered questions stay locked
+      q.chosen = q.perm[j];
+      mark(q);
+      tally();
+      if (advance) next(q);
+      else q.li.focus({ preventScroll: true });        // off the button, so Space scrolls again
+    }
+    quiz.choose = choose;
+
+    copyB.addEventListener('click', function () {
+      var lines = [title, ''], answered = 0, right = 0;
+      quiz.order.forEach(function (q, p) {
+        lines.push((p + 1) + '. ' + asPlain(q.d.q));
+        q.perm.forEach(function (o, j) { lines.push('   ' + LETTERS[j] + '. ' + asPlain(q.d.options[o])); });
+        var A = LETTERS[q.perm.indexOf(q.ans)];
+        if (q.chosen < 0) lines.push('   Skipped. Answer: ' + A);
+        else {
+          answered++;
+          var C = LETTERS[q.perm.indexOf(q.chosen)];
+          if (q.chosen === q.ans) { right++; lines.push('   Your answer: ' + C + ' (correct)'); }
+          else lines.push('   Your answer: ' + C + ' (incorrect). Answer: ' + A);
+        }
+        lines.push('');
+      });
+      var skipped = quiz.qs.length - answered;
+      lines.push('Score: ' + right + ' of ' + quiz.qs.length + (skipped ? ' (' + skipped + ' skipped)' : ''));
+      copyText(copyB, lines.join('\n'), fallback);
+    });
+    resetB.addEventListener('click', function () {      // a fresh order: same elements, moved
+      quiz.qs.forEach(function (q) { q.chosen = -1; mark(q); });
+      state.seed = newSeed();
+      arrange(state.seed);
+      tally();
+      var first = quiz.order[0];
+      glideTo(first.li);
+      first.li.focus({ preventScroll: true });
+    });
+
+    arrange(state.seed);
+    quiz.qs.forEach(function (q, i) {                  // reopen where you left off
+      var s = state.answers[i];
+      if (typeof s === 'number' && s >= 0 && s < q.btns.length) { q.chosen = s; mark(q); }
+    });
+    tally();
+    quizzes.push(quiz);
+
+    var issues = data.reduce(function (acc, d, i) { return acc.concat(auditOne(d, i)); }, []);
+    if (issues.length && window.console) console.warn('quiz.js: ' + issues.length + ' question(s) give the answer away', issues);
+
+    var MJ = window.MathJax, targets = [root].concat(quiz.nav ? [quiz.nav] : []);
+    if (MJ && MJ.startup && MJ.startup.promise) MJ.startup.promise.then(function () { return MJ.typesetPromise(targets); }).catch(function () {});
+    else if (MJ && typeof MJ.typesetPromise === 'function') MJ.typesetPromise(targets).catch(function () {});
+  }
+
+  /* ── keys: A–F or 1–6 answer the current question ─────────────────────── */
+  function current() {
+    var a = document.activeElement, li = a && a.closest && a.closest('.mcq-q');
+    var q = li && li._mcq;
+    if (q && q.chosen < 0 && shown(q)) return q;
+    if (hoverQ && hoverQ.chosen < 0 && shown(hoverQ)) return hoverQ;
+    var lis = document.querySelectorAll('.mcq-q');      // page order = the shuffled order
+    for (var i = 0; i < lis.length; i++) {
+      var x = lis[i]._mcq;
+      if (x && x.chosen < 0 && shown(x) && onScreen(x)) return x;
+    }
+    return null;
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey || e.repeat || e.defaultPrevented) return;
+    var a = document.activeElement;
+    if (a && (a.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))) return;
+    var j = e.key.length === 1 ? LETTERS.indexOf(e.key.toUpperCase()) : -1;
+    if (j < 0 && /^[1-6]$/.test(e.key)) j = +e.key - 1;
+    if (j < 0) return;
+    var q = current();
+    if (!q || j >= q.btns.length) return;
+    e.preventDefault();
+    q.quiz.choose(q, j, true);
+  });
+
+  function init() {
+    document.querySelectorAll('.mcq').forEach(function (r) {
+      if (!r.dataset.built) { r.dataset.built = '1'; build(r); }
+    });
+  }
+  init();                                               // the quiz markup sits above this script
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+
+  window.MCQ = {
+    init: init,
+    // every giveaway in every quiz on the page; must be empty before publishing
+    audit: function () {
+      return quizzes.reduce(function (acc, z) {
+        return acc.concat(z.data.reduce(function (a2, d, i) { return a2.concat(auditOne(d, i)); }, []));
+      }, []);
+    },
+    _shuffle: function (n, seed) { return shuffled(n, rng(seed)); }   // for tests
+  };
+})();
+
+</script>
+<script>
+
+/* page.js — this page's own behavior: FRQs, switching between the two tests,
+   and holding the questions back until the math is drawn. Everything is made
+   once at load; switching and answering only change attributes and text.  */
+(function () {
+  'use strict';
+  var html = document.documentElement;
+  var pane = document.querySelector('.pane-r');
+  var tests = [].slice.call(document.querySelectorAll('.test'));
+  var rows = [].slice.call(document.querySelectorAll('.pane-l .row[data-test]'));
+  var navs = {}, mem = {}, cur = null;
+
+  function make(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function glue(s) { return String(s).replace(/\\\)([.,;:!?])/g, '$1\\)'); }
+  function asPlain(s) { return String(s).replace(/\\\(|\\\)/g, '$').replace(/\\\[|\\\]/g, '$$$$'); }
+  function glide(el) {
+    var top = el.getBoundingClientRect().top - pane.getBoundingClientRect().top;
+    var y = Math.max(0, pane.scrollTop + top - pane.clientHeight * 0.18);
+    if (window.SmoothScroll) SmoothScroll.to(pane, y); else pane.scrollTop = y;
+  }
+  function copy(btn, text, fallback) {
+    var label = btn.firstChild, was = label.nodeValue;
+    function done() { fallback.hidden = true; label.nodeValue = 'Copied'; setTimeout(function () { label.nodeValue = was; }, 1400); }
+    function fail() { fallback.value = text; fallback.hidden = false; fallback.focus(); fallback.select(); }
+    try { navigator.clipboard.writeText(text).then(done, fail); } catch (e) { fail(); }
+  }
+
+  tests.forEach(function (t) {
+    var root = t.querySelector('.mcq');
+    var nav = document.querySelector(root.getAttribute('data-nav'));
+    navs[t.id] = nav;
+    var data = JSON.parse(t.querySelector('script.frq-data').textContent);
+    var n0 = JSON.parse(root.querySelector('script[type="application/json"]').textContent).length;
+    var key = 'bipn:frq:' + t.getAttribute('data-key');
+    var saved = null;
+    try { saved = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
+    if (!saved || !Array.isArray(saved.text)) saved = { text: [], open: [] };
+
+    var list = make('ol', 'frq-list');
+    var items = data.map(function (d, i) {
+      var n = n0 + i + 1;
+      var li = make('li', 'frq-q');
+      li.id = t.id + '-frq-' + (i + 1);
+      li.tabIndex = -1;
+      var num = make('span', 'mcq-n', String(n));
+      num.setAttribute('aria-hidden', 'true');
+      var body = make('div', 'mcq-body');
+      var text = make('div', 'mcq-text', glue(d.q));
+      var box = make('textarea', 'frq-in');
+      box.id = li.id + '-in';
+      box.rows = 6;
+      box.spellcheck = false;
+      box.setAttribute('aria-label', 'Your answer to question ' + n);
+      box.value = saved.text[i] || '';
+      var act = make('div', 'frq-act');
+      var btn = make('button', 'btn frq-show');
+      btn.type = 'button';
+      var label = btn.appendChild(document.createTextNode('Show answer'));
+      act.append(btn);
+      var ans = make('div', 'frq-ans');
+      ans.append(make('p', null, glue(d.answer)));
+      if (d.points && d.points.length) {
+        var ul = make('ul', 'frq-pts');
+        d.points.forEach(function (p) { ul.append(make('li', null, glue(p))); });
+        ans.append(ul);
+      }
+      body.append(text, box, act, ans);
+      li.append(num, body);
+      list.append(li);
+      var it = { d: d, n: n, li: li, box: box, ans: ans, navA: null };
+      it.open = function (v) {
+        ans.hidden = !v;
+        label.nodeValue = v ? 'Hide answer' : 'Show answer';
+        btn.setAttribute('aria-expanded', v ? 'true' : 'false');
+      };
+      it.open(!!saved.open[i]);
+      btn.addEventListener('click', function () { it.open(ans.hidden); save(); });
+      box.addEventListener('input', save);
+      if (nav) {
+        var a = make('a', 'mcq-nav-n', String(n));
+        a.href = '#' + li.id;
+        a.addEventListener('click', function (e) { e.preventDefault(); glide(li); li.focus({ preventScroll: true }); });
+        it.navA = a;
+      }
+      return it;
+    });
+    function save() {
+      try {
+        localStorage.setItem(key, JSON.stringify({
+          text: items.map(function (x) { return x.box.value; }),
+          open: items.map(function (x) { return !x.ans.hidden; })
+        }));
+      } catch (e) {}
+    }
+    function navTail() { if (nav) items.forEach(function (x) { nav.append(x.navA); }); }
+
+    var bar = root.querySelector('.mcq-bar');
+    var fallback = root.querySelector('.mcq-fallback');
+    var reset = root.querySelector('.mcq-reset');
+    root.insertBefore(list, bar);
+    navTail();
+
+    var copyW = make('button', 'btn frq-copy');
+    copyW.type = 'button';
+    copyW.appendChild(document.createTextNode('Copy written answers'));
+    bar.insertBefore(copyW, reset);
+    copyW.addEventListener('click', function () {
+      var lines = [root.getAttribute('data-title') + ', written answers', ''];
+      items.forEach(function (x) {
+        lines.push(x.n + '. ' + asPlain(x.d.q));
+        lines.push('   Your answer: ' + (x.box.value.trim() || 'Skipped'));
+        lines.push('   Model answer: ' + asPlain(x.d.answer));
+        (x.d.points || []).forEach(function (p) { lines.push('   - ' + asPlain(p)); });
+        lines.push('');
+      });
+      copy(copyW, lines.join('\n'), fallback);
+    });
+    reset.addEventListener('click', function () {   // quiz.js reshuffles first; then clear the written answers
+      items.forEach(function (x) { x.box.value = ''; x.open(false); });
+      save();
+      navTail();
+    });
+  });
+
+  // the two tests already exist; switching only flips `hidden` and aria-current
+  function show(id) {
+    if (!/^test-\d+$/.test(id) || !document.getElementById(id)) id = tests[0].id;
+    if (cur === id) return;
+    if (cur) mem[cur] = pane.scrollTop;
+    tests.forEach(function (t) { t.hidden = t.id !== id; });
+    rows.forEach(function (r) { r.setAttribute('aria-current', r.getAttribute('data-test') === id ? 'true' : 'false'); });
+    Object.keys(navs).forEach(function (k) { if (navs[k]) navs[k].hidden = k !== id; });
+    cur = id;
+    pane.scrollTop = mem[id] || 0;
+  }
+  function fromHash() { show((location.hash || '').slice(1)); }
+  addEventListener('hashchange', fromHash);
+  fromHash();
+
+  // the questions wait behind the loading ring until MathJax has drawn them
+  window.__mathReady = function () { html.classList.remove('mj-wait'); };
+  setTimeout(window.__mathReady, 9000);
+})();
+
+</script>
+</body>
+</html>

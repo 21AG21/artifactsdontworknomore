@@ -68,5 +68,12 @@
     "subject": "BIPN",
     "kind": "Test",
     "added": "2026-11-06"
+  },
+  {
+    "slug": "bipn-105-lab-practice",
+    "title": "BIPN 105 Lab Practice",
+    "subject": "BIPN",
+    "kind": "Test",
+    "added": "2026-11-06"
   }
 ]
