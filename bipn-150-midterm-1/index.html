@@ -1,0 +1,1145 @@
+<!doctype html>
+<html lang="en" class="mj-wait">
+<head>
+<meta charset="utf-8">
+<title>BIPN 150 Midterm 1 Practice</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="BIPN 150 Diseases of the Nervous System: two 30-minute Midterm 1 practice tests, 30 MCQs and 2 FRQs each.">
+<style>
+/* minimono.css — the house style's base: tokens, type, the two-pane layout,
+   the windowed overlay, and flat native controls.
+   Targets two screens: MacBook Air 15" (1710×1107, 2×) and Dell P2423D
+   (2560×1440, 1×). Every line is 1px — half-pixels vanish on the Dell.     */
+
+/* ── Tokens ─────────────────────────────────────────────────────────────── */
+:root{
+  color-scheme: light dark;            /* native controls + scrollbars follow the theme */
+  --ground:#EEF1F4; --wall:#ffffff;
+  --ink:#0a0a0b; --ink-soft:#5F6368; --muted:#9c9ca3;
+  --hair:rgba(10,10,12,.13); --hair-soft:rgba(10,10,12,.08);
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",system-ui,sans-serif;
+  --pane-l:25%;                        /* the left pane is one quarter, always */
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --ground:#000000; --wall:#161618; --ink:#f6f6f8; --ink-soft:#a0a0a8; --muted:#67676f;
+  --hair:rgba(255,255,255,.16); --hair-soft:rgba(255,255,255,.09);
+}}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#000000; --wall:#161618; --ink:#f6f6f8; --ink-soft:#a0a0a8; --muted:#67676f;
+  --hair:rgba(255,255,255,.16); --hair-soft:rgba(255,255,255,.09);
+}
+:root[data-theme="light"]{ color-scheme: light; }
+
+/* ── Base ───────────────────────────────────────────────────────────────── */
+*,*::before,*::after{ box-sizing:border-box; }
+html,body{ margin:0; height:100%; overflow:hidden; }
+body{
+  background:var(--ground); color:var(--ink);
+  font:16px/1.5 var(--sans); -webkit-font-smoothing:antialiased;
+  font-variant-numeric:tabular-nums;
+}
+:focus, :focus-visible{ outline:none; }
+/* focus shows only after Tab (minimono.js sets .kbd-nav; any click clears it),
+   as a thin grey line — never a bright ring, never from Shift or a click */
+html.kbd-nav :focus-visible{ outline:1px solid var(--muted); outline-offset:3px; border-radius:6px; }
+/* text selection keeps the system highlight — never restyle ::selection */
+a{ color:inherit; text-decoration:none; }
+/* scrollbars: left to macOS — overlay, thin, shown while scrolling. Never hidden. */
+
+/* ── Type (tuned for 1710 and 2560 wide). Weights: 300 · 400 · 500, never more ─ */
+.hero { font-size:clamp(64px, 4.6vw, 112px); font-weight:300; line-height:1.02; letter-spacing:-.035em; margin:0; }
+.h2   { font-size:clamp(28px, 1.9vw, 40px);  font-weight:500; line-height:1.15; letter-spacing:-.02em; margin:0; }
+.text { font-size:clamp(17px, 1.05vw, 20px); line-height:1.55; max-width:68ch; }
+.label{ font-size:13px; font-weight:500; color:var(--ink-soft); letter-spacing:.005em; }
+.num  { font-weight:400; letter-spacing:-.02em; }
+
+/* ── Layout: two panes, left ¼ · right ¾, each its own scroller ─────────── */
+#app{ display:flex; height:100dvh; }
+.pane-l{
+  flex:0 0 var(--pane-l); height:100%; overflow-y:auto; overscroll-behavior:contain;
+  border-right:1px solid var(--hair-soft); background:var(--ground);
+  padding:48px 32px 64px;
+}
+.pane-r{ flex:1 1 auto; min-width:0; height:100%; overflow-y:auto; overscroll-behavior:contain; }
+.pane-r .body{ max-width:1120px; padding:56px clamp(48px, 5vw, 120px) 120px; }
+
+/* the list in the left pane */
+.row{
+  display:block; width:100%; padding:14px 0; border-bottom:1px solid var(--hair-soft);
+  font-size:clamp(17px, 1.15vw, 22px); color:var(--ink-soft); cursor:pointer;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.row:last-child{ border-bottom:0; }
+@media (hover:hover){ .row:hover{ color:var(--ink); } }
+.row[aria-current="true"]{ color:var(--ink); font-weight:500; }
+.row:active{ opacity:.6; }
+
+/* ── One-pane mode: windowed, or the person hid the left pane ────────────
+   The left pane leaves the layout; it comes back as an overlay (the SAME
+   element, moved) when the pointer enters the top-left zone — the left
+   quarter of the width, the top sixth of the height — or on `.           */
+.pane-hide{
+  border:0; background:none; padding:4px 0; margin:0;
+  font:inherit; font-size:13px; color:var(--ink-soft); cursor:pointer; text-align:left;
+}
+.pane-hide kbd{ font:inherit; color:var(--muted); margin-left:6px; }
+.pane-hide .keep{ display:none; }
+html.is-single .pane-hide .hide{ display:none; }
+html.is-single .pane-hide .keep{ display:inline; }
+html.is-windowed .pane-hide{ display:none; }        /* windowed: the overlay is the only way it shows */
+@media (hover:hover){ .pane-hide:hover{ color:var(--ink); } }
+.menu-hint{ display:none; }
+/* one-pane mode: the link sits in the top-left zone, invisible until the
+   pointer enters that zone (or it takes keyboard focus); always shown on touch */
+html.is-single .menu-hint{
+  display:block; position:fixed; z-index:15;
+  top:calc(env(safe-area-inset-top, 0px) + 18px); left:max(16px, env(safe-area-inset-left, 0px), 2vw);
+  padding:6px 10px; margin:0; border-radius:8px; background:var(--ground);
+  font-size:13px; color:var(--ink-soft); cursor:pointer;
+  opacity:0; pointer-events:none; transition:opacity .14s ease;
+}
+html.is-single .menu-hint kbd{ font:inherit; color:var(--muted); margin-left:6px; }
+html.is-single.hint-on .menu-hint,
+html.kbd-nav.is-single .menu-hint:focus-visible{ opacity:1; pointer-events:auto; }
+@media (hover:none){ html.is-single .menu-hint{ opacity:1; pointer-events:auto; } }
+@media (hover:hover){ html.is-single .menu-hint:hover{ color:var(--ink); } }
+
+html.is-single .pane-l{
+  position:fixed; z-index:20; inset:0 auto 0 0; width:clamp(280px, 25vw, 640px);
+  transform:translateX(-100%); visibility:hidden;
+  transition:transform .22s cubic-bezier(.32,.72,0,1), visibility 0s linear .22s;
+}
+html.is-single.menu-open .pane-l{
+  transform:none; visibility:visible; border-right:1px solid var(--hair);
+  transition:transform .22s cubic-bezier(.32,.72,0,1), visibility 0s;
+}
+
+/* ── Controls: native elements, flat ────────────────────────────────────── */
+/* slider + checkbox + radio take ink through accent-color, natively */
+input[type="range"], input[type="checkbox"], input[type="radio"]{ accent-color:var(--ink); }
+input[type="range"]{ width:100%; max-width:420px; cursor:pointer; }
+
+/* toggle: a checkbox with role="switch", drawn flat */
+input[type="checkbox"][role="switch"]{
+  -webkit-appearance:none; appearance:none; margin:0; flex:none; cursor:pointer;
+  position:relative; width:40px; height:24px; border-radius:999px;
+  background:var(--hair); transition:background .16s ease;
+}
+input[type="checkbox"][role="switch"]::before{
+  content:""; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:999px;
+  background:var(--ground); transition:transform .18s cubic-bezier(.32,.72,0,1);
+}
+input[type="checkbox"][role="switch"]:checked{ background:var(--ink); }
+input[type="checkbox"][role="switch"]:checked::before{ transform:translateX(16px); }
+
+/* segmented choice: a radio group; the chosen one is heavier ink + a 2px mark */
+.seg{ display:inline-flex; gap:28px; border:0; padding:0; margin:0; }
+.seg label{ position:relative; cursor:pointer; padding:6px 0; color:var(--ink-soft); font-weight:400; }
+.seg input{ position:absolute; opacity:0; width:1px; height:1px; }
+.seg input:checked + span{ color:var(--ink); font-weight:500; }
+.seg input:checked + span::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:2px; background:var(--ink); border-radius:2px;
+}
+html.kbd-nav .seg input:focus-visible + span{ outline:1px solid var(--muted); outline-offset:4px; border-radius:6px; }
+@media (hover:hover){ .seg label:hover span{ color:var(--ink); } }
+
+/* search */
+input[type="search"]{
+  -webkit-appearance:none; appearance:none; width:100%; max-width:420px;
+  font:inherit; font-size:16px; color:var(--ink);
+  background:var(--wall); border:0; border-radius:10px; padding:10px 14px;
+}
+input[type="search"]::placeholder{ color:var(--muted); }
+
+/* buttons: only for real actions — navigation is text */
+button{ font:inherit; cursor:pointer; }
+.btn{ border:0; border-radius:10px; padding:10px 18px; font-weight:500; background:var(--wall); color:var(--ink); }
+.btn.primary{ background:var(--ink); color:var(--ground); }
+.btn:active{ opacity:.6; }
+
+/* ── Multiple-choice questions (quiz.js builds them from JSON) ─────────────
+   State without color: the right answer gets an ink bar and Medium weight,
+   a wrong pick is struck through, everything else recedes to grey. */
+.mcq-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:44px; max-width:760px; }
+.mcq-q{ display:grid; grid-template-columns:2em minmax(0, 1fr); column-gap:10px; outline-offset:8px; }
+.mcq-n{ font-size:clamp(19px, 1.25vw, 24px); line-height:1.45; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+.mcq-body{ display:flex; flex-direction:column; gap:12px; min-width:0; }
+.mcq-text{ margin:0; font-size:clamp(19px, 1.25vw, 24px); line-height:1.45; color:var(--ink); }
+.mcq-text mjx-container[display="true"]{ margin:.5em 0 !important; }
+.mcq-opts{ display:flex; flex-direction:column; gap:2px; }
+.mcq-opt{
+  display:grid; grid-template-columns:1.5em minmax(0, 1fr); align-items:baseline; gap:8px;
+  width:calc(100% + 20px); margin:0 -10px; padding:9px 10px; border:0; border-radius:8px;
+  background:none; text-align:left; font:inherit; font-size:clamp(17px, 1.05vw, 20px); line-height:1.45;
+  color:var(--ink); cursor:pointer;
+}
+.mcq-l{ color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+@media (hover:hover){ .mcq-q:not(.is-done) .mcq-opt:hover{ background:var(--wall); } }
+.mcq-q:not(.is-done) .mcq-opt:active{ opacity:.6; }
+.mcq-q.is-done .mcq-opt{ cursor:default; color:var(--ink-soft); }
+.mcq-q.is-done .mcq-opt.is-answer{ color:var(--ink); font-weight:500; box-shadow:inset 2px 0 0 var(--ink); }
+.mcq-q.is-done .mcq-opt.is-answer .mcq-l{ color:var(--ink); }
+.mcq-q.is-done .mcq-opt.is-chosen:not(.is-answer) .mcq-t{ text-decoration:line-through; text-decoration-thickness:1px; }
+.mcq-fb{ margin:6px 0 0; font-size:17px; font-weight:500; color:var(--ink); }
+.mcq-why{ margin:0; font-size:17px; line-height:1.5; color:var(--ink-soft); max-width:62ch; }
+.mcq-bar{ display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin-top:44px; }
+.mcq-score{ font-size:15px; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+.mcq-fallback{ width:100%; max-width:760px; min-height:160px; margin-top:16px; font:14px/1.5 var(--sans); color:var(--ink);
+  background:var(--wall); border:0; border-radius:10px; padding:12px 14px; }
+/* the question numbers, in the left pane of a quiz page */
+.mcq-nav{ display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:4px; }
+.mcq-nav a{ display:block; padding:8px 0; border-radius:8px; text-align:center; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+@media (hover:hover){ .mcq-nav a:hover{ background:var(--wall); color:var(--ink); } }
+.mcq-nav a.is-right{ color:var(--ink); text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:.25em; }
+.mcq-nav a.is-wrong{ color:var(--ink); text-decoration:line-through; text-decoration-thickness:1px; }
+/* fractions stay full size inline */
+mjx-container[jax="SVG"]:not([display="true"]){ margin:0 .08em; }
+
+/* ── Loading: the one color exception — a thin rainbow ring, only while loading */
+.loading{
+  width:18px; height:18px; border-radius:50%;
+  background:conic-gradient(#ff3b30,#ff9500,#ffcc00,#34c759,#00c7be,#007aff,#af52de,#ff3b30);
+  -webkit-mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+          mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+  animation:mm-spin .9s linear infinite;
+}
+@keyframes mm-spin{ to{ transform:rotate(1turn); } }
+
+@media (prefers-reduced-motion:reduce){
+  *{ animation:none!important; transition:none!important; }
+}
+
+/* ── This page: a course, two timed tests, MCQs then FRQs ─────────────── */
+[hidden]{ display:none!important; }
+.pane-r{ position:relative; }
+.course{ display:flex; flex-direction:column; gap:6px; margin:28px 0 30px; }
+.course-n{ margin:0; font-size:clamp(36px, 2.6vw, 56px); font-weight:300; line-height:1.12; letter-spacing:-.03em; }
+.course-t{ margin:0; font-size:clamp(17px, 1.15vw, 22px); line-height:1.35; color:var(--ink); }
+.course-s{ margin:0; font-size:14px; line-height:1.5; color:var(--ink-soft); }
+.tests{ margin:0 0 26px; }
+.frq-list{ list-style:none; margin:44px 0 0; padding:0; display:flex; flex-direction:column; gap:44px; max-width:760px; }
+.frq-q{ display:grid; grid-template-columns:2em minmax(0, 1fr); column-gap:10px; outline-offset:8px; }
+.frq-in{ display:block; width:100%; min-height:8.5em; margin:0; resize:vertical; font:inherit; font-size:clamp(17px, 1.05vw, 20px);
+  line-height:1.5; color:var(--ink); background:var(--wall); border:0; border-radius:10px; padding:12px 14px; }
+.frq-act{ display:flex; gap:12px; }
+.frq-ans{ display:flex; flex-direction:column; gap:10px; }
+.frq-ans p{ margin:0; font-size:17px; line-height:1.5; color:var(--ink); max-width:62ch; }
+.frq-pts{ margin:0; padding:0 0 0 1.1em; display:flex; flex-direction:column; gap:6px; font-size:17px; line-height:1.5; color:var(--ink-soft); max-width:62ch; }
+.frq-pts li::marker{ color:var(--muted); }
+.frq-q mjx-container[display="true"]{ margin:.5em 0 !important; }
+.mj-ring{ position:absolute; top:60px; left:clamp(48px, 5vw, 120px); }
+html:not(.mj-wait) .mj-ring{ display:none; }
+html.mj-wait .pane-r .body{ visibility:hidden; }
+
+</style>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']], packages: { '[+]': ['mhchem'] } },
+  svg: { fontCache: 'global' },
+  startup: {
+    pageReady: function () {
+      return MathJax.startup.defaultPageReady().then(function () { if (window.__mathReady) window.__mathReady(); });
+    }
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg-full.js"></script>
+</head>
+<body>
+<div id="app">
+  <nav class="pane-l">
+    <button class="pane-hide" type="button"><span class="hide">Hide</span><span class="keep">Keep open</span><kbd>`</kbd></button>
+    <header class="course">
+      <h1 class="course-n">BIPN 150</h1>
+      <p class="course-t">Diseases of the Nervous System</p>
+      <p class="course-s">Midterm 1 &middot; 30 minutes each</p>
+      <p class="course-s">Neuroanatomy, ALS, SMA, Rett syndrome and autism, pain, addiction, epilepsy, anxiety and schizophrenia.</p>
+    </header>
+    <div class="tests">
+      <a class="row" href="#test-1" data-test="test-1" aria-current="true">Test 1</a>
+<a class="row" href="#test-2" data-test="test-2" aria-current="false">Test 2</a>
+    </div>
+    <nav class="mcq-nav" id="nav-test-1" aria-label="Test 1 questions"></nav>
+<nav class="mcq-nav" id="nav-test-2" aria-label="Test 2 questions" hidden></nav>
+  </nav>
+  <main class="pane-r">
+    <a class="menu-hint" href="#">Menu<kbd>`</kbd></a>
+    <div class="loading mj-ring" aria-hidden="true"></div>
+    <div class="body">
+<section class="test" id="test-1" data-key="bipn150-t1">
+<section class="mcq" data-title="BIPN 150 Midterm 1, Test 1" data-nav="#nav-test-1"><script type="application/json">[{"q": "A patient has muscle wasting and twitching (fasciculations) in the hands, along with brisk reflexes and a Babinski sign in the legs. Sensation and eye movements are normal. What best explains this mix?", "options": ["Both upper and lower motor neurons are dying, as in ALS", "Lower motor neurons alone are dying, as in spinal muscular atrophy", "Upper motor neurons alone are dying, as in a stroke in the cortex", "Sensory neurons alone are dying, as in a peripheral neuropathy"], "answer": 0, "why": "Wasting and fasciculations are lower motor neuron signs (damage to motor neurons in the brainstem and spinal cord). Brisk reflexes and the Babinski sign are upper motor neuron signs (damage to the corticospinal neurons from the cortex). Finding both, with normal sensation, is the classic pattern of amyotrophic lateral sclerosis. Eye movement and bladder control neurons are usually spared."}, {"q": "Which finding is seen in the motor neurons of about 97% of ALS patients, but not in most patients with SOD1 mutations?", "options": ["TDP-43 leaves the nucleus and forms clumps in the cytoplasm", "SOD1 protein forms clumps inside the nucleus of motor neurons", "Tau protein forms tangles inside the axons of motor neurons", "Huntingtin protein forms clumps inside the nucleus of the cell"], "answer": 0, "why": "TDP-43 is an RNA-binding protein that normally works in the nucleus. In almost all ALS cases, including sporadic and C9orf72 cases, it moves into the cytoplasm and aggregates, so its nuclear jobs are lost and the clumps may be toxic. SOD1-linked ALS is a notable exception, with SOD1 aggregates instead. This shared pathology links ALS with frontotemporal dementia."}, {"q": "What is the most common genetic cause of familial ALS and of familial frontotemporal dementia?", "options": ["An expanded GGGGCC repeat in a noncoding part of C9orf72", "A point mutation in the coding region of the SOD1 gene", "A deletion of exon 7 in both copies of the SMN1 gene", "An expanded CAG repeat in the coding region of huntingtin"], "answer": 0, "why": "In C9orf72 ALS, a six-letter DNA repeat (GGGGCC) that is normally short is expanded to hundreds or thousands of copies. Three harmful effects are proposed: less normal C9orf72 protein, RNA clumps that trap RNA-binding proteins, and toxic dipeptide repeat proteins made by repeat-associated non-AUG (RAN) translation. Expanded CAG repeats in huntingtin cause Huntington disease."}, {"q": "Mutant SOD1 was turned off in microglia only, in ALS mice. Disease started at the same time but progressed much more slowly. What does this show?", "options": ["Glial cells help set how fast the disease progresses in the cord", "Microglia alone start ALS, so motor neurons stay healthy until then", "Mutant SOD1 has no effect in motor neurons, so glia alone matter", "Microglia protect motor neurons, so losing them speeds the disease"], "answer": 0, "why": "These experiments showed that ALS is non-cell-autonomous: what happens in surrounding cells matters, not just in the motor neurons. Mutant SOD1 in motor neurons mainly affected when disease began, while mutant SOD1 in microglia and astrocytes strongly affected how fast it progressed. This made glia a target for therapy."}, {"q": "Riluzole slightly slows ALS. What is its main proposed action?", "options": ["It lowers glutamate signaling, reducing excitotoxic damage", "It raises glutamate signaling, strengthening weak synapses", "It replaces the missing SMN protein in the motor neurons", "It removes TDP-43 clumps from the cytoplasm of neurons"], "answer": 0, "why": "One idea about ALS is that motor neurons are harmed by too much glutamate activity (excitotoxicity), partly because astrocytes lose the glutamate transporter EAAT2. Riluzole reduces glutamate release and blocks some \\(\\ce{Na+}\\) channels, lowering this stress. It extends survival by only a few months, which shows excitotoxicity is only part of the story."}, {"q": "Spinal muscular atrophy (SMA) is caused by loss of both copies of SMN1. Why are some patients far more severely affected than others?", "options": ["They have fewer copies of SMN2, which makes a little working SMN protein", "They have more copies of SMN2, which makes a toxic form of SMN protein", "They have extra copies of SMN1, which compete with SMN2 for splicing", "They have a mutation in SOD1 as well, which adds to the motor neuron loss"], "answer": 0, "why": "SMN2 is a nearly identical backup gene. One base change in exon 7 makes most SMN2 transcripts skip exon 7, producing an unstable, short protein, but about 10% are spliced correctly. More SMN2 copies mean more working protein, so people with 3 or 4 copies usually have milder disease than those with 1 or 2."}, {"q": "How does the drug nusinersen treat SMA?", "options": ["It is an antisense oligonucleotide that helps SMN2 keep exon 7", "It is a gene therapy virus that delivers a working SMN1 gene", "It is a small molecule that blocks the breakdown of SMN protein", "It is an antibody that removes toxic SMN clumps from neurons"], "answer": 0, "why": "Nusinersen is a short piece of modified nucleic acid that binds SMN2 pre-mRNA at a site in intron 7 that normally silences exon 7. Blocking this silencer lets the splicing machinery include exon 7, so more full-length SMN protein is made. It is injected into the spinal fluid. Onasemnogene abeparvovec is the gene therapy, which uses an AAV9 virus to deliver SMN1."}, {"q": "Which cells degenerate in SMA?", "options": ["Lower motor neurons in the spinal cord's ventral horn", "Upper motor neurons in the primary motor cortex", "Sensory neurons in the dorsal root ganglia", "Purkinje neurons in the cortex of the cerebellum"], "answer": 0, "why": "SMA mainly kills alpha motor neurons in the ventral (anterior) horn and some brainstem motor nuclei. Patients have weakness, low muscle tone, wasting and lost reflexes, which are lower motor neuron signs, with normal sensation and thinking. Upper motor neuron signs like spasticity are not part of SMA."}, {"q": "A girl develops normally until about 12 months, then loses speech and purposeful hand use and starts hand-wringing movements. Which gene is most likely mutated?", "options": ["MECP2, on the X chromosome", "FMR1, on the X chromosome", "SMN1, on chromosome 5", "SHANK3, on chromosome 22"], "answer": 0, "why": "This is classic Rett syndrome. MeCP2 binds methylated DNA and helps control the expression of many genes in mature neurons. Girls have one normal copy, and random X inactivation leaves a mix of healthy and affected cells. Boys with the same mutation usually have severe disease in infancy, because they have no healthy copy."}, {"q": "When the Mecp2 gene was turned back on in adult mice with Rett-like symptoms, many of their symptoms went away. What did this show?", "options": ["The neurons were not dead, so the disorder is reversible", "The disorder begins in adults, so early treatment is not needed", "The neurons regrew from stem cells after Mecp2 was restored", "The gene acts only in development, so the change was a mistake"], "answer": 0, "why": "Rett syndrome is not a neurodegenerative disease: neurons survive but work abnormally. Restoring MeCP2 even in adult mice rescued breathing, movement and survival. This raised hope for gene therapies in people. It also showed that the brain needs MeCP2 all through life. Too much MeCP2 is also harmful, as in MECP2 duplication syndrome, so the dose must be right."}, {"q": "In fragile X syndrome, a CGG repeat expansion silences FMR1. According to the mGluR theory, what goes wrong at synapses?", "options": ["Without FMRP, mGluR5 signaling causes too much local protein synthesis", "Without FMRP, mGluR5 signaling causes too little local protein synthesis", "Without FMRP, NMDA receptors lose their \\(\\ce{Mg^{2+}}\\) block at rest", "Without FMRP, GABA receptors become excitatory in the mature cortex"], "answer": 0, "why": "FMRP is an RNA-binding protein that normally brakes the translation of certain mRNAs at synapses. Group I metabotropic glutamate receptors (mGluR5) normally trigger protein synthesis that supports a form of long-term depression. Without FMRP's brake, this signaling runs too strong, leading to exaggerated LTD and immature, crowded dendritic spines. Drugs that block mGluR5 helped mouse models but not people in trials."}, {"q": "Many autism-linked genes, such as SHANK3, neurexins and neuroligins, code for proteins at the same place. Where?", "options": ["The synapse, where they build and hold together contacts", "The myelin sheath, where they wrap and insulate axons", "The nuclear pore, where they move RNA out of the nucleus", "The blood–brain barrier, where they seal endothelial cells"], "answer": 0, "why": "Neurexins (presynaptic) and neuroligins (postsynaptic) bind across the synapse, and SHANK proteins are scaffolds in the postsynaptic density of glutamate synapses. Mutations in these genes change synapse formation and the balance between excitation and inhibition. This is part of why autism is thought of as a disorder of synapse development."}, {"q": "A family has members who feel no pain at all from birth, and they also cannot smell. Which channel is most likely lost?", "options": ["The \\(\\ce{Na+}\\) channel Nav1.7, found in nociceptors", "The \\(\\ce{K+}\\) channel Kv1.1, found in motor axons", "The \\(\\ce{Ca^{2+}}\\) channel Cav2.1, found in Purkinje cells", "The \\(\\ce{Cl-}\\) channel CFTR, found in airway epithelium"], "answer": 0, "why": "Nav1.7 (gene SCN9A) amplifies small depolarizations in pain-sensing nerve endings and in olfactory neurons. Losing it means pain signals never get started, though touch and other senses work. Gain-of-function mutations do the opposite and cause burning pain disorders such as erythromelalgia. This made Nav1.7 a major target for new painkillers."}, {"q": "After a burn, light touch on the healed skin now hurts. What is this called, and what is one cause?", "options": ["Allodynia, from central sensitization of dorsal horn neurons", "Analgesia, from loss of nociceptors in the damaged skin area", "Hyperalgesia, from increased firing of the body's opioid neurons", "Paresthesia, from loss of myelin on the large touch fibers"], "answer": 0, "why": "Allodynia means pain from something that normally does not hurt, such as light touch. After strong pain input, dorsal horn neurons become more excitable through NMDA receptor activation and other changes (central sensitization), so signals from touch fibers start to activate pain pathways. Hyperalgesia means a painful stimulus hurts more than usual."}, {"q": "NSAIDs like ibuprofen reduce inflammatory pain. How?", "options": ["They block COX enzymes, so less prostaglandin sensitizes nociceptors", "They activate \\(\\mu\\)-opioid receptors, so less pain signal reaches the brain", "They block Nav1.7 channels, so nociceptors cannot fire action potentials", "They release endorphins, so the descending pathway inhibits the cord"], "answer": 0, "why": "Injured tissue makes prostaglandins using cyclooxygenase (COX). Prostaglandins do not cause much pain by themselves, but they make nociceptors more sensitive, partly by changing ion channels like TRPV1 and Nav1.8. Blocking COX reduces this sensitization, so ordinary stimuli hurt less. Opioids act on a different system."}, {"q": "Morphine relieves pain partly by acting in the brainstem's periaqueductal gray (PAG). How does this lead to less pain?", "options": ["It quiets GABA neurons in the PAG, which activates descending inhibition of the spinal cord", "It excites GABA neurons in the PAG, which blocks descending signals to the spinal cord", "It blocks Nav1.7 in the PAG, which stops pain signals from reaching the cortex", "It closes \\(\\ce{K+}\\) channels in the PAG, which makes pain neurons fire less often"], "answer": 0, "why": "In the PAG, \\(\\mu\\)-opioid receptors inhibit local GABA neurons. Releasing that brake activates PAG output neurons, which drive neurons in the rostral ventromedial medulla. These project down to the dorsal horn and inhibit pain transmission there, partly through local opioid interneurons. Opioids also act directly in the dorsal horn and on nociceptor terminals."}, {"q": "How do \\(\\mu\\)-opioid receptors reduce transmitter release from nociceptor terminals in the spinal cord?", "options": ["Through \\(\\text{G}_{\\text{i}}\\) and \\(\\text{G}_{\\text{o}}\\), they close \\(\\ce{Ca^{2+}}\\) channels and open \\(\\ce{K+}\\) channels", "Through \\(\\text{G}_{\\text{s}}\\), they open \\(\\ce{Ca^{2+}}\\) channels and close \\(\\ce{K+}\\) channels", "Through \\(\\text{G}_{\\text{q}}\\), they release \\(\\ce{Ca^{2+}}\\) from internal stores in the terminal", "Through an ion channel in the receptor itself, they let \\(\\ce{Cl-}\\) into the terminal"], "answer": 0, "why": "\\(\\mu\\)-opioid receptors couple to \\(\\text{G}_{\\text{i}}\\) and \\(\\text{G}_{\\text{o}}\\). The \\(\\beta\\gamma\\) subunits inhibit voltage-gated \\(\\ce{Ca^{2+}}\\) channels in the terminal (less \\(\\ce{Ca^{2+}}\\) means less release of glutamate and substance P) and open GIRK \\(\\ce{K+}\\) channels on postsynaptic neurons (hyperpolarization). \\(\\alpha\\) subunits also lower cAMP."}, {"q": "How does cocaine raise dopamine in the nucleus accumbens?", "options": ["It blocks the dopamine transporter, so dopamine is not cleared", "It reverses the dopamine transporter, so dopamine leaks out", "It activates dopamine receptors, acting like dopamine itself", "It blocks monoamine oxidase, so dopamine is not broken down"], "answer": 0, "why": "Cocaine binds the dopamine transporter (DAT) and stops it from taking dopamine back into the terminal, so dopamine released by spikes lingers in the synapse. Amphetamine is different: it enters the terminal, empties vesicles through VMAT, and makes DAT run backward, releasing dopamine even without spikes."}, {"q": "Opioids raise dopamine release in the nucleus accumbens. Where and how do they act to do this?", "options": ["On GABA neurons in the VTA, which they inhibit, freeing the dopamine neurons", "On dopamine neurons in the VTA, which they excite through a cation channel", "On dopamine transporters in the accumbens, which they block like cocaine", "On glutamate neurons in the cortex, which they excite to drive the VTA"], "answer": 0, "why": "VTA dopamine neurons are held back by local GABA neurons. These GABA neurons carry \\(\\mu\\)-opioid receptors. When opioids inhibit them, the dopamine neurons are disinhibited and fire more, releasing more dopamine in the accumbens. This is a common circuit trick: inhibiting an inhibitor excites its target."}, {"q": "Why does the opioid antagonist naloxone reverse an overdose within minutes?", "options": ["It outcompetes the opioid at \\(\\mu\\) receptors, so breathing centers recover", "It speeds the liver's breakdown of opioids, so they leave the blood faster", "It activates \\(\\mu\\) receptors in a different way, so it reverses their effect", "It binds the opioid in the blood, so the drug cannot reach the brain at all"], "answer": 0, "why": "Opioid overdose kills mostly by suppressing breathing through \\(\\mu\\) receptors in the brainstem (such as the preBötzinger complex). Naloxone binds these receptors tightly without activating them and pushes the opioid off. Because naloxone wears off faster than many opioids, the person can stop breathing again and must be watched."}, {"q": "After months of heavy opioid use, a person stops. Why does withdrawal cause anxiety, sweating, and diarrhea?", "options": ["Cells have boosted their cAMP pathway, and without the opioid it overshoots", "Cells have lost their \\(\\mu\\) receptors forever, so pain is felt more strongly", "Cells have stored opioid in fat, which is now released in a sudden rush", "Cells have made extra GABA, which now floods out once the drug stops"], "answer": 0, "why": "Opioids lower cAMP in many neurons. With long use, cells adapt by making more adenylyl cyclase and other parts of the cAMP pathway, keeping cAMP near normal while the drug is present. When the drug is removed, this boosted pathway runs unopposed, cAMP shoots up, and neurons such as those in the locus coeruleus fire too much, causing withdrawal symptoms."}, {"q": "Dopamine neurons fire a burst when a monkey gets an unexpected reward. After learning that a light predicts juice, they fire to the light instead. If the light comes on and no juice follows, what do they do?", "options": ["Their firing dips below baseline at the time the juice should have come", "Their firing bursts again at the time the juice should have come", "Their firing stays at baseline, since no reward was delivered at all", "Their firing bursts to the light but stops when the light turns off"], "answer": 0, "why": "These neurons signal reward prediction error: the difference between what was expected and what happened. A surprise reward gives a burst. A fully predicted reward gives no change at reward time. A missing expected reward gives a dip. Addictive drugs raise dopamine directly, which may act like a constant \"better than expected\" signal that teaches the brain to value the drug."}, {"q": "Absence seizures in children show 3 Hz spike-and-wave activity on the EEG. Which channels in thalamic neurons are key to this rhythm, and which drug targets them?", "options": ["T-type \\(\\ce{Ca^{2+}}\\) channels, blocked by ethosuximide", "L-type \\(\\ce{Ca^{2+}}\\) channels, blocked by nifedipine", "Nav1.1 \\(\\ce{Na+}\\) channels, blocked by phenytoin", "GABA-A receptors, enhanced by ethosuximide"], "answer": 0, "why": "Thalamic neurons fire bursts when hyperpolarization removes inactivation from T-type \\(\\ce{Ca^{2+}}\\) channels, which then open to give a low-threshold spike. Loops between thalamus and cortex can lock into a 3 Hz rhythm. Ethosuximide reduces T-type currents and is a first-choice drug for typical absence seizures."}, {"q": "In Dravet syndrome, a mutation removes one working copy of SCN1A, which codes for the Nav1.1 \\(\\ce{Na+}\\) channel. Why does losing a \\(\\ce{Na+}\\) channel cause seizures?", "options": ["Inhibitory interneurons depend on Nav1.1 most, so inhibition fails", "Excitatory neurons depend on Nav1.1 most, so they fire too much", "Glial cells depend on Nav1.1 most, so \\(\\ce{K+}\\) buffering fails", "Motor neurons depend on Nav1.1 most, so muscles convulse alone"], "answer": 0, "why": "Nav1.1 is especially important in fast-spiking GABAergic interneurons, like parvalbumin cells. With half the channels, these interneurons cannot keep up high firing rates, so inhibition weakens and excitatory circuits run out of control. This is why \\(\\ce{Na+}\\)-channel-blocking drugs like carbamazepine can make Dravet seizures worse."}, {"q": "How do benzodiazepines such as diazepam reduce seizures and anxiety?", "options": ["They raise the rate at which GABA-bound GABA-A channels open", "They increase how long GABA-A channels stay open with no GABA bound", "They block the reuptake of GABA by transporters on astrocytes", "They act as GABA itself, directly opening GABA-A channels at rest"], "answer": 0, "why": "Benzodiazepines bind GABA-A receptors at the site between an \\(\\alpha\\) and a \\(\\gamma\\) subunit. They do not open the channel themselves; they make GABA work better, mainly by raising how often the channel opens. More \\(\\ce{Cl-}\\) current means stronger inhibition. Barbiturates mainly lengthen opening time and can open the channel directly at high doses, which makes them more dangerous."}, {"q": "In temporal lobe epilepsy, which brain region most often shows scarring and neuron loss?", "options": ["The hippocampus, especially areas CA1 and CA3", "The cerebellum, especially its Purkinje cell layer", "The occipital cortex, especially the primary visual area", "The basal ganglia, especially the putamen and caudate"], "answer": 0, "why": "The most common pattern in drug-resistant temporal lobe epilepsy is hippocampal sclerosis: loss of pyramidal neurons in CA1 and CA3 and glial scarring, often with reorganized mossy fibers from the dentate gyrus. Removing the affected temporal lobe can stop the seizures in many of these patients."}, {"q": "In fear conditioning, a tone is paired with a mild shock. Later, the tone alone is played many times without shocks, and the fear fades (extinction). Which statement best describes extinction?", "options": ["A new safety memory, using the prefrontal cortex, suppresses the old fear memory", "The old fear memory is erased from the amygdala and cannot come back at all", "The amygdala neurons that stored the fear memory die off over time", "The tone stops reaching the brain, because the hearing pathway adapts"], "answer": 0, "why": "Extinction is new learning, not forgetting. The ventromedial prefrontal cortex learns that the tone now means safety and dampens the amygdala's fear output through inhibitory circuits. The old memory remains: fear can come back with time (spontaneous recovery), in a new place (renewal) or after a stressful event. This explains relapse after exposure therapy for anxiety."}, {"q": "Classic antipsychotics like haloperidol block D2 receptors. Which side effect comes from blocking D2 receptors in the pituitary pathway?", "options": ["High prolactin, causing breast milk and missed periods", "Stiff, slow movements, like those in Parkinson disease", "Weight gain and high blood sugar from appetite changes", "Low white blood cell counts from bone marrow damage"], "answer": 0, "why": "Dopamine from the tuberoinfundibular pathway inhibits prolactin release. Blocking D2 receptors there raises prolactin. Blocking D2 in the nigrostriatal pathway causes movement side effects (parkinsonism, dystonia). Weight gain and metabolic changes are more typical of some atypical drugs, and low white cell counts are a rare risk of clozapine."}, {"q": "PCP and ketamine block NMDA receptors. In healthy people, they can cause hallucinations, flat emotions and poor thinking. Why does this matter for schizophrenia research?", "options": ["It suggests low NMDA activity could explain positive, negative and cognitive symptoms", "It proves that high NMDA activity causes every symptom of schizophrenia", "It shows that dopamine plays no role in any symptom of schizophrenia", "It suggests that schizophrenia is caused by too much ketamine-like molecules"], "answer": 0, "why": "Amphetamine, which raises dopamine, mostly causes positive symptoms like paranoia. NMDA blockers produce a fuller picture, including negative and cognitive symptoms. This supports the glutamate hypothesis: weak NMDA function, perhaps on inhibitory interneurons, may disrupt cortical circuits and secondarily raise dopamine activity. The two hypotheses are linked, not rivals."}, {"q": "In a mouse model, mutant SOD1 is removed from motor neurons only. What happens to the disease?", "options": ["It starts later, though it then progresses at the usual speed", "It never starts, since motor neurons are the only cells that matter", "It starts on time and then progresses much faster than usual", "It starts on time, but the mice recover once it has started"], "answer": 0, "why": "Removing mutant SOD1 from motor neurons delayed disease onset, but once disease began, it progressed at a similar speed. Removing it from microglia or astrocytes had the opposite pattern: onset was about the same, but progression slowed. So motor neurons help decide when ALS begins, while glia help decide how fast it spreads."}]</script></section>
+<script type="application/json" class="frq-data">[{"q": "(a) Explain why loss of SMN1 causes SMA, and why the number of SMN2 copies predicts how severe the disease will be. (b) Compare how nusinersen and onasemnogene abeparvovec (AAV9 gene therapy) each raise SMN protein. (c) Explain why treatment works best when given early, ideally before symptoms appear.", "answer": "(a) SMN protein is needed in all cells, but motor neurons are especially sensitive to losing it, perhaps because of their long axons and roles in RNA processing. Without SMN1, the only source is SMN2. A single base change in SMN2's exon 7 makes most of its transcripts skip exon 7, so only about 10% of its protein is full length. More SMN2 copies mean more working SMN, so 1 or 2 copies cause severe type 1 SMA, while 3 or 4 copies cause milder forms. (b) Nusinersen is an antisense oligonucleotide injected into the spinal fluid. It binds a splicing silencer in intron 7 of SMN2 pre-mRNA, so exon 7 is kept and more full-length SMN is made from the patient's own SMN2 genes. The AAV9 gene therapy is a single IV infusion that delivers a working copy of SMN1 into motor neurons and other cells, so they make SMN from the new gene. (c) Motor neurons that have already died cannot be replaced. Raising SMN saves the motor neurons still alive, so starting before symptoms (found by newborn screening) saves the most neurons and gives the best function.", "points": ["Motor neurons need SMN; SMN2 makes only about 10% full-length protein", "More SMN2 copies, milder disease", "Nusinersen fixes SMN2 splicing; gene therapy adds SMN1", "Early treatment works best because dead motor neurons cannot be replaced"]}, {"q": "(a) Explain how cocaine and heroin each raise dopamine in the nucleus accumbens, naming the cells and molecules involved. (b) Explain, at the level of cell signaling, why stopping heroin after long use causes withdrawal. (c) Explain why methadone or buprenorphine helps people recover from opioid addiction.", "answer": "(a) Cocaine blocks the dopamine transporter on the terminals of VTA dopamine neurons in the accumbens, so released dopamine is not taken back up and builds up in the synapse. Heroin is converted to morphine, which acts on \\(\\mu\\)-opioid receptors on GABA interneurons in the VTA. Inhibiting these interneurons removes their brake on dopamine neurons, which then fire more and release more dopamine in the accumbens. (b) \\(\\mu\\) receptors act through \\(\\text{G}_{\\text{i}}\\) and \\(\\text{G}_{\\text{o}}\\) to inhibit adenylyl cyclase and lower cAMP. With long use, neurons adapt by increasing adenylyl cyclase, protein kinase A and CREB activity, keeping cAMP near normal while the drug is present. When heroin stops, the boosted pathway is unopposed, cAMP rises too high, and neurons such as those in the locus coeruleus fire too much, causing anxiety, sweating, pain and diarrhea. (c) Methadone is a long-acting full agonist and buprenorphine a long-acting partial agonist. They occupy \\(\\mu\\) receptors steadily, preventing withdrawal and craving without the rapid highs and lows of heroin. Buprenorphine's partial activity also limits breathing suppression.", "points": ["Cocaine blocks DAT at accumbens terminals", "Opioids inhibit VTA GABA neurons, disinhibiting dopamine neurons", "Withdrawal from cAMP pathway upregulation that rebounds", "Long-acting agonists prevent withdrawal and craving with steadier receptor activity"]}]</script>
+</section>
+<section class="test" id="test-2" data-key="bipn150-t2" hidden>
+<section class="mcq" data-title="BIPN 150 Midterm 1, Test 2" data-nav="#nav-test-2"><script type="application/json">[{"q": "Which group of signs points to an upper motor neuron lesion rather than a lower motor neuron lesion?", "options": ["Spasticity, brisk reflexes and an upgoing big toe", "Wasting, weak reflexes and muscle fasciculations", "Floppiness, absent reflexes and muscle shrinking", "Numbness, tingling and loss of vibration sense"], "answer": 0, "why": "Upper motor neurons in the cortex control the spinal circuits from above. When they are lost, spinal reflex circuits are released, giving high tone (spasticity), brisk reflexes and the Babinski sign. Lower motor neurons directly drive muscle, so losing them causes weakness with low tone, lost reflexes, wasting and fasciculations. Sensory signs are not part of either."}, {"q": "Why are the eye movement muscles usually spared in ALS, even late in the disease?", "options": ["The motor neurons for eye muscles resist the disease process", "The eye muscles are controlled by sensory neurons, not motor ones", "The eye muscles are made of smooth muscle, which ALS cannot reach", "The eye muscles regrow motor neurons from stem cells in the brainstem"], "answer": 0, "why": "Motor neurons in the oculomotor, trochlear and abducens nuclei, and those in Onuf's nucleus (which control bladder sphincters), are relatively resistant in ALS. Studies point to differences in their \\(\\ce{Ca^{2+}}\\) buffering proteins, their AMPA receptor makeup and their gene expression. Late-stage patients can often communicate using eye-tracking devices for this reason."}, {"q": "Tofersen is an antisense drug for SOD1-linked ALS. How is it designed to work?", "options": ["It lowers the amount of SOD1 protein by causing SOD1 mRNA to be destroyed", "It raises the amount of SOD1 protein by fixing the SOD1 gene's splicing", "It replaces SOD1 with a healthy copy delivered by an AAV9 virus vector", "It blocks the glutamate transporter, so motor neurons see less glutamate"], "answer": 0, "why": "Mutant SOD1 causes ALS through a toxic gain of function, not by losing its normal enzyme activity. So the goal is to make less of it. Tofersen binds SOD1 mRNA, which triggers RNase H to cut it, lowering SOD1 protein levels in the spinal fluid and tissue. This is the opposite of what is needed in SMA, where the goal is to raise SMN."}, {"q": "The C9orf72 repeat expansion lies outside the protein-coding sequence. Yet abnormal proteins made of two repeating amino acids are found in patients' neurons. How?", "options": ["The repeat RNA is translated without a normal start codon (RAN translation)", "The repeat DNA is copied into the coding region by a jumping DNA element", "The repeat RNA is spliced into the main C9orf72 protein-coding message", "The repeat DNA is read by DNA polymerase, which adds amino acids directly"], "answer": 0, "why": "The long GGGGCC repeat RNA can be translated in all reading frames even though it lacks an AUG start codon, a process called repeat-associated non-AUG (RAN) translation. This makes dipeptide repeat proteins like poly-GA, poly-GR and poly-PR, which can be toxic, especially the arginine-containing ones. Together with RNA foci and lost C9orf72 protein, these are thought to harm neurons."}, {"q": "A newborn has very weak muscles, cannot hold up her head and has trouble breathing and swallowing. Genetic testing shows no SMN1 and only 2 copies of SMN2. Without treatment, what is expected?", "options": ["Severe type 1 SMA, with death or lasting ventilation by 2 years of age", "Mild type 4 SMA, with weakness starting in adulthood and a normal lifespan", "No disease at all, since 2 copies of SMN2 fully replace SMN1", "Rett syndrome, since SMN2 copy number affects only girls"], "answer": 0, "why": "With only 2 copies of SMN2, very little full-length SMN protein is made, so motor neurons are lost before and soon after birth. This is the most common and severe form, type 1 SMA. Before modern treatments, most babies did not live past 2 years without breathing support. Today, early treatment greatly improves the outlook."}, {"q": "Why does SMN2 produce mostly a short, unstable protein?", "options": ["A single base change in exon 7 causes exon 7 to be skipped during splicing", "A deletion removes exon 7 from the SMN2 gene, so no full protein is made", "A stop codon in exon 1 ends translation early, so only a fragment is made", "A promoter defect lowers SMN2 transcription to about 10% of SMN1's level"], "answer": 0, "why": "SMN1 and SMN2 differ at a C-to-T change in exon 7. It does not change the amino acid, but it disrupts a splicing enhancer and creates a silencer, so most SMN2 transcripts leave out exon 7. The resulting protein is unstable and quickly destroyed. The roughly 10% of transcripts that keep exon 7 make normal SMN protein."}, {"q": "Boys with MECP2 duplication (an extra copy of the gene) have severe intellectual disability and seizures. What does this tell us?", "options": ["Too much MeCP2 is harmful, just as too little is", "Only losing MeCP2 matters; extra copies are harmless", "MeCP2 works only in girls, since it is on the X chromosome", "Extra MeCP2 must be the cause of classic Rett syndrome"], "answer": 0, "why": "Rett syndrome comes from losing MeCP2 function, and the duplication syndrome comes from having too much. So neurons need MeCP2 within a narrow range. This is important for gene therapy: adding too much MECP2 could cause a different disorder, so therapies must be carefully controlled."}, {"q": "Why are most patients with classic Rett syndrome girls?", "options": ["Boys with the mutation have no normal copy and rarely survive infancy", "Girls inherit the mutation from both parents, while boys inherit it from one", "The mutation is on the Y chromosome, which only girls are missing", "Girls make extra MeCP2 at puberty, which brings out the symptoms"], "answer": 0, "why": "MECP2 is on the X chromosome. Girls have two X chromosomes, and random X inactivation leaves about half of their cells with a working copy, so they survive with Rett syndrome. Boys have only one X, so every cell lacks working MeCP2, which usually causes severe disease in infancy. Most mutations are new (de novo), often arising in the father's sperm."}, {"q": "Autism is strongly heritable. Which finding best supports this?", "options": ["Identical twins share an autism diagnosis at far higher rates than fraternal twins", "Autism rates are the same in identical twins and in fraternal twins", "Autism is caused by a single gene inherited in a simple dominant pattern", "Autism appears only in families with no history of any brain disorder"], "answer": 0, "why": "Concordance in identical twins is very high (often reported at 60–90%) and much higher than in fraternal twins, which gives heritability estimates of about 80%. But hundreds of genes are involved, each with small or rare effects, and many cases involve new mutations not found in the parents. So autism is genetic but not simply inherited."}, {"q": "Which change in neural circuits is a leading hypothesis for autism?", "options": ["An imbalance between excitation and inhibition in the cortex", "A complete loss of dopamine neurons in the substantia nigra", "A loss of myelin in the peripheral nerves of the limbs", "A failure of motor neurons in the ventral horn of the cord"], "answer": 0, "why": "Many autism-linked genes affect how excitatory and inhibitory synapses form and work. Shifting the balance between them, often toward more excitation, could disrupt how the cortex processes information, and may help explain why about a quarter of autistic people also have epilepsy. The other changes describe Parkinson disease, neuropathy and SMA."}, {"q": "How does capsaicin cream reduce pain after many applications?", "options": ["Long TRPV1 activation desensitizes and damages the nociceptor endings", "Long TRPV1 activation makes nociceptors fire even more at the start", "It blocks COX enzymes in the skin and lowers prostaglandin levels", "It activates \\(\\mu\\) receptors on the nerve endings in the skin"], "answer": 0, "why": "Capsaicin opens TRPV1, so at first it burns. With repeated or high-dose use, the large \\(\\ce{Ca^{2+}}\\) entry desensitizes TRPV1 and causes the fine nerve endings to retract, so they respond less to painful stimuli. This \"defunctionalization\" lasts weeks and is used for some kinds of nerve pain."}, {"q": "Rapidly repeated C-fiber input makes a dorsal horn neuron's response grow with each stimulus (wind-up). Which receptor is key?", "options": ["NMDA receptors, as depolarization removes their \\(\\ce{Mg^{2+}}\\) block", "AMPA receptors, as they are permanently blocked by \\(\\ce{Mg^{2+}}\\)", "GABA-A receptors, as they become excitatory with repeated use", "Nicotinic receptors, as they open with each nociceptor signal"], "answer": 0, "why": "With repeated C-fiber input, the slow depolarization from substance P and glutamate builds up. This removes \\(\\ce{Mg^{2+}}\\) from NMDA receptors, letting \\(\\ce{Ca^{2+}}\\) in and making each response larger. Wind-up is a short-term form of central sensitization. Ketamine, an NMDA blocker, can reduce it."}, {"q": "A patient has pain from nerve damage (neuropathic pain) that does not respond well to ibuprofen. Why?", "options": ["The pain comes from abnormal firing in injured nerves, not from inflammation", "The pain comes from inflammation, but ibuprofen cannot reach the nerves", "The pain comes from the muscles, which ibuprofen cannot enter at all", "The pain comes from the opioid system, which ibuprofen cannot activate"], "answer": 0, "why": "Neuropathic pain arises from damage to the nervous system itself. Injured neurons can fire spontaneously, gain extra \\(\\ce{Na+}\\) channels and change their connections in the spinal cord. Because prostaglandins are not the main driver, COX blockers do little. Drugs that calm nerve excitability, such as gabapentin and some antidepressants, work better."}, {"q": "Endogenous opioid peptides include endorphins, enkephalins and dynorphins. Which pairing of peptide and preferred receptor is correct?", "options": ["Dynorphin with \\(\\kappa\\) receptors", "Dynorphin with \\(\\mu\\) receptors", "Enkephalin with \\(\\kappa\\) receptors", "Endorphin with \\(\\kappa\\) receptors"], "answer": 0, "why": "\\(\\beta\\)-endorphin binds \\(\\mu\\) receptors best, enkephalins prefer \\(\\delta\\) receptors (and also bind \\(\\mu\\)), and dynorphins prefer \\(\\kappa\\) receptors. \\(\\kappa\\) activation can reduce pain but also causes unpleasant feelings and lowers dopamine release, which may contribute to the negative mood of drug withdrawal."}, {"q": "How does nicotine increase dopamine release from VTA neurons?", "options": ["It activates nicotinic ACh receptors on VTA dopamine neurons", "It blocks the dopamine transporter in the nucleus accumbens", "It inhibits GABA neurons in the VTA through \\(\\mu\\) receptors", "It releases dopamine from vesicles by reversing VMAT2"], "answer": 0, "why": "Nicotinic ACh receptors are cation channels. Those containing \\(\\alpha4\\beta2\\) subunits on VTA dopamine neurons open when nicotine binds, depolarizing the cells and raising their firing, so more dopamine is released in the accumbens. Nicotine also acts on glutamate terminals in the VTA. Varenicline, a partial agonist at these receptors, helps people quit smoking."}, {"q": "With repeated cocaine use, the transcription factor \\(\\Delta\\)FosB builds up in nucleus accumbens neurons. Why is it thought to matter in addiction?", "options": ["It is very stable, so it lasts for weeks and keeps gene changes going", "It is broken down within minutes, so it signals only one cocaine dose", "It blocks dopamine release, so the drug feels weaker over time", "It is found only in glial cells, so it does not affect neurons at all"], "answer": 0, "why": "Most Fos family proteins rise briefly and are quickly degraded. \\(\\Delta\\)FosB is a truncated form that is unusually stable, so it accumulates with each exposure and persists long after drug use stops. It changes the expression of genes that affect dendritic spines and sensitivity to drugs, acting as a kind of molecular memory of drug use."}, {"q": "During a seizure, why can a single neuron's firing spread to recruit large areas of the brain?", "options": ["Strong excitatory feedback loops overcome weakened local inhibition", "Gap junctions between all neurons carry the seizure across the brain", "Dopamine release from the VTA directly triggers firing everywhere", "Myelin loss lets current leak between neighboring axons across the brain"], "answer": 0, "why": "Cortex and hippocampus have many recurrent excitatory connections, and normally strong inhibition from interneurons keeps them in check. If inhibition fails or excitation is too strong, activity spreads from neuron to neuron. Rising extracellular \\(\\ce{K+}\\) and changes in \\(\\ce{Cl-}\\) gradients during seizures can make inhibition weaker still, helping seizures spread."}, {"q": "Phenytoin and carbamazepine are common seizure drugs. What is their main shared action?", "options": ["They hold \\(\\ce{Na+}\\) channels in the inactivated state, limiting fast repetitive firing", "They hold \\(\\ce{K+}\\) channels in the closed state, lengthening each action potential", "They block GABA reuptake, so inhibitory synapses act for a longer time", "They block T-type \\(\\ce{Ca^{2+}}\\) channels, stopping the thalamic rhythm"], "answer": 0, "why": "These drugs bind voltage-gated \\(\\ce{Na+}\\) channels in their inactivated state and slow their recovery. Normal single spikes are barely affected, but the very fast, repeated firing of seizures needs channels to recover quickly, so it is blocked. This use-dependent action is why they work against seizures without stopping normal brain activity."}, {"q": "Levetiracetam reduces seizures by binding a protein in presynaptic terminals. Which one?", "options": ["SV2A, a protein in synaptic vesicle membranes", "SNAP-25, a protein of the SNARE fusion complex", "VMAT2, a transporter that loads monoamines", "Synaptophysin, a protein that forms gap junctions"], "answer": 0, "why": "Levetiracetam binds synaptic vesicle glycoprotein 2A (SV2A), which seems to help prepare vesicles for release. Binding is thought to reduce release during high-frequency firing, which calms the runaway synaptic activity of seizures. Its target is very different from older drugs that act on ion channels."}, {"q": "The ketogenic diet (high fat, very low carbohydrate) reduces seizures in some children with epilepsy. Which is a proposed reason?", "options": ["Ketone bodies and metabolic changes reduce neuronal excitability", "High fat increases myelin, which stops current spreading", "Low carbohydrate raises blood glucose, which calms neurons", "Fat blocks the blood–brain barrier, keeping seizures out"], "answer": 0, "why": "On the diet, the body burns fat and makes ketone bodies, which the brain uses as fuel. Proposed effects include opening ATP-sensitive \\(\\ce{K+}\\) channels, increasing adenosine, changing GABA and glutamate production, and calming neurons. It is especially used for drug-resistant epilepsy in children. Low carbohydrate lowers blood glucose, not raises it."}, {"q": "The basolateral amygdala is damaged on both sides in a rare disease. What is most likely?", "options": ["Impaired fear learning and reduced fear of threatening situations", "Severe anxiety, since the amygdala normally calms fear responses", "Loss of the ability to form any new memories of facts or events", "Paralysis of the facial muscles used to show fear and other feelings"], "answer": 0, "why": "The amygdala links sensory cues with threats. Patient S.M., with bilateral amygdala damage from Urbach–Wiethe disease, showed little fear of snakes, spiders or dangerous people and could not easily learn fear associations. She could still form ordinary memories (which depend on the hippocampus) and move her face normally."}, {"q": "SSRIs are widely used for anxiety disorders. Why do they take several weeks to work, even though they block serotonin reuptake within hours?", "options": ["Slow changes like receptor adjustment and new gene expression are needed", "The drug takes weeks to cross the blood–brain barrier into the brain", "Serotonin must build up in fat stores before it can reach the synapse", "The liver must convert the drug into its active form over several weeks"], "answer": 0, "why": "Blocking SERT raises serotonin right away. But at first, extra serotonin activates 5-HT1A autoreceptors on serotonin neurons, which reduces their firing. Over weeks, these autoreceptors desensitize, serotonin output rises, and downstream changes such as new gene expression and neurogenesis in the hippocampus build up. These slow adaptations match the timing of the clinical effect."}, {"q": "The dopamine hypothesis of schizophrenia says positive symptoms come from too much dopamine activity. In which pathway?", "options": ["The mesolimbic pathway, from the VTA to the nucleus accumbens", "The nigrostriatal pathway, from the substantia nigra to the striatum", "The tuberoinfundibular pathway, from the hypothalamus to the pituitary", "The mesocortical pathway, from the VTA to the prefrontal cortex"], "answer": 0, "why": "Too much dopamine activity in the mesolimbic pathway is linked to hallucinations and delusions, which D2 blockers reduce. Low dopamine activity in the mesocortical pathway to the prefrontal cortex may underlie negative and cognitive symptoms, which classic antipsychotics treat poorly. Blocking D2 in the nigrostriatal and tuberoinfundibular pathways causes side effects."}, {"q": "Why does clozapine cause fewer movement side effects than haloperidol?", "options": ["It binds D2 receptors loosely and also blocks 5-HT2A receptors", "It binds D2 receptors tightly and also blocks 5-HT2A receptors", "It raises dopamine release in the striatum to offset the D2 block", "It acts only on glutamate receptors and ignores dopamine receptors"], "answer": 0, "why": "Haloperidol binds D2 receptors tightly and blocks them strongly in the striatum, often above the roughly 80% occupancy that causes parkinsonism. Clozapine binds D2 more loosely and comes off quickly, and it strongly blocks 5-HT2A receptors, which increases dopamine release in the striatum and cortex. Clozapine is the most effective drug for treatment-resistant schizophrenia, but it can rarely destroy white blood cells, so blood counts are monitored."}, {"q": "Variants of the complement gene C4 that raise its expression increase the risk of schizophrenia. What is the proposed mechanism?", "options": ["More complement tags more synapses for removal, causing too much pruning", "More complement destroys dopamine neurons, causing too little dopamine", "More complement opens the blood–brain barrier, letting in toxic antibodies", "More complement blocks NMDA receptors, causing low glutamate activity"], "answer": 0, "why": "In the developing brain, complement proteins (C1q, C3 and C4) tag synapses, and microglia remove the tagged ones (synaptic pruning). Higher C4 activity may cause too much pruning during adolescence, when symptoms usually begin. This matches findings of fewer dendritic spines in the prefrontal cortex of patients."}, {"q": "Brain scans of people with schizophrenia often show which structural change?", "options": ["Larger lateral ventricles and less gray matter in the cortex", "Smaller lateral ventricles and more gray matter in the cortex", "A large tumor near the hypothalamus that presses on the pituitary", "Loss of all myelin in the spinal cord and peripheral nerves"], "answer": 0, "why": "On average, patients show enlarged ventricles and reduced cortical gray matter, especially in frontal and temporal regions, partly due to fewer synapses and less neuropil. These changes are present early in the illness and are small, so they cannot be used to diagnose an individual."}, {"q": "Huntington disease, fragile X syndrome and C9orf72 ALS share which type of mutation?", "options": ["Expanded repeats of short DNA sequences", "Single base changes in a splicing site", "Deletions of a whole chromosome arm", "Extra copies of a whole chromosome"], "answer": 0, "why": "All three are repeat expansion disorders: a CAG repeat in the huntingtin coding region, a CGG repeat in the FMR1 untranslated region (which silences the gene), and a GGGGCC repeat in a C9orf72 intron. Repeats can grow longer when passed to children, so the disease may appear earlier or more severely in later generations (anticipation)."}, {"q": "What does the 22q11.2 deletion syndrome teach about schizophrenia?", "options": ["One large deletion raises the risk by 25 times", "One gene on chromosome 22 causes every case seen", "Schizophrenia has no link to any genetic changes", "The deletion protects against developing schizophrenia"], "answer": 0, "why": "About a quarter of people with the 22q11.2 deletion develop schizophrenia or a related psychosis, compared with about 1% of the general population. The deletion removes dozens of genes, including COMT, which breaks down dopamine. But most patients do not have this deletion, and most of the genetic risk comes from many common variants with small effects."}, {"q": "An opioid user's breathing nearly stops. What explains the danger of mixing opioids with alcohol or benzodiazepines?", "options": ["Both add to suppression of brainstem breathing centers", "Alcohol blocks \\(\\mu\\) receptors, which raises opioid levels", "Benzodiazepines speed opioid breakdown in the liver", "Alcohol makes opioids cross the blood–brain barrier"], "answer": 0, "why": "Opioids suppress breathing through \\(\\mu\\) receptors in brainstem respiratory centers. Alcohol and benzodiazepines boost GABA-A inhibition and also depress these centers. Together, the effects add up, so doses that would be survivable alone can stop breathing. Naloxone reverses only the opioid part."}, {"q": "Status epilepticus is a medical emergency. Why do benzodiazepines often work less well the longer a seizure lasts?", "options": ["GABA-A receptors are pulled into the cell and fewer remain on the surface", "GABA-A receptors gain extra \\(\\gamma\\) subunits and bind the drug too tightly", "The blood–brain barrier closes during long seizures and blocks the drug", "The drug is broken down faster at high body temperatures during seizures"], "answer": 0, "why": "During long seizures, synaptic GABA-A receptors (which contain the benzodiazepine-binding \\(\\gamma\\) subunit) are internalized, while NMDA receptors move to the surface. So inhibition weakens and excitation strengthens over time, and benzodiazepines have fewer targets. This is why they must be given early, and why NMDA blockers like ketamine are sometimes used later."}]</script></section>
+<script type="application/json" class="frq-data">[{"q": "A 55-year-old has weakness and muscle wasting in his right hand, with twitching, and stiff legs with brisk reflexes and Babinski signs. Sensation is normal. (a) Explain why this mix of signs points to ALS. (b) Compare how SOD1 mutations and C9orf72 repeat expansions are thought to harm motor neurons. (c) Describe evidence that cells other than motor neurons help drive ALS, and why this matters for treatment.", "answer": "(a) Wasting and fasciculations are lower motor neuron signs. Stiffness (spasticity), brisk reflexes and Babinski signs are upper motor neuron signs. Finding both together, without sensory loss, means motor neurons in both the cortex and the spinal cord are degenerating, which defines ALS. (b) Mutant SOD1 causes disease through a toxic gain of function: the misfolded protein aggregates and harms mitochondria, protein handling and axonal transport, while loss of its enzyme activity is not the cause. The C9orf72 expansion is thought to act in three ways: reduced C9orf72 protein, toxic RNA foci that trap RNA-binding proteins, and toxic dipeptide repeat proteins made by RAN translation. C9orf72 cases, unlike SOD1 cases, show TDP-43 aggregates. (c) In mice, removing mutant SOD1 from microglia or astrocytes slowed disease progression, even though motor neurons still carried the mutation. Astrocytes from patients can also kill healthy motor neurons in culture. This means therapies may need to target glia, not just neurons.", "points": ["Upper plus lower motor neuron signs with normal sensation define ALS", "SOD1: toxic gain of function from misfolded protein", "C9orf72: loss of function, RNA foci and RAN dipeptide proteins", "Glia (microglia, astrocytes) drive progression, so they are treatment targets"]}, {"q": "A child with Dravet syndrome has one nonworking copy of SCN1A (Nav1.1). (a) Explain why losing a \\(\\ce{Na+}\\) channel causes too much excitation and seizures. (b) Explain why carbamazepine, a common \\(\\ce{Na+}\\)-channel-blocking seizure drug, can make this child's seizures worse. (c) Suggest a drug strategy more likely to help, and explain why.", "answer": "(a) Nav1.1 is the main \\(\\ce{Na+}\\) channel in fast-spiking GABAergic interneurons, such as parvalbumin and somatostatin cells. With half the channels, these interneurons cannot fire at the high rates needed to control excitatory neurons. Excitatory neurons, which rely more on other \\(\\ce{Na+}\\) channels such as Nav1.2 and Nav1.6, are less affected. So inhibition weakens, excitation dominates, and seizures result. (b) Carbamazepine blocks \\(\\ce{Na+}\\) channels in all neurons. In Dravet syndrome, interneurons already have too few working channels, so blocking more of them weakens inhibition further, which can worsen seizures. (c) Drugs that boost GABA signaling, such as clobazam (a benzodiazepine) or stiripentol (which enhances GABA-A receptors), help restore the missing inhibition. Fenfluramine and cannabidiol are also approved. Gene-based approaches that raise Nav1.1 from the healthy copy are in trials. Each aims to restore inhibition rather than reduce all firing.", "points": ["Nav1.1 matters most in inhibitory interneurons, so inhibition fails", "Excitatory neurons are spared, so the balance shifts toward excitation", "Blocking \\(\\ce{Na+}\\) channels further weakens interneurons", "Boosting GABA signaling (clobazam, stiripentol) or raising Nav1.1 restores inhibition"]}]</script>
+</section>
+    </div>
+  </main>
+</div>
+<script>
+/* minimono.js — the house style's behavior. Include before </body>; no init.
+   1. Two panes or one. Full-screen shows both (left ¼ · right ¾). The page
+      goes to one pane when the window isn't full-screen, or when the person
+      hides the left pane (`, or the pane's own "Hide"). Hiding is
+      remembered. Force the layout with <html data-layout="split|single">.
+   2. In one-pane mode the "Menu" link (.menu-hint) is invisible until the
+      pointer enters the top-left zone (left quarter, top sixth); clicking it,
+      or `, opens the left pane as an overlay. Esc, a click outside, or
+      choosing a row closes it. With no pointer (touch), the link stays shown.
+      The overlay is the SAME .pane-l element, moved by a class — never a
+      copy, never rebuilt — so its scroll position and selection survive.
+   3. Safari: trackpad pinch-zoom is blocked; ⌘+ / ⌘− still work.          */
+(function () {
+  'use strict';
+  var html = document.documentElement;
+  var KEY = 'minimono:pane-hidden';
+  var hidden = false;
+  try { hidden = localStorage.getItem(KEY) === '1'; } catch (e) {}
+
+  /* 1. Two panes or one ---------------------------------------------------- */
+  function isFull() {
+    var forced = html.getAttribute('data-layout');
+    if (forced === 'split') return true;
+    if (forced === 'single') return false;
+    // Full-screen or maximized. At the top level, measure the window itself
+    // (outerWidth): ⌘+ zoom shrinks innerWidth but not the window. Embedded
+    // in a frame, the frame's own width is what's available.
+    var top = true;
+    try { top = window.top === window; } catch (e) { top = false; }
+    var w = top && outerWidth > 0 ? outerWidth : innerWidth;
+    return w >= screen.availWidth - 24;
+  }
+  function layout() {
+    var windowed = !isFull();
+    html.classList.toggle('is-windowed', windowed);
+    var single = windowed || hidden;
+    if (single !== html.classList.contains('is-single')) {
+      if (!single) close(true);
+      html.classList.toggle('is-single', single);
+    }
+  }
+  function setHidden(v) {
+    hidden = v;
+    try { localStorage.setItem(KEY, v ? '1' : '0'); } catch (e) {}
+    close(true);
+    layout();
+  }
+  var raf = 0;
+  addEventListener('resize', function () { if (!raf) raf = requestAnimationFrame(function () { raf = 0; layout(); }); });
+  new MutationObserver(layout).observe(html, { attributes: true, attributeFilter: ['data-layout'] });
+
+  /* 2. The overlay --------------------------------------------------------- */
+  var lastFocus = null;
+  function pane() { return document.querySelector('.pane-l'); }
+  function typing(el) {
+    if (!el || el === document.body) return false;
+    if (el.isContentEditable) return true;
+    if (el.tagName === 'TEXTAREA' || el.tagName === 'SELECT') return true;
+    return el.tagName === 'INPUT' && !/^(button|submit|reset|checkbox|radio|range|color|file|image)$/i.test(el.type);
+  }
+  function single() { return html.classList.contains('is-single'); }
+  function isOpen() { return html.classList.contains('menu-open'); }
+  function open(keyboard) {
+    if (!single() || isOpen()) return;
+    html.classList.remove('hint-on');
+    html.classList.add('menu-open');
+    lastFocus = document.activeElement;
+    if (keyboard) {                                   // keyboard: move focus in
+      var p = pane(), cur = p && (p.querySelector('[aria-current="true"]') || p.querySelector('a,button,input,[tabindex]'));
+      if (cur) cur.focus({ preventScroll: true });
+    }
+  }
+  function close(silent) {
+    if (!isOpen()) return;
+    html.classList.remove('menu-open');
+    var p = pane();
+    if (!silent && lastFocus && lastFocus.focus && lastFocus !== document.body) lastFocus.focus({ preventScroll: true });
+    else if (p && p.contains(document.activeElement)) document.activeElement.blur();
+    lastFocus = null;
+  }
+
+  // the top-left zone: left quarter of the width, top sixth of the height.
+  // Entering it shows the menu link; nothing opens until the link is clicked.
+  function inZone(x, y) { return x <= innerWidth / 4 && y <= innerHeight / 6; }
+  var hintTimer = 0;
+  function hint(on) {
+    clearTimeout(hintTimer);
+    if (on) { html.classList.add('hint-on'); return; }
+    hintTimer = setTimeout(function () { html.classList.remove('hint-on'); }, 200);
+  }
+  addEventListener('pointermove', function (e) {
+    if (e.pointerType !== 'mouse') return;
+    hint(single() && !isOpen() && inZone(e.clientX, e.clientY));
+  }, { passive: true });
+  document.addEventListener('mouseleave', function () { hint(false); });
+
+  addEventListener('keydown', function (e) {
+    // ` (backtick) on its own — left alone while typing in a field
+    if (e.key === '`' && !e.metaKey && !e.ctrlKey && !e.altKey && !typing(document.activeElement)) {
+      e.preventDefault();
+      if (html.classList.contains('is-windowed')) { isOpen() ? close() : open(true); }
+      else setHidden(!hidden);                        // full-screen: hide, or dock it again
+      return;
+    }
+    if (e.key === 'Escape' && isOpen()) { e.preventDefault(); close(); }
+  });
+  addEventListener('pointerdown', function (e) {
+    if (!isOpen()) return;
+    var p = pane();
+    if (p && !p.contains(e.target) && !(e.target.closest && e.target.closest('.menu-hint'))) close();
+  });
+  addEventListener('click', function (e) {
+    var t = e.target.closest ? e.target : e.target.parentElement;
+    if (t.closest('.menu-hint')) { e.preventDefault(); isOpen() ? close() : open(false); return; }
+    if (t.closest('.pane-hide')) {                    // docked: "Hide" · hidden overlay: "Keep open"
+      e.preventDefault(); setHidden(!hidden); return;
+    }
+    if (isOpen() && t.closest('.pane-l .row, .pane-l .mcq-nav a')) close();
+  });
+
+  /* Focus rings: only after Tab. Shift, arrows, Space and clicks never show one. */
+  addEventListener('keydown', function (e) { if (e.key === 'Tab') html.classList.add('kbd-nav'); }, true);
+  addEventListener('pointerdown', function () { html.classList.remove('kbd-nav'); }, true);
+
+  /* 3. Safari pinch-zoom ---------------------------------------------------- */
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (t) {
+    document.addEventListener(t, function (e) { e.preventDefault(); }, { passive: false });
+  });
+
+  layout();
+  window.Minimono = {
+    open: function () { open(true); }, close: close,
+    hide: function () { setHidden(true); }, show: function () { setHidden(false); },
+    relayout: layout
+  };
+})();
+
+</script>
+<script>
+/* smooth-scroll.js — Safari's keyboard scrolling, for every pane.
+   ---------------------------------------------------------------------------
+   A port of WebKit's keyboard-scroll physics (ScrollAnimationKeyboard.cpp,
+   KeyboardScroll.h, macOS constants) so Space, arrows, Page Up/Down and
+   Home/End glide and settle on a spring in every scroller — the page, and
+   each two-pane split pane on its own.
+
+     ↑ / ↓            tap: glide one line (40px) · hold: accelerate to
+                      1000px/s in 0.2s, cruise, then the spring carries the
+                      leftover momentum and settles
+     Space / ⇧Space   the same, with a page as the step (the visible height
+     PgDn / PgUp      less 40px of overlap, never less than 87.5% of it):
+                      tap glides at least a page, hold accelerates
+     Home / End       glide to the top / bottom (also ⌘↑ / ⌘↓ on a Mac)
+   Key repeats are ignored while a key is held, as in WebKit.
+
+   Which scroller moves: the one under the pointer, else the one that holds
+   focus, else the last one clicked, else the page.
+   Left alone: any control that uses these keys itself — text fields,
+   sliders, radio groups, selects, contenteditable, tabs, listboxes — and
+   Space on a button, link, checkbox or anything else Space activates. Any key with ⌥/⌃
+   (and ⌘ except ⌘↑/⌘↓) passes through.
+   Respects prefers-reduced-motion: the same steps, applied instantly.
+   No init call — include before </body>. ~3KB. Exposes window.SmoothScroll.  */
+(function () {
+  'use strict';
+  if (window.SmoothScroll) return;
+
+  /* WebKit macOS KeyboardScrollParameters */
+  var MASS = 1, STIFF = 175, DAMP = 20, MAX_VEL_MULT = 25, TIME_TO_MAX = 0.2;
+  var LINE = 40;                         /* Scrollbar::pixelsPerLineStep()          */
+  var PAGE_MIN_FRACTION = 0.875;         /* Scrollbar::minFractionToStepWhenPaging  */
+  var PAGE_OVERLAP = 40;                 /* Scrollbar::maxOverlapBetweenPages        */
+
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
+  var docEl = function () { return document.scrollingElement || document.documentElement; };
+
+  function canScroll(el) {
+    if (el === docEl()) return el.scrollHeight > el.clientHeight;
+    var s = getComputedStyle(el), o = s.overflowY;
+    return (o === 'auto' || o === 'scroll' || o === 'overlay') && el.scrollHeight > el.clientHeight + 1;
+  }
+  function scrollerFrom(node) {
+    for (var el = node; el && el.nodeType === 1; el = el.parentElement) {
+      if (el === document.body || el === document.documentElement) break;
+      if (canScroll(el)) return el;
+    }
+    return canScroll(docEl()) ? docEl() : null;
+  }
+
+  var hovered = null, clicked = null;
+  addEventListener('pointermove', function (e) { if (e.pointerType === 'mouse') hovered = e.target; }, { passive: true });
+  addEventListener('pointerdown', function (e) { clicked = e.target; }, { passive: true });
+  document.addEventListener('mouseleave', function () { hovered = null; });
+
+  function pickScroller() {
+    var a = document.activeElement;
+    return (hovered && scrollerFrom(hovered)) ||
+           (a && a !== document.body && scrollerFrom(a)) ||
+           (clicked && scrollerFrom(clicked)) ||
+           scrollerFrom(document.body);
+  }
+
+  // controls that use arrows / Page / Home / End themselves keep them
+  function ownsKeys(el) {
+    if (!el || el === document.body) return false;
+    if (el.isContentEditable) return true;
+    var t = el.tagName;
+    if (t === 'TEXTAREA' || t === 'SELECT') return true;
+    if (t === 'INPUT') return !/^(button|submit|reset|checkbox|color|file|image)$/i.test(el.type);
+    var r = el.getAttribute && el.getAttribute('role');
+    return !!r && /^(slider|spinbutton|radio|radiogroup|tab|tablist|listbox|option|menu|menubar|menuitem|combobox|grid|tree|treeitem|textbox)$/.test(r);
+  }
+  function spaceActivates(el) {
+    if (!el || el === document.body) return false;
+    if (/^(BUTTON|A|SUMMARY|INPUT)$/.test(el.tagName)) return true;
+    var r = el.getAttribute && el.getAttribute('role');
+    return !!r && /^(button|link|tab|checkbox|radio|switch|menuitem|option|slider)$/.test(r);
+  }
+
+  /* One animator per scroller ------------------------------------------- */
+  var anims = new WeakMap();
+  function Anim(el) {
+    this.el = el; this.pos = el.scrollTop; this.vel = 0;
+    this.held = null; this.ideal = this.pos; this.minTravel = this.pos;
+    this.raf = 0; this.last = 0;
+  }
+  Anim.prototype.max = function () { return this.el.scrollHeight - this.el.clientHeight; };
+  Anim.prototype.sync = function () {
+    // the user may have scrolled by wheel/trackpad since we last moved it
+    if (!this.raf) { this.pos = this.el.scrollTop; this.ideal = this.pos; this.vel = 0; }
+  };
+  Anim.prototype.run = function () {
+    if (this.raf) return;
+    var self = this; this.last = performance.now();
+    this.raf = requestAnimationFrame(function f(t) { self.step(t) ? (self.raf = requestAnimationFrame(f)) : (self.raf = 0); });
+  };
+  Anim.prototype.stop = function () { if (this.raf) cancelAnimationFrame(this.raf); this.raf = 0; this.vel = 0; this.held = null; };
+  Anim.prototype.write = function () {
+    var max = this.max();
+    if (this.pos <= 0 || this.pos >= max) {          // hit an edge: stop there, no overshoot
+      this.pos = Math.min(Math.max(this.pos, 0), max);
+      this.vel = 0; this.ideal = this.pos;
+      this.el.scrollTop = this.pos;
+      return false;
+    }
+    this.el.scrollTop = this.pos;
+    return true;
+  };
+  /* ScrollAnimationKeyboard::animateScroll */
+  Anim.prototype.step = function (t) {
+    var dt = (t - this.last) / 1000; this.last = t;
+    if (dt <= 0) return true;
+    if (dt > 0.05) dt = 0.05;                          // a stalled frame shouldn't fling
+    var force = 0, spring = true, ideal = this.ideal;
+    if (this.held) {
+      force = this.held.force; spring = false; ideal = this.pos;
+      if (Math.abs(this.vel) >= Math.abs(this.held.maxVel)) force = 0;
+    }
+    var disp = this.pos - ideal;
+    if (spring) force -= disp * STIFF + this.vel * DAMP;
+    this.vel += force / MASS * dt;
+    this.pos += this.vel * dt;
+    var inside = this.write();
+    if (spring && disp * (this.pos - ideal) < 0) { this.vel = 0; this.pos = ideal; this.el.scrollTop = ideal; }
+    if (!inside && !this.held) return false;
+    if (!this.held && this.vel * this.vel < 1 && Math.abs(this.pos - ideal) < 0.5) { this.vel = 0; return false; }
+    return true;
+  };
+  /* startKeyboardScroll — velocity carries over, like WebKit */
+  Anim.prototype.hold = function (dir, step) {
+    var maxVel = step * MAX_VEL_MULT * dir;
+    this.held = { dir: dir, maxVel: maxVel, force: maxVel * MASS / TIME_TO_MAX };
+    this.minTravel = this.pos + step * dir;
+    this.run();
+  };
+  /* stopKeyboardScrollAnimation */
+  Anim.prototype.release = function () {
+    if (!this.held) return;
+    var d = Math.sqrt(this.vel * this.vel * MASS / STIFF) * (this.vel < 0 ? -1 : 1);
+    var settle = this.pos + d;
+    this.ideal = this.held.dir > 0 ? Math.max(settle, this.minTravel) : Math.min(settle, this.minTravel);
+    this.ideal = Math.round(Math.min(Math.max(this.ideal, 0), this.max()));
+    this.held = null;
+    this.run();
+  };
+  /* a jump to a target (top / bottom, or the public API): spring there */
+  Anim.prototype.to = function (target) {
+    var base = this.raf && !this.held ? this.ideal : this.pos;
+    if (typeof target === 'function') target = target(base);
+    this.held = null;
+    this.ideal = Math.round(Math.min(Math.max(target, 0), this.max()));
+    this.run();
+  };
+
+  function anim(el) { var a = anims.get(el); if (!a) { a = new Anim(el); anims.set(el, a); } a.sync(); return a; }
+  function pageStep(el) {
+    var h = el === docEl() ? innerHeight : el.clientHeight;
+    return Math.max(h * PAGE_MIN_FRACTION, h - PAGE_OVERLAP);
+  }
+
+  var heldKey = null, heldAnim = null;
+  function releaseHeld() { if (heldAnim) heldAnim.release(); heldKey = heldAnim = null; }
+
+  addEventListener('keydown', function (e) {
+    if (e.defaultPrevented || e.altKey || e.ctrlKey) return;
+    var k = e.key, cmdArrow = e.metaKey && (k === 'ArrowUp' || k === 'ArrowDown');
+    if (e.metaKey && !cmdArrow) return;
+    if (!/^( |ArrowUp|ArrowDown|PageUp|PageDown|Home|End)$/.test(k)) return;
+    var act = document.activeElement;
+    if (ownsKeys(act)) return;
+    if (k === ' ' && spaceActivates(act)) return;
+    if ((k === 'ArrowUp' || k === 'ArrowDown') && e.shiftKey && !cmdArrow) return;   // leave selection alone
+
+    var el = pickScroller(); if (!el) return;
+    e.preventDefault();
+    var edge = cmdArrow || k === 'Home' || k === 'End';
+    if (!edge && (e.repeat || heldKey)) return;                // WebKit ignores repeats and other keys while one is held
+    var a = anim(el), page = pageStep(el);
+
+    if (reduce && reduce.matches) {                       // same steps, no animation
+      a.stop();
+      var dy = k === 'ArrowDown' ? LINE : k === 'ArrowUp' ? -LINE :
+               (k === ' ' && !e.shiftKey) || k === 'PageDown' ? page : page * -1;
+      if (k === 'Home' || (cmdArrow && k === 'ArrowUp')) el.scrollTop = 0;
+      else if (k === 'End' || (cmdArrow && k === 'ArrowDown')) el.scrollTop = el.scrollHeight;
+      else el.scrollTop += dy;
+      return;
+    }
+
+    if (edge) {
+      a.to(k === 'Home' || k === 'ArrowUp' ? 0 : a.max());
+    } else if (k === 'ArrowUp' || k === 'ArrowDown') {
+      heldKey = k; heldAnim = a; a.hold(k === 'ArrowDown' ? 1 : -1, LINE);
+    } else {
+      heldKey = k; heldAnim = a;
+      a.hold((k === ' ' && !e.shiftKey) || k === 'PageDown' ? 1 : -1, page);
+    }
+  });
+  addEventListener('keyup', function (e) { if (e.key === heldKey) releaseHeld(); });
+  addEventListener('blur', releaseHeld);
+  document.addEventListener('visibilitychange', function () { if (document.hidden) releaseHeld(); });
+  /* a wheel/trackpad scroll takes over from a gliding key scroll */
+  addEventListener('wheel', function (e) {
+    var el = scrollerFrom(e.target), a = el && anims.get(el);
+    if (a && a.raf && !a.held) a.stop();
+  }, { passive: true });
+
+  window.SmoothScroll = {
+    /* programmatic glide, e.g. SmoothScroll.to(pane, 0) to send a pane home */
+    to: function (el, y) { anim(el || docEl()).to(y); },
+    by: function (el, dy) { var a = anim(el || docEl()); a.to(function (b) { return b + dy; }); }
+  };
+})();
+
+</script>
+<script>
+/* quiz.js — multiple-choice questions, the house way. Include before </body>; no init.
+
+   Write each quiz as JSON inside a .mcq element. The page builds it once,
+   at load; answering only changes classes and text.
+
+     <section class="mcq" data-title="Chapter 5 practice">
+       <script type="application/json">[
+         { "q": "If \\(t = \\sqrt{\\dfrac{2h}{g}}\\), how much taller must the table be to double \\(t\\)?",
+           "options": ["\\(2\\times\\)", "\\(4\\times\\)", "\\(8\\times\\)"],
+           "answer": 1,                       (0-based index into options, or a letter)
+           "why": "\\(t \\propto \\sqrt{h}\\), so doubling \\(t\\) takes \\(4h\\)." }
+       ]<\/script>                         (written <\/script here so the file can be inlined)
+     </section>
+
+   Randomized, always: the question order and each question's options are
+   shuffled the first time the quiz opens, kept through reloads (so progress
+   and the letters you talk about stay put), and reshuffled on Start over.
+   Never refer to a letter or a position in a question, option or why.
+
+   Optional: an empty <nav class="mcq-nav"></nav> (the left pane of a quiz
+   page) becomes the question numbers: plain = unanswered, underlined =
+   right, struck through = wrong. Clicking one glides to that question.
+
+   Answer with a click, or press A–F or 1–6. Keys go to the question that
+   holds focus or sits under the pointer, else the first unanswered one on
+   screen. An answer shows Correct / Incorrect, marks the right option,
+   strikes a wrong pick, shows the why, and locks the question. A keyboard
+   answer glides on to the next unanswered question.
+
+   Copy answers is always there: plain text with each question, its
+   options, your answer or Skipped, and the right answer. Math stays LaTeX
+   ($…$) so it pastes cleanly into a chat.
+
+   MCQ.audit() lists anything that gives an answer away: the right option
+   longest or shortest, options of very different length, a hedge only on
+   the right one or an absolute only on the wrong ones, "all/none of the
+   above", duplicates, a missing why, a slash fraction. It must come back
+   empty before a quiz is published; the same list goes to the console.     */
+(function () {
+  'use strict';
+  if (window.MCQ) return;
+  var LETTERS = 'ABCDEF';
+  var quizzes = [];
+  var hoverQ = null;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
+
+  /* ── helpers ──────────────────────────────────────────────────────────── */
+  function make(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  // punctuation right after inline math moves inside it, so a line can't start with ", "
+  function glue(s) { return String(s).replace(/\\\)([.,;:!?])/g, '$1\\)'); }
+  function asPlain(s) { return String(s).replace(/\\\(|\\\)/g, '$').replace(/\\\[|\\\]/g, '$$$$'); }
+  function hash(s) { var h = 0; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); }
+  function newSeed() {
+    try { var a = new Uint32Array(1); crypto.getRandomValues(a); return a[0]; }
+    catch (e) { return (Math.random() * 4294967296) >>> 0; }
+  }
+  function rng(seed) {                                 // mulberry32: small, seedable, even
+    return function () {
+      seed = (seed + 0x6D2B79F5) | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function shuffled(n, rand) {                         // Fisher–Yates
+    var a = []; for (var i = 0; i < n; i++) a.push(i);
+    for (var j = n - 1; j > 0; j--) { var k = Math.floor(rand() * (j + 1)), t = a[j]; a[j] = a[k]; a[k] = t; }
+    return a;
+  }
+  function answerIndex(answer, n) {
+    if (typeof answer === 'number') return answer >= 0 && answer < n ? answer : 0;
+    var j = LETTERS.indexOf(String(answer).trim().toUpperCase());
+    return j >= 0 && j < n ? j : 0;
+  }
+  function scrollerOf(node) {
+    for (var e = node.parentElement; e && e !== document.body; e = e.parentElement) {
+      var o = getComputedStyle(e).overflowY;
+      if ((o === 'auto' || o === 'scroll') && e.scrollHeight > e.clientHeight) return e;
+    }
+    return document.scrollingElement || document.documentElement;
+  }
+  function glideTo(node) {
+    var sc = scrollerOf(node), page = sc === (document.scrollingElement || document.documentElement);
+    var top = node.getBoundingClientRect().top - (page ? 0 : sc.getBoundingClientRect().top);
+    var y = Math.max(0, sc.scrollTop + top - sc.clientHeight * 0.18);
+    if (reduce && reduce.matches) sc.scrollTop = y;
+    else if (window.SmoothScroll) SmoothScroll.to(sc, y);
+    else sc.scrollTo({ top: y, behavior: 'smooth' });
+  }
+  function shown(q) { return q.li.offsetParent !== null; }
+  function onScreen(q) { var r = q.li.getBoundingClientRect(); return r.bottom > 40 && r.top < innerHeight - 40; }
+  function copyText(btn, text, fallback) {
+    var label = btn.firstChild, was = label.nodeValue;
+    function done() { fallback.hidden = true; label.nodeValue = 'Copied'; setTimeout(function () { label.nodeValue = was; }, 1400); }
+    function fail() { fallback.value = text; fallback.hidden = false; fallback.focus(); fallback.select(); }
+    try { navigator.clipboard.writeText(text).then(done, fail); } catch (e) { fail(); }
+  }
+
+  /* ── the giveaway check ───────────────────────────────────────────────── */
+  var HEDGE = /\b(usually|often|generally|typically|mostly|may|might|can|sometimes|tends? to|about|roughly)\b/i;
+  var ABSOLUTE = /\b(always|never|only|all|none|every|completely|entirely|impossible|guaranteed)\b/i;
+  function words(s) {                                  // what a reader sees: LaTeX commands and delimiters out
+    return String(s).replace(/\\[a-zA-Z]+/g, ' ').replace(/[\\{}()\[\]^_$]/g, '').replace(/\s+/g, ' ').trim();
+  }
+  function auditOne(d, i) {
+    var out = [], n = (d.options || []).length, ans = answerIndex(d.answer, n);
+    var say = function (msg) { out.push({ question: i + 1, text: words(d.q).slice(0, 60), issue: msg }); };
+    if (n < 3) say('fewer than 3 options');
+    if (!d.why) say('no why');
+    var opts = (d.options || []).map(words), lens = opts.map(function (o) { return o.length; });
+    if (new Set((d.options || []).map(function (o) { return String(o).replace(/\s+/g, ' ').trim().toLowerCase(); })).size < n) say('two options are the same');
+    if (opts.some(function (o) { return /\b(all|none|both|neither) of (the|these) (above|options)\b/i.test(o); })) say('"all / none / both of the above"');
+    var max = Math.max.apply(null, lens), min = Math.min.apply(null, lens);
+    if (max > 12) {                                    // short answers (numbers, symbols) can't give much away by length
+      if (max / Math.max(min, 1) > 1.5) say('options differ a lot in length (' + min + '–' + max + ' characters)');
+      var others = lens.filter(function (_, j) { return j !== ans; });
+      var nextLong = Math.max.apply(null, others), nextShort = Math.min.apply(null, others);
+      if (lens[ans] > nextLong && lens[ans] >= nextLong * 1.15) say('the right answer is the longest option');
+      if (lens[ans] < nextShort && lens[ans] <= nextShort * 0.85) say('the right answer is the shortest option');
+    }
+    var wrong = opts.filter(function (_, j) { return j !== ans; });
+    if (HEDGE.test(opts[ans]) && !wrong.some(function (o) { return HEDGE.test(o); })) say('only the right answer hedges ("usually", "can"…)');
+    if (!ABSOLUTE.test(opts[ans]) && wrong.length && wrong.every(function (o) { return ABSOLUTE.test(o); })) say('only the wrong answers use absolutes ("always", "never"…)');
+    [d.q, d.why].concat(d.options || []).forEach(function (s) {
+      (String(s || '').match(/\\\(([\s\S]*?)\\\)|\\\[([\s\S]*?)\\\]/g) || []).forEach(function (m) {
+        if (m.indexOf('/') !== -1) say('slash fraction in math: ' + m.slice(0, 30));
+      });
+      if (/\b(?:[Oo]ption|[Aa]nswer(?: is)?|[Cc]hoice|[Ll]etter) [A-F]\b/.test(words(s))) say('refers to a letter, but options are shuffled');
+    });
+    return out;
+  }
+
+  /* ── one quiz ─────────────────────────────────────────────────────────── */
+  function build(root) {
+    var src = root.querySelector('script[type="application/json"]'), data;
+    try { data = JSON.parse(src.textContent); } catch (e) { return; }
+    if (!Array.isArray(data) || !data.length) return;
+    var title = root.getAttribute('data-title') || document.title;
+    var key = 'minimono:mcq2:' + hash(data.map(function (d) { return d.q + '\u0001' + (d.options || []).join('\u0001'); }).join('\n'));
+    var state = null;
+    try { state = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
+    if (!state || typeof state.seed !== 'number' || !Array.isArray(state.answers)) state = { seed: newSeed(), answers: [] };
+
+    var quiz = { root: root, data: data, qs: [], order: [], nav: null };
+    var list = make('ol', 'mcq-list');
+    var nav = document.querySelector(root.getAttribute('data-nav') || '.mcq-nav');  // one nav per test
+    if (nav && !nav.dataset.built) { nav.dataset.built = '1'; quiz.nav = nav; }
+    var base = quizzes.reduce(function (s, z) { return s + z.qs.length; }, 0);
+
+    // every element is made once, here; shuffling only moves them
+    data.forEach(function (d, i) {
+      var li = make('li', 'mcq-q');
+      li.id = 'mcq-' + (base + i + 1);
+      li.tabIndex = -1;                                 // holds focus between answers, so Space still scrolls
+      var num = make('span', 'mcq-n');
+      num.setAttribute('aria-hidden', 'true');
+      var body = make('div', 'mcq-body');
+      var text = make('div', 'mcq-text', glue(d.q));
+      var opts = make('div', 'mcq-opts');
+      opts.setAttribute('role', 'group');
+      var btns = (d.options || []).map(function (o) {
+        var b = make('button', 'mcq-opt');
+        b.type = 'button';
+        var l = make('span', 'mcq-l');
+        b._letter = l.appendChild(document.createTextNode(''));
+        b.append(l, make('span', 'mcq-t', glue(o)));
+        return b;
+      });
+      var fb = make('p', 'mcq-fb');
+      fb.hidden = true;
+      fb.setAttribute('aria-live', 'polite');
+      var fbt = fb.appendChild(document.createTextNode(''));
+      var why = make('p', 'mcq-why', glue(d.why || ''));
+      why.hidden = true;
+      body.append(text, opts, fb, why);
+      li.append(num, body);
+
+      var q = { quiz: quiz, i: i, d: d, li: li, num: num.appendChild(document.createTextNode('')), opts: opts, btns: btns,
+                fb: fb, fbt: fbt, why: why, ans: answerIndex(d.answer, btns.length), chosen: -1, perm: [], navA: null };
+      li._mcq = q;
+      btns.forEach(function (b, o) {                   // o = the option's index in the JSON
+        b.addEventListener('click', function (e) { choose(q, q.perm.indexOf(o), e.detail === 0); });   // detail 0 = Enter / Space
+      });
+      li.addEventListener('pointerenter', function () { hoverQ = q; });
+      li.addEventListener('pointerleave', function () { if (hoverQ === q) hoverQ = null; });
+      if (quiz.nav) {
+        var a = make('a', 'mcq-nav-n');
+        a.href = '#' + li.id;
+        q.navT = a.appendChild(document.createTextNode(''));
+        a.addEventListener('click', function (e) { e.preventDefault(); glideTo(li); li.focus({ preventScroll: true }); });
+        q.navA = a;
+      }
+      quiz.qs.push(q);
+    });
+
+    var bar = make('div', 'mcq-bar');
+    var copyB = make('button', 'btn mcq-copy', 'Copy answers');
+    copyB.type = 'button';
+    var resetB = make('button', 'btn mcq-reset', 'Start over');
+    resetB.type = 'button';
+    var score = make('span', 'mcq-score');
+    score.setAttribute('aria-live', 'polite');
+    var scoreT = score.appendChild(document.createTextNode(''));
+    var fallback = make('textarea', 'mcq-fallback');
+    fallback.readOnly = true;
+    fallback.hidden = true;
+    fallback.setAttribute('aria-label', 'Answers to copy');
+    bar.append(copyB, resetB, score);
+    root.append(list, bar, fallback);
+
+    // lay the questions and options out in the order the seed gives
+    function arrange(seed) {
+      var rand = rng(seed);
+      quiz.order = shuffled(quiz.qs.length, rand).map(function (i) { return quiz.qs[i]; });
+      quiz.qs.forEach(function (q) { q.perm = shuffled(q.btns.length, rand); });
+      quiz.order.forEach(function (q, p) {
+        list.append(q.li);
+        q.num.nodeValue = String(p + 1);
+        q.opts.setAttribute('aria-label', 'Question ' + (p + 1));
+        q.perm.forEach(function (o, j) { q.opts.append(q.btns[o]); q.btns[o]._letter.nodeValue = LETTERS[j]; });
+        if (q.navA) { quiz.nav.append(q.navA); q.navT.nodeValue = String(p + 1); }
+      });
+    }
+    function mark(q) {
+      var done = q.chosen >= 0, right = done && q.chosen === q.ans;
+      q.li.classList.toggle('is-done', done);
+      q.li.classList.toggle('is-wrong', done && !right);
+      q.btns.forEach(function (b, o) {
+        b.classList.toggle('is-chosen', done && o === q.chosen);
+        b.classList.toggle('is-answer', done && o === q.ans);
+        if (done) b.setAttribute('aria-disabled', 'true'); else b.removeAttribute('aria-disabled');
+      });
+      q.fbt.nodeValue = !done ? '' : right ? 'Correct.' : 'Incorrect. The answer is ' + LETTERS[q.perm.indexOf(q.ans)] + '.';
+      q.fb.hidden = !done;
+      q.why.hidden = !done || !q.d.why;
+      if (q.navA) { q.navA.classList.toggle('is-right', right); q.navA.classList.toggle('is-wrong', done && !right); }
+    }
+    function save() {
+      try { localStorage.setItem(key, JSON.stringify({ seed: state.seed, answers: quiz.qs.map(function (q) { return q.chosen; }) })); } catch (e) {}
+    }
+    function tally() {
+      var answered = 0, right = 0;
+      quiz.qs.forEach(function (q) { if (q.chosen >= 0) { answered++; if (q.chosen === q.ans) right++; } });
+      var left = quiz.qs.length - answered;
+      scoreT.nodeValue = !answered ? '' : right + ' of ' + answered + ' correct' + (left ? ' · ' + left + ' left' : '');
+      save();
+    }
+    function next(q) {
+      var p = quiz.order.indexOf(q);
+      var rest = quiz.order.slice(p + 1).concat(quiz.order.slice(0, p)).filter(function (x) { return x.chosen < 0; });
+      if (rest.length) { rest[0].li.focus({ preventScroll: true }); glideTo(rest[0].li); }
+      else { q.li.focus({ preventScroll: true }); glideTo(root.querySelector('.frq-q') || bar); }  // on to the FRQs
+    }
+    function choose(q, j, advance) {                   // j = position on screen
+      if (q.chosen >= 0 || j < 0 || j >= q.btns.length) return;   // answered questions stay locked
+      q.chosen = q.perm[j];
+      mark(q);
+      tally();
+      if (advance) next(q);
+      else q.li.focus({ preventScroll: true });        // off the button, so Space scrolls again
+    }
+    quiz.choose = choose;
+
+    copyB.addEventListener('click', function () {
+      var lines = [title, ''], answered = 0, right = 0;
+      quiz.order.forEach(function (q, p) {
+        lines.push((p + 1) + '. ' + asPlain(q.d.q));
+        q.perm.forEach(function (o, j) { lines.push('   ' + LETTERS[j] + '. ' + asPlain(q.d.options[o])); });
+        var A = LETTERS[q.perm.indexOf(q.ans)];
+        if (q.chosen < 0) lines.push('   Skipped. Answer: ' + A);
+        else {
+          answered++;
+          var C = LETTERS[q.perm.indexOf(q.chosen)];
+          if (q.chosen === q.ans) { right++; lines.push('   Your answer: ' + C + ' (correct)'); }
+          else lines.push('   Your answer: ' + C + ' (incorrect). Answer: ' + A);
+        }
+        lines.push('');
+      });
+      var skipped = quiz.qs.length - answered;
+      lines.push('Score: ' + right + ' of ' + quiz.qs.length + (skipped ? ' (' + skipped + ' skipped)' : ''));
+      copyText(copyB, lines.join('\n'), fallback);
+    });
+    resetB.addEventListener('click', function () {      // a fresh order: same elements, moved
+      quiz.qs.forEach(function (q) { q.chosen = -1; mark(q); });
+      state.seed = newSeed();
+      arrange(state.seed);
+      tally();
+      var first = quiz.order[0];
+      glideTo(first.li);
+      first.li.focus({ preventScroll: true });
+    });
+
+    arrange(state.seed);
+    quiz.qs.forEach(function (q, i) {                  // reopen where you left off
+      var s = state.answers[i];
+      if (typeof s === 'number' && s >= 0 && s < q.btns.length) { q.chosen = s; mark(q); }
+    });
+    tally();
+    quizzes.push(quiz);
+
+    var issues = data.reduce(function (acc, d, i) { return acc.concat(auditOne(d, i)); }, []);
+    if (issues.length && window.console) console.warn('quiz.js: ' + issues.length + ' question(s) give the answer away', issues);
+
+    var MJ = window.MathJax, targets = [root].concat(quiz.nav ? [quiz.nav] : []);
+    if (MJ && MJ.startup && MJ.startup.promise) MJ.startup.promise.then(function () { return MJ.typesetPromise(targets); }).catch(function () {});
+    else if (MJ && typeof MJ.typesetPromise === 'function') MJ.typesetPromise(targets).catch(function () {});
+  }
+
+  /* ── keys: A–F or 1–6 answer the current question ─────────────────────── */
+  function current() {
+    var a = document.activeElement, li = a && a.closest && a.closest('.mcq-q');
+    var q = li && li._mcq;
+    if (q && q.chosen < 0 && shown(q)) return q;
+    if (hoverQ && hoverQ.chosen < 0 && shown(hoverQ)) return hoverQ;
+    var lis = document.querySelectorAll('.mcq-q');      // page order = the shuffled order
+    for (var i = 0; i < lis.length; i++) {
+      var x = lis[i]._mcq;
+      if (x && x.chosen < 0 && shown(x) && onScreen(x)) return x;
+    }
+    return null;
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey || e.repeat || e.defaultPrevented) return;
+    var a = document.activeElement;
+    if (a && (a.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))) return;
+    var j = e.key.length === 1 ? LETTERS.indexOf(e.key.toUpperCase()) : -1;
+    if (j < 0 && /^[1-6]$/.test(e.key)) j = +e.key - 1;
+    if (j < 0) return;
+    var q = current();
+    if (!q || j >= q.btns.length) return;
+    e.preventDefault();
+    q.quiz.choose(q, j, true);
+  });
+
+  function init() {
+    document.querySelectorAll('.mcq').forEach(function (r) {
+      if (!r.dataset.built) { r.dataset.built = '1'; build(r); }
+    });
+  }
+  init();                                               // the quiz markup sits above this script
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+
+  window.MCQ = {
+    init: init,
+    // every giveaway in every quiz on the page; must be empty before publishing
+    audit: function () {
+      return quizzes.reduce(function (acc, z) {
+        return acc.concat(z.data.reduce(function (a2, d, i) { return a2.concat(auditOne(d, i)); }, []));
+      }, []);
+    },
+    _shuffle: function (n, seed) { return shuffled(n, rng(seed)); }   // for tests
+  };
+})();
+
+</script>
+<script>
+
+/* page.js — this page's own behavior: FRQs, switching between the two tests,
+   and holding the questions back until the math is drawn. Everything is made
+   once at load; switching and answering only change attributes and text.  */
+(function () {
+  'use strict';
+  var html = document.documentElement;
+  var pane = document.querySelector('.pane-r');
+  var tests = [].slice.call(document.querySelectorAll('.test'));
+  var rows = [].slice.call(document.querySelectorAll('.pane-l .row[data-test]'));
+  var navs = {}, mem = {}, cur = null;
+
+  function make(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function glue(s) { return String(s).replace(/\\\)([.,;:!?])/g, '$1\\)'); }
+  function asPlain(s) { return String(s).replace(/\\\(|\\\)/g, '$').replace(/\\\[|\\\]/g, '$$$$'); }
+  function glide(el) {
+    var top = el.getBoundingClientRect().top - pane.getBoundingClientRect().top;
+    var y = Math.max(0, pane.scrollTop + top - pane.clientHeight * 0.18);
+    if (window.SmoothScroll) SmoothScroll.to(pane, y); else pane.scrollTop = y;
+  }
+  function copy(btn, text, fallback) {
+    var label = btn.firstChild, was = label.nodeValue;
+    function done() { fallback.hidden = true; label.nodeValue = 'Copied'; setTimeout(function () { label.nodeValue = was; }, 1400); }
+    function fail() { fallback.value = text; fallback.hidden = false; fallback.focus(); fallback.select(); }
+    try { navigator.clipboard.writeText(text).then(done, fail); } catch (e) { fail(); }
+  }
+
+  tests.forEach(function (t) {
+    var root = t.querySelector('.mcq');
+    var nav = document.querySelector(root.getAttribute('data-nav'));
+    navs[t.id] = nav;
+    var data = JSON.parse(t.querySelector('script.frq-data').textContent);
+    var n0 = JSON.parse(root.querySelector('script[type="application/json"]').textContent).length;
+    var key = 'bipn:frq:' + t.getAttribute('data-key');
+    var saved = null;
+    try { saved = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
+    if (!saved || !Array.isArray(saved.text)) saved = { text: [], open: [] };
+
+    var list = make('ol', 'frq-list');
+    var items = data.map(function (d, i) {
+      var n = n0 + i + 1;
+      var li = make('li', 'frq-q');
+      li.id = t.id + '-frq-' + (i + 1);
+      li.tabIndex = -1;
+      var num = make('span', 'mcq-n', String(n));
+      num.setAttribute('aria-hidden', 'true');
+      var body = make('div', 'mcq-body');
+      var text = make('div', 'mcq-text', glue(d.q));
+      var box = make('textarea', 'frq-in');
+      box.id = li.id + '-in';
+      box.rows = 6;
+      box.spellcheck = false;
+      box.setAttribute('aria-label', 'Your answer to question ' + n);
+      box.value = saved.text[i] || '';
+      var act = make('div', 'frq-act');
+      var btn = make('button', 'btn frq-show');
+      btn.type = 'button';
+      var label = btn.appendChild(document.createTextNode('Show answer'));
+      act.append(btn);
+      var ans = make('div', 'frq-ans');
+      ans.append(make('p', null, glue(d.answer)));
+      if (d.points && d.points.length) {
+        var ul = make('ul', 'frq-pts');
+        d.points.forEach(function (p) { ul.append(make('li', null, glue(p))); });
+        ans.append(ul);
+      }
+      body.append(text, box, act, ans);
+      li.append(num, body);
+      list.append(li);
+      var it = { d: d, n: n, li: li, box: box, ans: ans, navA: null };
+      it.open = function (v) {
+        ans.hidden = !v;
+        label.nodeValue = v ? 'Hide answer' : 'Show answer';
+        btn.setAttribute('aria-expanded', v ? 'true' : 'false');
+      };
+      it.open(!!saved.open[i]);
+      btn.addEventListener('click', function () { it.open(ans.hidden); save(); });
+      box.addEventListener('input', save);
+      if (nav) {
+        var a = make('a', 'mcq-nav-n', String(n));
+        a.href = '#' + li.id;
+        a.addEventListener('click', function (e) { e.preventDefault(); glide(li); li.focus({ preventScroll: true }); });
+        it.navA = a;
+      }
+      return it;
+    });
+    function save() {
+      try {
+        localStorage.setItem(key, JSON.stringify({
+          text: items.map(function (x) { return x.box.value; }),
+          open: items.map(function (x) { return !x.ans.hidden; })
+        }));
+      } catch (e) {}
+    }
+    function navTail() { if (nav) items.forEach(function (x) { nav.append(x.navA); }); }
+
+    var bar = root.querySelector('.mcq-bar');
+    var fallback = root.querySelector('.mcq-fallback');
+    var reset = root.querySelector('.mcq-reset');
+    root.insertBefore(list, bar);
+    navTail();
+
+    var copyW = make('button', 'btn frq-copy');
+    copyW.type = 'button';
+    copyW.appendChild(document.createTextNode('Copy written answers'));
+    bar.insertBefore(copyW, reset);
+    copyW.addEventListener('click', function () {
+      var lines = [root.getAttribute('data-title') + ', written answers', ''];
+      items.forEach(function (x) {
+        lines.push(x.n + '. ' + asPlain(x.d.q));
+        lines.push('   Your answer: ' + (x.box.value.trim() || 'Skipped'));
+        lines.push('   Model answer: ' + asPlain(x.d.answer));
+        (x.d.points || []).forEach(function (p) { lines.push('   - ' + asPlain(p)); });
+        lines.push('');
+      });
+      copy(copyW, lines.join('\n'), fallback);
+    });
+    reset.addEventListener('click', function () {   // quiz.js reshuffles first; then clear the written answers
+      items.forEach(function (x) { x.box.value = ''; x.open(false); });
+      save();
+      navTail();
+    });
+  });
+
+  // the two tests already exist; switching only flips `hidden` and aria-current
+  function show(id) {
+    if (!/^test-\d+$/.test(id) || !document.getElementById(id)) id = tests[0].id;
+    if (cur === id) return;
+    if (cur) mem[cur] = pane.scrollTop;
+    tests.forEach(function (t) { t.hidden = t.id !== id; });
+    rows.forEach(function (r) { r.setAttribute('aria-current', r.getAttribute('data-test') === id ? 'true' : 'false'); });
+    Object.keys(navs).forEach(function (k) { if (navs[k]) navs[k].hidden = k !== id; });
+    cur = id;
+    pane.scrollTop = mem[id] || 0;
+  }
+  function fromHash() { show((location.hash || '').slice(1)); }
+  addEventListener('hashchange', fromHash);
+  fromHash();
+
+  // the questions wait behind the loading ring until MathJax has drawn them
+  window.__mathReady = function () { html.classList.remove('mj-wait'); };
+  setTimeout(window.__mathReady, 9000);
+})();
+
+</script>
+</body>
+</html>

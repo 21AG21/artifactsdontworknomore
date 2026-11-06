@@ -54,5 +54,12 @@
     "subject": "BIPN",
     "kind": "Test",
     "added": "2026-11-06"
+  },
+  {
+    "slug": "bipn-150-midterm-1",
+    "title": "BIPN 150 Midterm 1 Practice",
+    "subject": "BIPN",
+    "kind": "Test",
+    "added": "2026-11-06"
   }
 ]
