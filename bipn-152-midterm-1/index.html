@@ -1,0 +1,1145 @@
+<!doctype html>
+<html lang="en" class="mj-wait">
+<head>
+<meta charset="utf-8">
+<title>BIPN 152 Midterm 1 Practice</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="BIPN 152 The Healthy and Diseased Brain: two 30-minute Midterm 1 practice tests, 30 MCQs and 2 FRQs each.">
+<style>
+/* minimono.css — the house style's base: tokens, type, the two-pane layout,
+   the windowed overlay, and flat native controls.
+   Targets two screens: MacBook Air 15" (1710×1107, 2×) and Dell P2423D
+   (2560×1440, 1×). Every line is 1px — half-pixels vanish on the Dell.     */
+
+/* ── Tokens ─────────────────────────────────────────────────────────────── */
+:root{
+  color-scheme: light dark;            /* native controls + scrollbars follow the theme */
+  --ground:#EEF1F4; --wall:#ffffff;
+  --ink:#0a0a0b; --ink-soft:#5F6368; --muted:#9c9ca3;
+  --hair:rgba(10,10,12,.13); --hair-soft:rgba(10,10,12,.08);
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",system-ui,sans-serif;
+  --pane-l:25%;                        /* the left pane is one quarter, always */
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --ground:#000000; --wall:#161618; --ink:#f6f6f8; --ink-soft:#a0a0a8; --muted:#67676f;
+  --hair:rgba(255,255,255,.16); --hair-soft:rgba(255,255,255,.09);
+}}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#000000; --wall:#161618; --ink:#f6f6f8; --ink-soft:#a0a0a8; --muted:#67676f;
+  --hair:rgba(255,255,255,.16); --hair-soft:rgba(255,255,255,.09);
+}
+:root[data-theme="light"]{ color-scheme: light; }
+
+/* ── Base ───────────────────────────────────────────────────────────────── */
+*,*::before,*::after{ box-sizing:border-box; }
+html,body{ margin:0; height:100%; overflow:hidden; }
+body{
+  background:var(--ground); color:var(--ink);
+  font:16px/1.5 var(--sans); -webkit-font-smoothing:antialiased;
+  font-variant-numeric:tabular-nums;
+}
+:focus, :focus-visible{ outline:none; }
+/* focus shows only after Tab (minimono.js sets .kbd-nav; any click clears it),
+   as a thin grey line — never a bright ring, never from Shift or a click */
+html.kbd-nav :focus-visible{ outline:1px solid var(--muted); outline-offset:3px; border-radius:6px; }
+/* text selection keeps the system highlight — never restyle ::selection */
+a{ color:inherit; text-decoration:none; }
+/* scrollbars: left to macOS — overlay, thin, shown while scrolling. Never hidden. */
+
+/* ── Type (tuned for 1710 and 2560 wide). Weights: 300 · 400 · 500, never more ─ */
+.hero { font-size:clamp(64px, 4.6vw, 112px); font-weight:300; line-height:1.02; letter-spacing:-.035em; margin:0; }
+.h2   { font-size:clamp(28px, 1.9vw, 40px);  font-weight:500; line-height:1.15; letter-spacing:-.02em; margin:0; }
+.text { font-size:clamp(17px, 1.05vw, 20px); line-height:1.55; max-width:68ch; }
+.label{ font-size:13px; font-weight:500; color:var(--ink-soft); letter-spacing:.005em; }
+.num  { font-weight:400; letter-spacing:-.02em; }
+
+/* ── Layout: two panes, left ¼ · right ¾, each its own scroller ─────────── */
+#app{ display:flex; height:100dvh; }
+.pane-l{
+  flex:0 0 var(--pane-l); height:100%; overflow-y:auto; overscroll-behavior:contain;
+  border-right:1px solid var(--hair-soft); background:var(--ground);
+  padding:48px 32px 64px;
+}
+.pane-r{ flex:1 1 auto; min-width:0; height:100%; overflow-y:auto; overscroll-behavior:contain; }
+.pane-r .body{ max-width:1120px; padding:56px clamp(48px, 5vw, 120px) 120px; }
+
+/* the list in the left pane */
+.row{
+  display:block; width:100%; padding:14px 0; border-bottom:1px solid var(--hair-soft);
+  font-size:clamp(17px, 1.15vw, 22px); color:var(--ink-soft); cursor:pointer;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.row:last-child{ border-bottom:0; }
+@media (hover:hover){ .row:hover{ color:var(--ink); } }
+.row[aria-current="true"]{ color:var(--ink); font-weight:500; }
+.row:active{ opacity:.6; }
+
+/* ── One-pane mode: windowed, or the person hid the left pane ────────────
+   The left pane leaves the layout; it comes back as an overlay (the SAME
+   element, moved) when the pointer enters the top-left zone — the left
+   quarter of the width, the top sixth of the height — or on `.           */
+.pane-hide{
+  border:0; background:none; padding:4px 0; margin:0;
+  font:inherit; font-size:13px; color:var(--ink-soft); cursor:pointer; text-align:left;
+}
+.pane-hide kbd{ font:inherit; color:var(--muted); margin-left:6px; }
+.pane-hide .keep{ display:none; }
+html.is-single .pane-hide .hide{ display:none; }
+html.is-single .pane-hide .keep{ display:inline; }
+html.is-windowed .pane-hide{ display:none; }        /* windowed: the overlay is the only way it shows */
+@media (hover:hover){ .pane-hide:hover{ color:var(--ink); } }
+.menu-hint{ display:none; }
+/* one-pane mode: the link sits in the top-left zone, invisible until the
+   pointer enters that zone (or it takes keyboard focus); always shown on touch */
+html.is-single .menu-hint{
+  display:block; position:fixed; z-index:15;
+  top:calc(env(safe-area-inset-top, 0px) + 18px); left:max(16px, env(safe-area-inset-left, 0px), 2vw);
+  padding:6px 10px; margin:0; border-radius:8px; background:var(--ground);
+  font-size:13px; color:var(--ink-soft); cursor:pointer;
+  opacity:0; pointer-events:none; transition:opacity .14s ease;
+}
+html.is-single .menu-hint kbd{ font:inherit; color:var(--muted); margin-left:6px; }
+html.is-single.hint-on .menu-hint,
+html.kbd-nav.is-single .menu-hint:focus-visible{ opacity:1; pointer-events:auto; }
+@media (hover:none){ html.is-single .menu-hint{ opacity:1; pointer-events:auto; } }
+@media (hover:hover){ html.is-single .menu-hint:hover{ color:var(--ink); } }
+
+html.is-single .pane-l{
+  position:fixed; z-index:20; inset:0 auto 0 0; width:clamp(280px, 25vw, 640px);
+  transform:translateX(-100%); visibility:hidden;
+  transition:transform .22s cubic-bezier(.32,.72,0,1), visibility 0s linear .22s;
+}
+html.is-single.menu-open .pane-l{
+  transform:none; visibility:visible; border-right:1px solid var(--hair);
+  transition:transform .22s cubic-bezier(.32,.72,0,1), visibility 0s;
+}
+
+/* ── Controls: native elements, flat ────────────────────────────────────── */
+/* slider + checkbox + radio take ink through accent-color, natively */
+input[type="range"], input[type="checkbox"], input[type="radio"]{ accent-color:var(--ink); }
+input[type="range"]{ width:100%; max-width:420px; cursor:pointer; }
+
+/* toggle: a checkbox with role="switch", drawn flat */
+input[type="checkbox"][role="switch"]{
+  -webkit-appearance:none; appearance:none; margin:0; flex:none; cursor:pointer;
+  position:relative; width:40px; height:24px; border-radius:999px;
+  background:var(--hair); transition:background .16s ease;
+}
+input[type="checkbox"][role="switch"]::before{
+  content:""; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:999px;
+  background:var(--ground); transition:transform .18s cubic-bezier(.32,.72,0,1);
+}
+input[type="checkbox"][role="switch"]:checked{ background:var(--ink); }
+input[type="checkbox"][role="switch"]:checked::before{ transform:translateX(16px); }
+
+/* segmented choice: a radio group; the chosen one is heavier ink + a 2px mark */
+.seg{ display:inline-flex; gap:28px; border:0; padding:0; margin:0; }
+.seg label{ position:relative; cursor:pointer; padding:6px 0; color:var(--ink-soft); font-weight:400; }
+.seg input{ position:absolute; opacity:0; width:1px; height:1px; }
+.seg input:checked + span{ color:var(--ink); font-weight:500; }
+.seg input:checked + span::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:2px; background:var(--ink); border-radius:2px;
+}
+html.kbd-nav .seg input:focus-visible + span{ outline:1px solid var(--muted); outline-offset:4px; border-radius:6px; }
+@media (hover:hover){ .seg label:hover span{ color:var(--ink); } }
+
+/* search */
+input[type="search"]{
+  -webkit-appearance:none; appearance:none; width:100%; max-width:420px;
+  font:inherit; font-size:16px; color:var(--ink);
+  background:var(--wall); border:0; border-radius:10px; padding:10px 14px;
+}
+input[type="search"]::placeholder{ color:var(--muted); }
+
+/* buttons: only for real actions — navigation is text */
+button{ font:inherit; cursor:pointer; }
+.btn{ border:0; border-radius:10px; padding:10px 18px; font-weight:500; background:var(--wall); color:var(--ink); }
+.btn.primary{ background:var(--ink); color:var(--ground); }
+.btn:active{ opacity:.6; }
+
+/* ── Multiple-choice questions (quiz.js builds them from JSON) ─────────────
+   State without color: the right answer gets an ink bar and Medium weight,
+   a wrong pick is struck through, everything else recedes to grey. */
+.mcq-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:44px; max-width:760px; }
+.mcq-q{ display:grid; grid-template-columns:2em minmax(0, 1fr); column-gap:10px; outline-offset:8px; }
+.mcq-n{ font-size:clamp(19px, 1.25vw, 24px); line-height:1.45; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+.mcq-body{ display:flex; flex-direction:column; gap:12px; min-width:0; }
+.mcq-text{ margin:0; font-size:clamp(19px, 1.25vw, 24px); line-height:1.45; color:var(--ink); }
+.mcq-text mjx-container[display="true"]{ margin:.5em 0 !important; }
+.mcq-opts{ display:flex; flex-direction:column; gap:2px; }
+.mcq-opt{
+  display:grid; grid-template-columns:1.5em minmax(0, 1fr); align-items:baseline; gap:8px;
+  width:calc(100% + 20px); margin:0 -10px; padding:9px 10px; border:0; border-radius:8px;
+  background:none; text-align:left; font:inherit; font-size:clamp(17px, 1.05vw, 20px); line-height:1.45;
+  color:var(--ink); cursor:pointer;
+}
+.mcq-l{ color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+@media (hover:hover){ .mcq-q:not(.is-done) .mcq-opt:hover{ background:var(--wall); } }
+.mcq-q:not(.is-done) .mcq-opt:active{ opacity:.6; }
+.mcq-q.is-done .mcq-opt{ cursor:default; color:var(--ink-soft); }
+.mcq-q.is-done .mcq-opt.is-answer{ color:var(--ink); font-weight:500; box-shadow:inset 2px 0 0 var(--ink); }
+.mcq-q.is-done .mcq-opt.is-answer .mcq-l{ color:var(--ink); }
+.mcq-q.is-done .mcq-opt.is-chosen:not(.is-answer) .mcq-t{ text-decoration:line-through; text-decoration-thickness:1px; }
+.mcq-fb{ margin:6px 0 0; font-size:17px; font-weight:500; color:var(--ink); }
+.mcq-why{ margin:0; font-size:17px; line-height:1.5; color:var(--ink-soft); max-width:62ch; }
+.mcq-bar{ display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin-top:44px; }
+.mcq-score{ font-size:15px; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+.mcq-fallback{ width:100%; max-width:760px; min-height:160px; margin-top:16px; font:14px/1.5 var(--sans); color:var(--ink);
+  background:var(--wall); border:0; border-radius:10px; padding:12px 14px; }
+/* the question numbers, in the left pane of a quiz page */
+.mcq-nav{ display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:4px; }
+.mcq-nav a{ display:block; padding:8px 0; border-radius:8px; text-align:center; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+@media (hover:hover){ .mcq-nav a:hover{ background:var(--wall); color:var(--ink); } }
+.mcq-nav a.is-right{ color:var(--ink); text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:.25em; }
+.mcq-nav a.is-wrong{ color:var(--ink); text-decoration:line-through; text-decoration-thickness:1px; }
+/* fractions stay full size inline */
+mjx-container[jax="SVG"]:not([display="true"]){ margin:0 .08em; }
+
+/* ── Loading: the one color exception — a thin rainbow ring, only while loading */
+.loading{
+  width:18px; height:18px; border-radius:50%;
+  background:conic-gradient(#ff3b30,#ff9500,#ffcc00,#34c759,#00c7be,#007aff,#af52de,#ff3b30);
+  -webkit-mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+          mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+  animation:mm-spin .9s linear infinite;
+}
+@keyframes mm-spin{ to{ transform:rotate(1turn); } }
+
+@media (prefers-reduced-motion:reduce){
+  *{ animation:none!important; transition:none!important; }
+}
+
+/* ── This page: a course, two timed tests, MCQs then FRQs ─────────────── */
+[hidden]{ display:none!important; }
+.pane-r{ position:relative; }
+.course{ display:flex; flex-direction:column; gap:6px; margin:28px 0 30px; }
+.course-n{ margin:0; font-size:clamp(36px, 2.6vw, 56px); font-weight:300; line-height:1.12; letter-spacing:-.03em; }
+.course-t{ margin:0; font-size:clamp(17px, 1.15vw, 22px); line-height:1.35; color:var(--ink); }
+.course-s{ margin:0; font-size:14px; line-height:1.5; color:var(--ink-soft); }
+.tests{ margin:0 0 26px; }
+.frq-list{ list-style:none; margin:44px 0 0; padding:0; display:flex; flex-direction:column; gap:44px; max-width:760px; }
+.frq-q{ display:grid; grid-template-columns:2em minmax(0, 1fr); column-gap:10px; outline-offset:8px; }
+.frq-in{ display:block; width:100%; min-height:8.5em; margin:0; resize:vertical; font:inherit; font-size:clamp(17px, 1.05vw, 20px);
+  line-height:1.5; color:var(--ink); background:var(--wall); border:0; border-radius:10px; padding:12px 14px; }
+.frq-act{ display:flex; gap:12px; }
+.frq-ans{ display:flex; flex-direction:column; gap:10px; }
+.frq-ans p{ margin:0; font-size:17px; line-height:1.5; color:var(--ink); max-width:62ch; }
+.frq-pts{ margin:0; padding:0 0 0 1.1em; display:flex; flex-direction:column; gap:6px; font-size:17px; line-height:1.5; color:var(--ink-soft); max-width:62ch; }
+.frq-pts li::marker{ color:var(--muted); }
+.frq-q mjx-container[display="true"]{ margin:.5em 0 !important; }
+.mj-ring{ position:absolute; top:60px; left:clamp(48px, 5vw, 120px); }
+html:not(.mj-wait) .mj-ring{ display:none; }
+html.mj-wait .pane-r .body{ visibility:hidden; }
+
+</style>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']], packages: { '[+]': ['mhchem'] } },
+  svg: { fontCache: 'global' },
+  startup: {
+    pageReady: function () {
+      return MathJax.startup.defaultPageReady().then(function () { if (window.__mathReady) window.__mathReady(); });
+    }
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg-full.js"></script>
+</head>
+<body>
+<div id="app">
+  <nav class="pane-l">
+    <button class="pane-hide" type="button"><span class="hide">Hide</span><span class="keep">Keep open</span><kbd>`</kbd></button>
+    <header class="course">
+      <h1 class="course-n">BIPN 152</h1>
+      <p class="course-t">The Healthy and Diseased Brain</p>
+      <p class="course-s">Midterm 1 &middot; 30 minutes each</p>
+      <p class="course-s">Neuroanatomy, action potentials, synapses, plasticity, learning and memory, and the basics of epilepsy.</p>
+    </header>
+    <div class="tests">
+      <a class="row" href="#test-1" data-test="test-1" aria-current="true">Test 1</a>
+<a class="row" href="#test-2" data-test="test-2" aria-current="false">Test 2</a>
+    </div>
+    <nav class="mcq-nav" id="nav-test-1" aria-label="Test 1 questions"></nav>
+<nav class="mcq-nav" id="nav-test-2" aria-label="Test 2 questions" hidden></nav>
+  </nav>
+  <main class="pane-r">
+    <a class="menu-hint" href="#">Menu<kbd>`</kbd></a>
+    <div class="loading mj-ring" aria-hidden="true"></div>
+    <div class="body">
+<section class="test" id="test-1" data-key="bipn152-t1">
+<section class="mcq" data-title="BIPN 152 Midterm 1, Test 1" data-nav="#nav-test-1"><script type="application/json">[{"q": "After a stroke in the right parietal lobe, a patient ignores food on the left side of her plate and shaves only the right side of his face. What is this called?", "options": ["Hemispatial neglect, from loss of right parietal attention areas", "Hemianopia, from loss of the left half of the primary visual cortex", "Aphasia, from loss of the language areas of the right parietal lobe", "Apraxia, from loss of the motor planning areas of the right frontal lobe"], "answer": 0, "why": "The right parietal lobe attends to both sides of space, while the left mainly attends to the right side. So right parietal damage leaves the left side of the world without attention. Patients can see the left side (their eyes work) but do not notice or act on it. Left-sided damage rarely causes strong neglect because the right side still covers the right."}, {"q": "Which nucleus is the brain's main source of norepinephrine?", "options": ["The locus coeruleus, in the pons", "The raphe nuclei, in the brainstem", "The substantia nigra, in the midbrain", "The nucleus basalis, in the forebrain"], "answer": 0, "why": "The locus coeruleus is a small cluster of neurons in the pons whose axons reach almost the whole brain, controlling arousal and attention. The raphe nuclei make serotonin, the substantia nigra and VTA make dopamine, and the nucleus basalis of Meynert makes acetylcholine for the cortex. Losing nucleus basalis neurons is an early feature of Alzheimer disease."}, {"q": "Where are action potentials usually started in a neuron, and why?", "options": ["At the axon initial segment, which has the highest density of \\(\\ce{Na+}\\) channels", "At the dendrites, which receive most synapses and so have the most input current", "At the cell body, which has the largest surface area and holds the most channels", "At the axon terminals, which are farthest from the inhibitory synapses on the soma"], "answer": 0, "why": "The axon initial segment, just past the axon hillock, packs voltage-gated \\(\\ce{Na+}\\) channels at high density, anchored by the scaffold protein ankyrin-G. This gives it the lowest threshold in the cell. Synaptic currents spread passively from dendrites and soma, and the spike starts wherever threshold is first reached, which is the initial segment."}, {"q": "In axons, microtubules all point with their plus ends away from the cell body. Which motor protein carries new synaptic vesicle proteins toward the terminal?", "options": ["Kinesin, which walks toward microtubule plus ends", "Dynein, which walks toward microtubule plus ends", "Myosin, which walks along microtubules to the terminal", "Kinesin, which walks toward microtubule minus ends"], "answer": 0, "why": "Most kinesins move toward plus ends, so in axons they carry cargo outward (anterograde transport). Dynein moves toward minus ends, carrying cargo back toward the cell body (retrograde transport), including signals from the terminal. Myosins move along actin filaments, not microtubules. Problems with axonal transport are seen in many neurodegenerative diseases."}, {"q": "Tau is a microtubule-associated protein. What is its normal role, and what goes wrong in Alzheimer disease?", "options": ["It stabilizes axon microtubules; in disease it is overphosphorylated and forms tangles", "It stabilizes dendrite actin filaments; in disease it is cut into the amyloid-\\(\\beta\\) peptide", "It carries vesicles along axon microtubules; in disease it locks up the kinesin motors", "It forms the myelin sheath around axons; in disease it is attacked by immune cells"], "answer": 0, "why": "Tau binds and stabilizes microtubules, mainly in axons. In Alzheimer disease and other tauopathies, tau gets too many phosphate groups, falls off the microtubules, and clumps into neurofibrillary tangles inside neurons. The amount of tangles tracks memory loss more closely than amyloid plaques do. Amyloid-\\(\\beta\\) comes from a different protein, APP."}, {"q": "Tetanus toxin and botulinum toxin both cut SNARE proteins. Why does tetanus cause rigid muscle spasms, while botulism causes floppy paralysis?", "options": ["Tetanus toxin travels into the spinal cord and blocks release from inhibitory interneurons", "Tetanus toxin blocks release at the neuromuscular junction more strongly than botulinum", "Tetanus toxin activates nicotinic receptors on muscle, causing constant contraction", "Tetanus toxin blocks acetylcholinesterase, so acetylcholine builds up at the muscle"], "answer": 0, "why": "Botulinum toxin stays at the neuromuscular junction and blocks acetylcholine release, so muscles go limp. Tetanus toxin is carried backward up motor axons into the spinal cord, then crosses into the inhibitory interneurons (Renshaw and glycine cells). Blocking their glycine and GABA release removes inhibition from motor neurons, which fire uncontrollably, causing spasms like lockjaw."}, {"q": "In the CA1 region of the hippocampus, what is required to induce NMDA receptor–dependent LTP?", "options": ["Glutamate release plus strong postsynaptic depolarization, raising \\(\\ce{Ca^{2+}}\\) in the spine", "Glutamate release while the postsynaptic cell is held hyperpolarized at −80 mV", "Strong postsynaptic depolarization alone, with no presynaptic glutamate release", "Dopamine release plus a drop in postsynaptic \\(\\ce{Ca^{2+}}\\) in the dendrite"], "answer": 0, "why": "NMDA receptors pass current only when glutamate is bound and the membrane is depolarized enough to push out \\(\\ce{Mg^{2+}}\\). Together, these let a large amount of \\(\\ce{Ca^{2+}}\\) into the spine, which activates CaMKII and starts LTP. Holding the cell hyperpolarized during stimulation keeps the \\(\\ce{Mg^{2+}}\\) block in place and prevents LTP. Pairing a single input with postsynaptic spikes can also induce it."}, {"q": "After LTP is established, the NMDA blocker AP5 is applied. What happens to the larger EPSPs?", "options": ["They stay large, because AP5 blocks the induction of LTP but not its expression", "They return to baseline, because AP5 reverses the changes made during LTP", "They get even larger, because AP5 removes the inhibition that limits them", "They disappear, because AP5 also blocks the AMPA receptors that carry them"], "answer": 0, "why": "NMDA receptors are needed to start LTP, through \\(\\ce{Ca^{2+}}\\) entry. But the bigger EPSPs after LTP are carried mostly by extra and more conductive AMPA receptors. AP5 blocks NMDA receptors only, so it does not undo LTP or block basal transmission. This difference between induction and expression was key to understanding LTP."}, {"q": "Which change mainly expresses early LTP at CA1 synapses?", "options": ["More AMPA receptors are inserted into the postsynaptic membrane", "More NMDA receptors are inserted into the presynaptic membrane", "More GABA-A receptors are removed from the postsynaptic spines", "More voltage-gated \\(\\ce{Na+}\\) channels are added to the dendrites"], "answer": 0, "why": "\\(\\ce{Ca^{2+}}\\) through NMDA receptors activates CaMKII. CaMKII phosphorylates AMPA receptors (raising their conductance) and helps bring more AMPA receptors into the synapse from nearby pools. With more AMPA receptors, the same amount of glutamate makes a larger EPSP. Spines also grow larger, held up by more actin."}, {"q": "CaMKII can stay active after \\(\\ce{Ca^{2+}}\\) falls back to resting levels. How?", "options": ["It phosphorylates itself at threonine 286, so it no longer needs \\(\\ce{Ca^{2+}}\\)", "It binds the NMDA receptor permanently, which keeps the channel open", "It moves into the nucleus, where it stays active until new genes turn on", "It is protected from phosphatases by binding to the AMPA receptor's tail"], "answer": 0, "why": "CaMKII is a ring of 12 subunits. When \\(\\ce{Ca^{2+}}\\)–calmodulin activates two neighbors, one phosphorylates the other at threonine 286. Once phosphorylated, the subunit stays active even after \\(\\ce{Ca^{2+}}\\) falls, and it can phosphorylate neighbors. This \"molecular memory switch\" helps keep LTP going. Mice with T286 mutated cannot form NMDA-dependent LTP and learn spatial tasks poorly."}, {"q": "A weak input to a CA1 neuron does not cause LTP alone. Paired with strong activation of a different input onto the same cell, it is potentiated. Which LTP property is this?", "options": ["Associativity", "Input specificity", "Cooperativity", "Reversibility"], "answer": 0, "why": "Associativity means a weak input that is active at the same time as a strong input gets potentiated, because the strong input depolarizes the cell enough to unblock NMDA receptors at the weak synapses. It is a cellular version of associative learning, like linking a tone with food. Input specificity means inactive synapses on the same cell are not potentiated."}, {"q": "What triggers NMDA receptor–dependent LTD instead of LTP?", "options": ["A modest, longer rise in spine \\(\\ce{Ca^{2+}}\\) that activates phosphatases", "A large, brief rise in spine \\(\\ce{Ca^{2+}}\\) that activates CaMKII strongly", "A complete absence of \\(\\ce{Ca^{2+}}\\) entry during the conditioning stimulus", "A rise in \\(\\ce{Ca^{2+}}\\) in the presynaptic terminal alone, with none in the spine"], "answer": 0, "why": "Both LTP and LTD at CA1 synapses depend on NMDA receptors. Low-frequency stimulation produces a smaller, longer rise in \\(\\ce{Ca^{2+}}\\), which favors phosphatases like calcineurin and PP1. They dephosphorylate AMPA receptors and pull them out of the membrane, weakening the synapse. High-frequency stimulation gives a large, fast rise that favors kinases and LTP."}, {"q": "Patient H.M. had both medial temporal lobes removed to treat his epilepsy. Which ability was most severely lost?", "options": ["Forming new long-term memories of facts and events", "Holding a phone number in mind for a few seconds", "Learning new motor skills like mirror drawing", "Remembering facts he had learned as a child"], "answer": 0, "why": "H.M. had dense anterograde amnesia: he could not form new declarative memories. His working memory, IQ and memories from long before the surgery were mostly intact, and he could learn motor skills, getting better at mirror drawing day after day without remembering having practiced. This showed that the medial temporal lobe is needed to form declarative memories, but not to store old ones or to learn skills."}, {"q": "H.M. lost memories from about 11 years before his surgery but kept childhood memories. What does this temporally graded loss suggest?", "options": ["Memories slowly become independent of the hippocampus as they are consolidated in the cortex", "Memories are stored in the hippocampus forever, so the oldest ones were stored elsewhere first", "Memories from childhood are stored in the cerebellum, which the surgery did not touch", "Memories fade in a fixed order, so the most recent ones are lost first no matter what"], "answer": 0, "why": "In systems consolidation, the hippocampus first helps link the parts of a memory spread across the cortex. Over years, the cortical links strengthen and the memory no longer needs the hippocampus. So recent memories, still dependent on the hippocampus, are lost, while older, consolidated memories survive."}, {"q": "Which type of memory is mainly supported by the basal ganglia?", "options": ["Habits and procedural learning, such as riding a bike", "Episodic memories, such as your last birthday party", "Semantic memories, such as the capital of France", "Working memory, such as keeping a number in mind"], "answer": 0, "why": "Declarative memory (episodic and semantic) depends on the medial temporal lobe. Habits and skills that become automatic with practice depend on the striatum of the basal ganglia, along with the cerebellum and motor cortex. Working memory depends on the prefrontal cortex. Patients with Parkinson or Huntington disease have trouble learning new habits despite intact declarative memory."}, {"q": "Hippocampal place cells fire when a rat is in specific locations. Where are grid cells, which fire in a repeating triangular pattern across space?", "options": ["The medial entorhinal cortex", "The primary visual cortex", "The dentate gyrus alone", "The cerebellar cortex"], "answer": 0, "why": "Grid cells in the medial entorhinal cortex provide a kind of coordinate system, firing at the corners of a repeating grid of triangles. They project into the hippocampus, where place cells represent particular locations. The 2014 Nobel Prize recognized the discovery of both. The entorhinal cortex is also among the first areas affected in Alzheimer disease."}, {"q": "Rats given the NMDA blocker AP5 into the hippocampus during training in a water maze fail to learn where the hidden platform is. What does this support?", "options": ["NMDA receptor–dependent plasticity in the hippocampus helps form spatial memory", "NMDA receptors in the hippocampus are needed for swimming and seeing the room", "AP5 erases older spatial memories that the rat had stored before the training", "Spatial learning depends only on the cerebellum and not on the hippocampus"], "answer": 0, "why": "Rats with AP5 could swim and see normally, but they did not learn the platform's location, and AP5 also blocked LTP in the hippocampus. This linked LTP-like plasticity with spatial learning. Later, mice lacking NMDA receptors only in CA1 showed the same problem, strengthening the link."}, {"q": "A protein synthesis blocker is given right after training. Short-term memory is normal for an hour, but there is no memory the next day. What does this show?", "options": ["Long-term memory needs new proteins, while short-term memory does not", "Short-term memory needs new proteins, while long-term memory does not", "Both memory types need new proteins, but short-term memory recovers", "Neither memory type needs new proteins; the drug blocks memory retrieval"], "answer": 0, "why": "Short-term memory uses changes to proteins that already exist, such as phosphorylation. Converting it into long-term memory needs gene expression and new proteins, through pathways like PKA and the transcription factor CREB. Blocking protein synthesis during this window prevents long-term memory but leaves short-term memory intact. Late LTP shows the same requirement."}, {"q": "In mature neurons, GABA-A receptors hyperpolarize the cell. In newborn neurons, GABA often depolarizes them. Why?", "options": ["Newborn neurons express more NKCC1 and less KCC2, so inside \\(\\ce{Cl-}\\) is high", "Newborn neurons express more KCC2 and less NKCC1, so inside \\(\\ce{Cl-}\\) is low", "Newborn GABA-A receptors pass \\(\\ce{Na+}\\) instead of \\(\\ce{Cl-}\\) when they open", "Newborn neurons lack \\(\\ce{K+}\\) channels, so they rest at a positive voltage"], "answer": 0, "why": "NKCC1 pumps \\(\\ce{Cl-}\\) into the cell and KCC2 pumps it out. Young neurons have mostly NKCC1, so \\(E_{\\ce{Cl}}\\) is above the resting voltage, and opening GABA-A channels lets \\(\\ce{Cl-}\\) out, depolarizing the cell. As KCC2 increases during development, GABA becomes inhibitory. This switch may explain why some newborn seizures resist standard GABA-boosting drugs."}, {"q": "During a stroke, neurons near the blocked artery die partly from excitotoxicity. Which chain fits best?", "options": ["No ATP, so neurons depolarize, glutamate builds up, NMDA receptors flood cells with \\(\\ce{Ca^{2+}}\\)", "No ATP, so neurons hyperpolarize, glutamate falls, and the cells starve for \\(\\ce{Ca^{2+}}\\)", "Too much ATP, so the pumps overwork and remove all \\(\\ce{Na+}\\) from inside the neurons", "Too much \\(\\ce{O2}\\), so free radicals form and break the NMDA receptors on the neurons"], "answer": 0, "why": "Without blood, ATP runs out and \\(\\ce{Na+}\\)–\\(\\ce{K+}\\) pumps fail, so neurons depolarize and release glutamate. Glutamate transporters, which depend on the \\(\\ce{Na+}\\) gradient, slow down or run backward. Excess glutamate overactivates NMDA receptors, \\(\\ce{Ca^{2+}}\\) floods in, and it activates proteases, lipases, nitric oxide synthase and mitochondrial damage, killing the cells."}, {"q": "What happens to most glutamate after it is released at a synapse?", "options": ["Astrocytes take it up and turn it into glutamine for neurons to reuse", "Neurons break it down in the synaptic cleft with an esterase enzyme", "It diffuses into blood vessels and is filtered out by the kidneys", "It stays bound to AMPA receptors until the next action potential"], "answer": 0, "why": "Astrocytes surround synapses and take up most glutamate through transporters like EAAT2 (GLT-1), driven by the \\(\\ce{Na+}\\) gradient. Inside astrocytes, glutamine synthetase turns it into glutamine, which goes back to neurons and is turned back into glutamate. This glutamate–glutamine cycle keeps glutamate low in the cleft and prevents excitotoxicity."}, {"q": "The brain is about 2% of body weight but uses about 20% of the body's \\(\\ce{O2}\\). What uses most of this energy?", "options": ["The \\(\\ce{Na+}\\)–\\(\\ce{K+}\\) pump, restoring ion gradients after electrical activity", "Protein synthesis, building new receptors for each memory formed", "Myelin production, wrapping new layers around active axons", "Microtubule transport, moving vesicles along each long axon"], "answer": 0, "why": "Every action potential and synaptic current lets \\(\\ce{Na+}\\) in and \\(\\ce{K+}\\) out, and the pump must spend ATP to restore them. Estimates put most of the brain's energy budget on these pumps, especially for synaptic activity. This is why the brain is so sensitive to loss of blood flow: consciousness is lost within about 10 seconds without oxygenated blood."}, {"q": "The GABA-B receptor is metabotropic. What does it do when activated on a postsynaptic neuron?", "options": ["It opens GIRK \\(\\ce{K+}\\) channels through G protein \\(\\beta\\gamma\\), giving a slow IPSP", "It opens \\(\\ce{Cl-}\\) channels in its own pore, giving a fast IPSP within 1 ms", "It closes \\(\\ce{K+}\\) channels through cAMP, giving a slow EPSP in the dendrite", "It opens \\(\\ce{Ca^{2+}}\\) channels through \\(\\text{G}_{\\text{q}}\\), giving a fast EPSP"], "answer": 0, "why": "GABA-B receptors couple to \\(\\text{G}_{\\text{i}}\\) and \\(\\text{G}_{\\text{o}}\\). The freed \\(\\beta\\gamma\\) subunits open GIRK channels, letting \\(\\ce{K+}\\) out and slowly hyperpolarizing the cell for hundreds of milliseconds. On presynaptic terminals, GABA-B receptors close \\(\\ce{Ca^{2+}}\\) channels and reduce release. The fast \\(\\ce{Cl-}\\) IPSP comes from GABA-A receptors."}, {"q": "How is GABA made in inhibitory neurons?", "options": ["From glutamate, by glutamic acid decarboxylase (GAD)", "From glycine, by a GABA synthase found in astrocytes", "From choline, by choline acetyltransferase in terminals", "From tyrosine, by tyrosine hydroxylase in the cell body"], "answer": 0, "why": "GAD removes a carboxyl group from glutamate to make GABA, the main inhibitory transmitter, from the main excitatory one. GAD needs vitamin B6 as a cofactor, so severe B6 deficiency can cause seizures. Antibodies against GAD cause stiff person syndrome, in which loss of inhibition causes muscle rigidity."}, {"q": "In a brain slice, the GABA-A blocker bicuculline is added. What happens?", "options": ["Seizure-like bursts of synchronized firing appear", "All neuron firing stops within a few seconds", "Neurons fire more slowly and less in sync", "Only the inhibitory interneurons stop firing"], "answer": 0, "why": "Blocking GABA-A receptors removes fast inhibition, so recurrent excitatory connections drive neurons to fire together in large bursts that look like seizure discharges. Bicuculline and picrotoxin are standard ways to make seizure models in slices. Interneurons keep firing; their output just stops working."}, {"q": "In kindling, a weak electrical stimulus that causes no seizure is given to the amygdala once a day. After a few weeks, the same stimulus causes a full seizure. What does this show?", "options": ["Repeated activity makes circuits lastingly more prone to seizures", "Repeated stimulation damages the electrode, so a stronger current flows", "The amygdala grows new neurons, which directly cause each seizure", "The brain becomes tolerant to stimulation, so seizures get weaker over time"], "answer": 0, "why": "Kindling shows that repeated activity can produce lasting changes, like strengthened excitatory synapses and weakened inhibition, that lower the seizure threshold. Once kindled, the animal can stay sensitive for months or start having spontaneous seizures. It is a model of how epilepsy can develop (epileptogenesis) and why early seizure control matters."}, {"q": "Why is a febrile seizure in a toddler usually not a sign of lifelong epilepsy?", "options": ["Fever lowers seizure threshold in a still-developing brain, and most children outgrow it", "Fever damages the hippocampus in every case, so later seizures are unavoidable", "Fever blocks all \\(\\ce{Na+}\\) channels, so seizures stop as soon as it breaks", "Fever is caused by the seizure, not the other way around, so no risk remains"], "answer": 0, "why": "Febrile seizures happen in about 2–5% of young children, usually between 6 months and 5 years. The young brain's balance of excitation and inhibition is still maturing, and fever can push it over threshold. Most children never have epilepsy. Some genetic forms (like SCN1A mutations) and long febrile seizures carry a higher risk."}, {"q": "The endocannabinoid 2-AG is made when a postsynaptic neuron depolarizes. How does it change the synapse?", "options": ["It travels backward to CB1 receptors on the terminal and lowers release", "It travels forward to CB1 receptors on the spine and raises AMPA current", "It binds GABA-A receptors directly and makes them stay open longer", "It blocks the glutamate transporter, so glutamate stays in the cleft"], "answer": 0, "why": "Endocannabinoids are retrograde messengers. A depolarized, \\(\\ce{Ca^{2+}}\\)-loaded postsynaptic cell makes 2-AG from membrane lipids. It diffuses back to CB1 receptors on presynaptic terminals, which reduce \\(\\ce{Ca^{2+}}\\) entry and transmitter release (for example, depolarization-induced suppression of inhibition). THC from cannabis acts on these same CB1 receptors."}, {"q": "Which feature makes dendritic spines well suited to store synapse-specific changes?", "options": ["Their narrow neck limits the spread of \\(\\ce{Ca^{2+}}\\) to neighboring synapses", "Their wide neck lets \\(\\ce{Ca^{2+}}\\) spread evenly along the whole dendrite", "Their lack of actin keeps their shape fixed once a synapse has formed", "Their own nucleus lets each spine make its own proteins on demand"], "answer": 0, "why": "Each spine usually holds one excitatory synapse and is joined to the dendrite by a thin neck. The neck traps \\(\\ce{Ca^{2+}}\\) and signaling molecules in that spine, so changes like LTP can stay limited to the active synapse (input specificity). Spines are full of actin, which lets them change shape and size with plasticity."}, {"q": "Donepezil is used in early Alzheimer disease. How does it work?", "options": ["It blocks acetylcholinesterase, so remaining ACh lasts longer", "It activates nicotinic receptors, replacing the lost ACh entirely", "It removes amyloid plaques, so neurons regain their synapses", "It blocks NMDA receptors, so neurons are protected from glutamate"], "answer": 0, "why": "Cholinergic neurons of the nucleus basalis, which supply the cortex, are lost early in Alzheimer disease, and ACh is important for attention and memory. Blocking the enzyme that breaks down ACh helps the remaining ACh act longer. The benefit is modest and does not stop the disease. Memantine is the drug that blocks NMDA receptors."}]</script></section>
+<script type="application/json" class="frq-data">[{"q": "At CA1 synapses in a hippocampal slice, a high-frequency train (100 Hz for 1 s) is given to the Schaffer collaterals. (a) Describe the steps that induce LTP and the changes that express it. (b) Predict what happens if the postsynaptic cell is voltage-clamped at −80 mV during the train, and if AP5 is applied only after LTP is established. Explain each. (c) Explain what associativity is, and why it makes LTP a plausible cellular basis for associative learning.", "answer": "(a) Glutamate from the train activates AMPA receptors. Strong summation depolarizes the spine, pushing \\(\\ce{Mg^{2+}}\\) out of NMDA receptors, so \\(\\ce{Ca^{2+}}\\) floods in. \\(\\ce{Ca^{2+}}\\)–calmodulin activates CaMKII, which phosphorylates itself (staying active) and AMPA receptors. More AMPA receptors are inserted, their conductance rises and spines enlarge, so the same glutamate now gives a larger EPSP. Late LTP needs new proteins through PKA and CREB. (b) Clamped at −80 mV, the \\(\\ce{Mg^{2+}}\\) block stays in place even with glutamate bound, so little \\(\\ce{Ca^{2+}}\\) enters and no LTP forms. AP5 after LTP does not reverse it, because NMDA receptors are needed to induce LTP but the enhanced response is carried by AMPA receptors. (c) Associativity means a weak input active at the same time as a strong input on the same cell gets potentiated, because the strong input supplies the depolarization that unblocks NMDA receptors at the weak synapses. This matches associative learning, where a neutral cue gains meaning when paired with a significant event.", "points": ["Induction: glutamate plus depolarization unblock NMDA receptors, \\(\\ce{Ca^{2+}}\\) activates CaMKII", "Expression: more and stronger AMPA receptors, larger spines", "Clamp at −80 mV prevents LTP; AP5 after does not reverse it", "Associativity explained through shared depolarization"]}, {"q": "Patient H.M. had his medial temporal lobes removed on both sides. (a) Describe which memory abilities he lost and which he kept. (b) Explain the \"temporally graded\" pattern of his memory loss and what it suggests about consolidation. (c) Explain what his improving performance on mirror drawing shows about the organization of memory.", "answer": "(a) He lost the ability to form new declarative memories (anterograde amnesia): he could not learn new facts or remember new events for more than a short time. He also lost some memories from the years just before surgery. He kept his working memory (he could hold information briefly while attending to it), his intelligence, his language, his older memories from childhood, and his ability to learn skills. (b) His loss of memories from the decade before surgery, with older memories spared, suggests that the hippocampus is needed for memories at first, but over years memories are reorganized and stored in the cortex, where they no longer need the hippocampus. This is systems consolidation. (c) He got better at mirror drawing over several days, even though he did not remember practicing. This shows that procedural memory (skills) uses different brain systems, such as the basal ganglia, cerebellum and motor cortex, from declarative memory, which needs the medial temporal lobe.", "points": ["Lost: new declarative memories (anterograde amnesia) and some recent past memories", "Kept: working memory, intelligence, old memories, skill learning", "Graded loss means memories become independent of the hippocampus with time", "Mirror drawing shows separate procedural and declarative systems"]}]</script>
+</section>
+<section class="test" id="test-2" data-key="bipn152-t2" hidden>
+<section class="mcq" data-title="BIPN 152 Midterm 1, Test 2" data-nav="#nav-test-2"><script type="application/json">[{"q": "A patient speaks fluently and understands well but cannot repeat a sentence spoken to her. Where is the damage most likely?", "options": ["The arcuate fasciculus, linking Wernicke's and Broca's areas", "Broca's area, in the inferior frontal gyrus on the left side", "Wernicke's area, in the superior temporal gyrus on the left side", "The corpus callosum, linking the left and right hemispheres"], "answer": 0, "why": "This is conduction aphasia. Wernicke's area (understanding) and Broca's area (speech output) both work, so speech is fluent and comprehension is fine. But the fibers linking them, the arcuate fasciculus, are damaged, so heard words cannot be passed to the speech areas for repetition. The classic model is simplified, but this pattern is still a useful example."}, {"q": "In a split-brain patient, a picture of a key is shown only in the left visual field. What happens?", "options": ["She cannot name it, but her left hand can pick out a key by touch", "She can name it, but her left hand cannot pick out a key by touch", "She can name it and her right hand can pick out a key by touch", "She cannot name it, and neither hand can pick out a key by touch"], "answer": 0, "why": "The left visual field projects to the right hemisphere. With the corpus callosum cut, the right hemisphere cannot pass the information to the left hemisphere, which controls speech in most people, so she cannot say what it is. But the right hemisphere controls the left hand and can use touch to find the key. Sperry and Gazzaniga's experiments showed this."}, {"q": "In Parkinson disease, dopamine neurons of the substantia nigra die. How does this change the basal ganglia circuits for movement?", "options": ["The direct pathway weakens and the indirect pathway strengthens, so movement falls", "The direct pathway strengthens and the indirect pathway weakens, so movement rises", "Both pathways strengthen equally, so movement stays the same but is shaky", "Both pathways weaken equally, so the cortex controls movement on its own"], "answer": 0, "why": "Dopamine excites direct-pathway striatal neurons through D1 receptors and inhibits indirect-pathway neurons through D2 receptors. Losing dopamine weakens the direct (\"go\") pathway and boosts the indirect (\"stop\") pathway. Both changes increase the inhibitory output of the globus pallidus internal segment onto the thalamus, so less excitation reaches the motor cortex, causing slowness and difficulty starting movements."}, {"q": "Why does each half of the cerebellum control movements on the same side of the body?", "options": ["Its outputs cross once to the thalamus, and the motor cortex's tract crosses back", "Its outputs never cross, and it sends signals straight to the spinal cord on that side", "Its inputs come only from the opposite cortex, which controls the opposite side", "Its Purkinje cells cross the midline twice inside the cerebellum itself"], "answer": 0, "why": "The right cerebellum sends output through the deep nuclei and superior cerebellar peduncle, which crosses to the left thalamus and then the left motor cortex. The left motor cortex controls the right body through the corticospinal tract, which crosses in the medulla. Two crossings bring control back to the same side, so right cerebellar damage affects the right limbs."}, {"q": "Which brain structure is most important for regulating body temperature, thirst and hunger?", "options": ["The hypothalamus", "The thalamus", "The hippocampus", "The cerebellum"], "answer": 0, "why": "The hypothalamus senses body temperature, blood osmolality, and signals of energy like leptin and ghrelin, and it drives responses through hormones, the autonomic nervous system and behavior. Small lesions there can cause severe overeating, loss of thirst or failure of temperature control. The thalamus relays sensory information to the cortex."}, {"q": "EGTA and BAPTA both bind \\(\\ce{Ca^{2+}}\\), but BAPTA binds it much faster. Injected into a terminal, BAPTA blocks release much more than EGTA does. What does this show?", "options": ["\\(\\ce{Ca^{2+}}\\) sensors sit very close to the channels, so only a fast buffer catches \\(\\ce{Ca^{2+}}\\) in time", "\\(\\ce{Ca^{2+}}\\) sensors sit far from the channels, so a slow buffer catches \\(\\ce{Ca^{2+}}\\) in time", "Release does not depend on \\(\\ce{Ca^{2+}}\\), so both buffers act through other effects", "EGTA cannot enter the terminal, so it has no chance to bind any \\(\\ce{Ca^{2+}}\\)"], "answer": 0, "why": "\\(\\ce{Ca^{2+}}\\) entering through a channel reaches very high concentrations only within tens of nanometers of the pore. A slow buffer like EGTA cannot bind it before it reaches a nearby sensor, but a fast buffer like BAPTA can. So release must be triggered by \\(\\ce{Ca^{2+}}\\) nanodomains, with synaptotagmin and the vesicle sitting right next to the channels."}, {"q": "Two stimuli 20 ms apart are given to an axon. At a synapse with a high release probability, the second response is smaller. At a synapse with a low release probability, it is larger. What explains this?", "options": ["High probability empties ready vesicles; low probability leaves extra \\(\\ce{Ca^{2+}}\\) to add release", "High probability adds extra \\(\\ce{Ca^{2+}}\\); low probability empties the ready vesicles", "High probability desensitizes the \\(\\ce{Na+}\\) channels in the axon before the second spike", "Low probability blocks the receptors, so the second response looks bigger by comparison"], "answer": 0, "why": "At a high-probability synapse, the first spike releases many of the docked vesicles, so fewer remain for the second (paired-pulse depression). At a low-probability synapse, few vesicles are used, and \\(\\ce{Ca^{2+}}\\) left over from the first spike adds to the second, raising release (paired-pulse facilitation). The paired-pulse ratio is a common way to estimate release probability."}, {"q": "Presynaptic autoreceptors are found on many terminals. What is their usual role?", "options": ["They sense the terminal's own transmitter and reduce further release", "They sense other transmitters and raise release from the terminal", "They sense \\(\\ce{Ca^{2+}}\\) and open channels to let more \\(\\ce{Ca^{2+}}\\) in", "They sense ATP and tell the cell body to make more vesicles"], "answer": 0, "why": "Autoreceptors respond to the transmitter released by the same terminal. Examples include \\(\\alpha_2\\) receptors on norepinephrine terminals, D2 receptors on dopamine terminals and 5-HT1 receptors on serotonin terminals. Most couple to \\(\\text{G}_{\\text{i}}\\) and \\(\\text{G}_{\\text{o}}\\) and reduce release, forming a local negative feedback loop."}, {"q": "Early LTP lasts 1–3 hours, and late LTP lasts much longer. What does late LTP need that early LTP does not?", "options": ["Gene transcription and new protein synthesis", "NMDA receptor activation during the stimulus", "\\(\\ce{Ca^{2+}}\\) entry into the postsynaptic spine", "Glutamate release from the presynaptic terminal"], "answer": 0, "why": "Both forms are started by NMDA receptors and \\(\\ce{Ca^{2+}}\\). Early LTP relies on modifying existing proteins, such as phosphorylating AMPA receptors. Late LTP, usually triggered by repeated strong trains, needs cAMP–PKA signaling, CREB-driven gene expression and new proteins, which build lasting changes such as larger synapses. Blocking protein synthesis prevents late LTP but not early LTP."}, {"q": "In Aplysia, a shock to the tail strengthens the gill-withdrawal reflex (sensitization). How does serotonin cause this at the sensory neuron's terminal?", "options": ["It raises cAMP and PKA, closing \\(\\ce{K+}\\) channels, so spikes widen and release rises", "It lowers cAMP and PKA, opening \\(\\ce{K+}\\) channels, so spikes narrow and release falls", "It opens \\(\\ce{Cl-}\\) channels, so the sensory neuron is inhibited for several minutes", "It blocks glutamate receptors on the motor neuron, so the reflex grows stronger"], "answer": 0, "why": "Tail shock activates interneurons that release serotonin onto the sensory neuron terminals. Serotonin raises cAMP and activates PKA, which closes certain \\(\\ce{K+}\\) channels. Spikes in the terminal last longer, more \\(\\ce{Ca^{2+}}\\) enters, and more transmitter is released onto the motor neuron. Kandel's work on this system showed that learning uses ordinary signaling molecules."}, {"q": "In Aplysia, a light touch repeated many times makes the gill withdrawal weaker (habituation). Which change causes it?", "options": ["The sensory neuron releases less transmitter with each touch", "The motor neuron loses its receptors after each touch", "The sensory neuron stops firing action potentials at all", "The gill muscle runs out of ATP after repeated touches"], "answer": 0, "why": "In habituation, the sensory neuron still fires, and the motor neuron still responds to transmitter. But each repeated touch releases less transmitter, partly because fewer vesicles are ready to be released (synaptic depression). With long-term habituation, the sensory neuron even loses some of its synaptic connections."}, {"q": "Repeated sensitization training in Aplysia gives memory lasting days. Which change in the sensory neuron is found only in this long-term form?", "options": ["New synaptic connections grow onto the motor neuron", "Existing \\(\\ce{K+}\\) channels close for a few minutes", "The neuron's resting potential drops to about −20 mV", "The neuron stops making serotonin receptors entirely"], "answer": 0, "why": "Long-term sensitization requires PKA to move into the nucleus and activate CREB, which turns on genes that lead to the growth of new synaptic terminals. The extra synapses keep the reflex stronger for days. Blocking protein synthesis or CREB prevents this, while short-term sensitization, based on modified existing proteins, still works."}, {"q": "A patient with amnesia cannot recall seeing a list of words, but she completes word stems (like \"tab__\") with words from the list more often than chance. What does this show?", "options": ["Priming, a nondeclarative memory, works without the hippocampus", "Priming depends on the hippocampus, so her amnesia must be faked", "Declarative memory is intact, since she remembers the list words", "Working memory is gone, since she cannot hold the stems in mind"], "answer": 0, "why": "Priming is a change in how easily something is processed after seeing it before, and it relies on the neocortex rather than the medial temporal lobe. Amnesic patients show normal priming even when they deny seeing the items. This is one of the clearest examples of memory without conscious recollection."}, {"q": "What is the difference between episodic and semantic memory?", "options": ["Episodic memory is about personal events; semantic memory is about facts", "Episodic memory is about facts; semantic memory is about personal events", "Episodic memory is about skills; semantic memory is about emotional events", "Episodic memory lasts seconds; semantic memory lasts for an entire lifetime"], "answer": 0, "why": "Both are declarative and depend on the medial temporal lobe to form. Episodic memories are tied to a time and place you experienced, like your first day of college. Semantic memories are general knowledge, like the fact that the hippocampus is in the temporal lobe. Episodic memory is often more affected in early Alzheimer disease."}, {"q": "A person with a long history of heavy drinking cannot form new memories and confidently makes up stories to fill gaps. What causes this?", "options": ["Thiamine deficiency damaging the mammillary bodies and medial thalamus", "Folate deficiency damaging the cerebellum and the motor cortex", "Vitamin C deficiency damaging the hippocampus and the amygdala", "Iron deficiency damaging the basal ganglia and the spinal cord"], "answer": 0, "why": "This is Korsakoff syndrome, usually from long-term alcohol use with poor nutrition. Lack of thiamine (vitamin B1), which brain cells need for glucose metabolism, damages the mammillary bodies and the dorsomedial thalamus, which are part of the memory circuit. Patients have severe anterograde amnesia and often confabulate. Giving thiamine early can prevent it."}, {"q": "Where do the first tangles and neuron losses usually appear in Alzheimer disease?", "options": ["In the entorhinal cortex and hippocampus", "In the primary motor and visual cortex", "In the cerebellum and the brainstem", "In the spinal cord and the motor nerves"], "answer": 0, "why": "Tau tangles typically start in the entorhinal cortex and then spread to the hippocampus and later the wider cortex (Braak stages). Because these areas are needed to form new memories, trouble remembering recent events is the earliest common symptom. Primary motor and sensory areas are affected only late in the disease."}, {"q": "During slow-wave sleep, hippocampal place cells fire in the same order as they did during the day's exploring, but much faster. What is this thought to do?", "options": ["Replay helps consolidate the day's memories by transferring them to the cortex", "Replay erases the day's memories so the hippocampus can store new ones", "Replay keeps the rat awake by firing the place cells at very high speed", "Replay lets the rat dream about places it has never visited before"], "answer": 0, "why": "During slow-wave sleep, the hippocampus produces sharp-wave ripples in which place cell sequences from the day are replayed in compressed time. Interrupting these ripples impairs later memory. Replay is thought to strengthen links in the cortex, helping memories become independent of the hippocampus over time."}, {"q": "Why do some people develop seizures years after a severe head injury?", "options": ["The injured brain rewires itself over time, creating hyperexcitable circuits", "The skull fracture presses on the brain and triggers every seizure directly", "The injury kills all inhibitory neurons at once, causing seizures that day", "The injury raises blood pressure, which causes seizures after many years"], "answer": 0, "why": "This is posttraumatic epilepsy, an example of epileptogenesis. After injury, a series of changes can follow over months to years: loss of inhibitory interneurons, sprouting of new excitatory connections, inflammation, scarring and leaks in the blood–brain barrier. These slowly build circuits that produce spontaneous seizures. Preventing this process is a major research goal."}, {"q": "An EEG during a generalized tonic–clonic seizure shows large, rhythmic waves across the whole scalp. What do EEG waves mainly reflect?", "options": ["Summed synaptic currents in many pyramidal neurons firing together", "Single action potentials in a few neurons under each electrode", "Electrical activity of the scalp muscles alone during the seizure", "Blood flow changes in the cortex during the seizure"], "answer": 0, "why": "Scalp EEG mainly records synchronized synaptic currents in large numbers of aligned cortical pyramidal neurons, whose dendrites act like tiny batteries. Single action potentials are too brief and small to be seen. During seizures, huge numbers of neurons synchronize, producing large, rhythmic waves. Muscle artifacts are a problem to be removed, not the signal."}, {"q": "Microglia remove some synapses during development. Which molecules tag synapses for removal?", "options": ["Complement proteins such as C1q and C3", "Neurotransmitter transporters such as GLT-1", "Ion channels such as Nav1.1 and Kv1.1", "Myelin proteins such as MBP and PLP"], "answer": 0, "why": "In the developing visual system, weaker synapses get tagged with complement proteins C1q and C3, and microglia with complement receptors engulf them. This pruning refines circuits. Too much pruning may contribute to schizophrenia, and complement tagging of synapses in aging and Alzheimer disease may help drive synapse loss."}, {"q": "In fragile X syndrome, the cortex has many long, thin dendritic spines. What does this suggest?", "options": ["Spines fail to mature and be pruned normally", "Spines grow too large and become too stable", "Spines are lost early, as in Alzheimer disease", "Spines change into axons that form new terminals"], "answer": 0, "why": "Mature spines are usually short with large heads, and many immature spines are pruned during development. In fragile X syndrome, without FMRP, protein synthesis at synapses is poorly controlled, and spines stay long, thin and numerous, like immature spines. This points to faulty synapse maturation and pruning, linked to the intellectual disability in the syndrome."}, {"q": "Where in the adult human brain is the best evidence for ongoing birth of new neurons (adult neurogenesis)?", "options": ["The dentate gyrus of the hippocampus", "The primary motor cortex", "The Purkinje layer of the cerebellum", "The ventral horn of the spinal cord"], "answer": 0, "why": "Neural stem cells in the subgranular zone of the dentate gyrus keep making new granule cells in adult rodents, and many studies suggest this continues in humans to some degree, though the amount is debated. Exercise and enriched environments increase it, while stress lowers it. Most other brain regions do not add new neurons in adulthood."}, {"q": "Why is the hippocampus especially vulnerable to damage from low oxygen and from seizures?", "options": ["Its CA1 neurons have many NMDA receptors and strong recurrent excitation", "Its CA1 neurons have no glutamate receptors and depend on oxygen alone", "It has no blood supply of its own and depends on spinal fluid for oxygen", "It is made mainly of glial cells, which die first when oxygen falls"], "answer": 0, "why": "CA1 pyramidal neurons have dense glutamate and NMDA receptors and high metabolic demand, and the hippocampus has strong excitatory loops. During low oxygen or prolonged seizures, glutamate builds up and \\(\\ce{Ca^{2+}}\\) overload kills these neurons (excitotoxicity). That is why cardiac arrest survivors often have memory problems, and why hippocampal sclerosis is common in epilepsy."}, {"q": "A neuron is filled through a patch pipette with a solution that blocks PKA. Short-term facilitation still works, but late LTP fails. What does this show?", "options": ["Late LTP needs PKA signaling inside the neuron, while short-term facilitation does not", "Short-term facilitation needs PKA signaling, while late LTP depends on \\(\\ce{Ca^{2+}}\\) alone", "PKA is needed only for releasing transmitter from the presynaptic terminal of the cell", "PKA blocks both kinds of plasticity, so neither one should work in this experiment"], "answer": 0, "why": "Short-term facilitation comes from residual \\(\\ce{Ca^{2+}}\\) in the presynaptic terminal over milliseconds, with no need for kinases. Late LTP needs cAMP and PKA, which turn on CREB and gene expression. Blocking PKA in the postsynaptic cell leaves short-term processes intact but prevents the lasting form of LTP."}, {"q": "Which statement about the blood–brain barrier is correct?", "options": ["Tight junctions between capillary endothelial cells limit what enters the brain", "Tight junctions between astrocytes limit what enters the brain from the blood", "The barrier is formed by neurons, which pump out unwanted molecules", "The barrier blocks oxygen and glucose, which must be made in the brain"], "answer": 0, "why": "Brain capillary endothelial cells are sealed by tight junctions and have few transport vesicles, so most molecules must cross through the cells using specific transporters (like GLUT1 for glucose). Astrocyte end-feet and pericytes help induce and maintain the barrier but do not form the seal themselves. Some areas, like circumventricular organs, lack the barrier so they can sense the blood."}, {"q": "Which change most directly reduces the strength of inhibition in epilepsy models where KCC2 is lost?", "options": ["\\(\\ce{Cl-}\\) builds up inside neurons, so GABA-A currents weaken or turn depolarizing", "\\(\\ce{Cl-}\\) is pumped out of neurons, so GABA-A currents become much stronger", "\\(\\ce{K+}\\) builds up inside neurons, so GABA-B receptors stop working at all", "\\(\\ce{Na+}\\) builds up inside neurons, so GABA is no longer released at synapses"], "answer": 0, "why": "KCC2 removes \\(\\ce{Cl-}\\) from mature neurons, keeping \\(E_{\\ce{Cl}}\\) below the resting potential so GABA-A channels let \\(\\ce{Cl-}\\) in. When KCC2 is lost, as can happen after injury or during repeated seizures, inside \\(\\ce{Cl-}\\) rises, \\(E_{\\ce{Cl}}\\) moves up, and GABA becomes weaker or even excitatory. Restoring KCC2 is being studied as a treatment."}, {"q": "A person with multiple sclerosis notices their vision blurs after a hot shower and recovers after cooling down. Why?", "options": ["Heat shortens action potentials, so demyelinated segments fail to conduct", "Heat thickens the myelin, so current cannot spread along the axon", "Heat kills oligodendrocytes, so new demyelination forms each time", "Heat raises blood \\(\\ce{K+}\\), so every neuron in the eye stops firing"], "answer": 0, "why": "In demyelinated axons, current barely reaches threshold at the next point of excitable membrane, so the safety margin is small. Heat speeds \\(\\ce{Na+}\\) channel inactivation and \\(\\ce{K+}\\) channel opening, making each spike briefer and carrying less charge. That small loss is enough to block conduction in the damaged segments. Cooling restores it. This is called Uhthoff's phenomenon."}, {"q": "A stroke in the anterior cerebral artery damages the medial part of the left frontal lobe. Which weakness is expected?", "options": ["Weakness of the right leg more than the right arm and face", "Weakness of the right arm and face more than the right leg", "Weakness of the left leg more than the left arm and face", "Weakness of both legs and arms equally on both sides"], "answer": 0, "why": "In the motor homunculus, the leg and foot are represented on the medial surface of the hemisphere, which the anterior cerebral artery supplies. The arm and face are on the lateral surface, supplied by the middle cerebral artery. The left hemisphere controls the right side, so the right leg is most affected."}, {"q": "In a delayed-response task, a monkey must remember where a cue was for several seconds. Some prefrontal neurons keep firing during the delay. What is this thought to reflect?", "options": ["Working memory, holding information active while it is needed", "Long-term memory, storing the cue's location in the hippocampus", "Procedural memory, learning the eye movement as a fixed habit", "Sensory memory, keeping an afterimage of the cue on the retina"], "answer": 0, "why": "Persistent delay-period firing in dorsolateral prefrontal neurons holds the cue's location in mind until it is used. Damage to this region, or blocking dopamine D1 receptors there, impairs working memory. This depends on recurrent excitation in prefrontal circuits and is weakened by stress and in schizophrenia."}, {"q": "A rat learns that a tone means a shock. A day later, the tone is played once (recalling the memory), and a protein synthesis blocker is injected into the amygdala right after. The next day, the rat shows little fear. What does this show?", "options": ["Recalling a memory makes it unstable, so it must be stored again with new proteins", "Recalling a memory erases it, so no protein synthesis is needed to lose it", "The drug blocks hearing, so the rat can no longer hear the tone at all", "The drug kills amygdala neurons, so any memory there is lost forever"], "answer": 0, "why": "This is reconsolidation. Reactivating a consolidated memory returns it to a fragile state, and it must be restabilized with new protein synthesis. Blocking that synthesis right after recall weakens the memory, while giving the drug without recall does not. This idea is being explored for treating PTSD and addiction."}]</script></section>
+<script type="application/json" class="frq-data">[{"q": "In Aplysia, the gill-withdrawal reflex can be habituated and sensitized. (a) Describe the cellular mechanism of habituation. (b) Describe the signaling chain in short-term sensitization, from tail shock to stronger reflex. (c) Explain what is needed to convert short-term sensitization into long-term sensitization, and what structural change results.", "answer": "(a) In habituation, repeated gentle touches fire the siphon sensory neurons, but each spike releases less glutamate onto the motor neurons, so the reflex weakens. This synaptic depression comes mainly from fewer ready vesicles at the sensory terminals. The sensory neuron still fires, and the motor neuron still responds normally to transmitter. (b) A tail shock excites facilitating interneurons, which release serotonin onto the sensory neuron terminals. Serotonin acts on G protein–coupled receptors, raising cAMP and activating PKA (and also PKC). PKA closes certain \\(\\ce{K+}\\) channels, so terminal spikes are longer and more \\(\\ce{Ca^{2+}}\\) enters, and it helps move vesicles to release sites. More glutamate is released, and the reflex grows stronger for minutes. (c) Repeated shocks keep PKA active long enough for its catalytic subunits to enter the nucleus, along with MAP kinase. They activate CREB-1 and relieve inhibition by CREB-2, turning on genes needed for growth. New proteins lead to new synaptic terminals between sensory and motor neurons, so the reflex stays strong for days or weeks. Blocking transcription or translation prevents long-term but not short-term sensitization.", "points": ["Habituation: less transmitter released per spike (synaptic depression)", "Sensitization: serotonin, cAMP, PKA, \\(\\ce{K+}\\) channel closure, more \\(\\ce{Ca^{2+}}\\), more release", "Long-term form needs PKA in the nucleus, CREB and new proteins", "Long-term change: growth of new synaptic connections"]}, {"q": "A patient has an ischemic stroke when a clot blocks part of the middle cerebral artery. (a) Explain step by step how lack of blood flow leads to glutamate excitotoxicity in neurons near the clot. (b) Explain how \\(\\ce{Ca^{2+}}\\) overload kills neurons. (c) NMDA receptor blockers protected neurons in animal models but failed in human trials. Give two reasons.", "answer": "(a) Without blood flow, oxygen and glucose run out, so ATP falls. The \\(\\ce{Na+}\\)–\\(\\ce{K+}\\) pump fails, \\(\\ce{Na+}\\) builds up inside, \\(\\ce{K+}\\) leaks out, and neurons depolarize, releasing glutamate. Glutamate transporters, which rely on the \\(\\ce{Na+}\\) gradient, stop working or run backward, so glutamate builds up outside. (b) Excess glutamate overactivates NMDA and other receptors, and depolarization removes the NMDA \\(\\ce{Mg^{2+}}\\) block, so \\(\\ce{Ca^{2+}}\\) floods in. High \\(\\ce{Ca^{2+}}\\) activates proteases like calpain, lipases, and nitric oxide synthase, which together with mitochondrial \\(\\ce{Ca^{2+}}\\) overload create free radicals and trigger cell death. (c) In animals, drugs were given before or right after the stroke, but people arrive hours later, after much of the excitotoxic damage has occurred. NMDA receptors are also needed for normal brain function, so effective doses caused serious side effects such as psychosis and sedation. Other cell death pathways also matter, so blocking one is not enough.", "points": ["No ATP, pumps fail, depolarization, glutamate release, transporters fail or reverse", "NMDA overactivation brings \\(\\ce{Ca^{2+}}\\) overload", "\\(\\ce{Ca^{2+}}\\) activates proteases, lipases, NOS and damages mitochondria", "Trials failed because of late treatment and side effects of blocking normal NMDA signaling"]}]</script>
+</section>
+    </div>
+  </main>
+</div>
+<script>
+/* minimono.js — the house style's behavior. Include before </body>; no init.
+   1. Two panes or one. Full-screen shows both (left ¼ · right ¾). The page
+      goes to one pane when the window isn't full-screen, or when the person
+      hides the left pane (`, or the pane's own "Hide"). Hiding is
+      remembered. Force the layout with <html data-layout="split|single">.
+   2. In one-pane mode the "Menu" link (.menu-hint) is invisible until the
+      pointer enters the top-left zone (left quarter, top sixth); clicking it,
+      or `, opens the left pane as an overlay. Esc, a click outside, or
+      choosing a row closes it. With no pointer (touch), the link stays shown.
+      The overlay is the SAME .pane-l element, moved by a class — never a
+      copy, never rebuilt — so its scroll position and selection survive.
+   3. Safari: trackpad pinch-zoom is blocked; ⌘+ / ⌘− still work.          */
+(function () {
+  'use strict';
+  var html = document.documentElement;
+  var KEY = 'minimono:pane-hidden';
+  var hidden = false;
+  try { hidden = localStorage.getItem(KEY) === '1'; } catch (e) {}
+
+  /* 1. Two panes or one ---------------------------------------------------- */
+  function isFull() {
+    var forced = html.getAttribute('data-layout');
+    if (forced === 'split') return true;
+    if (forced === 'single') return false;
+    // Full-screen or maximized. At the top level, measure the window itself
+    // (outerWidth): ⌘+ zoom shrinks innerWidth but not the window. Embedded
+    // in a frame, the frame's own width is what's available.
+    var top = true;
+    try { top = window.top === window; } catch (e) { top = false; }
+    var w = top && outerWidth > 0 ? outerWidth : innerWidth;
+    return w >= screen.availWidth - 24;
+  }
+  function layout() {
+    var windowed = !isFull();
+    html.classList.toggle('is-windowed', windowed);
+    var single = windowed || hidden;
+    if (single !== html.classList.contains('is-single')) {
+      if (!single) close(true);
+      html.classList.toggle('is-single', single);
+    }
+  }
+  function setHidden(v) {
+    hidden = v;
+    try { localStorage.setItem(KEY, v ? '1' : '0'); } catch (e) {}
+    close(true);
+    layout();
+  }
+  var raf = 0;
+  addEventListener('resize', function () { if (!raf) raf = requestAnimationFrame(function () { raf = 0; layout(); }); });
+  new MutationObserver(layout).observe(html, { attributes: true, attributeFilter: ['data-layout'] });
+
+  /* 2. The overlay --------------------------------------------------------- */
+  var lastFocus = null;
+  function pane() { return document.querySelector('.pane-l'); }
+  function typing(el) {
+    if (!el || el === document.body) return false;
+    if (el.isContentEditable) return true;
+    if (el.tagName === 'TEXTAREA' || el.tagName === 'SELECT') return true;
+    return el.tagName === 'INPUT' && !/^(button|submit|reset|checkbox|radio|range|color|file|image)$/i.test(el.type);
+  }
+  function single() { return html.classList.contains('is-single'); }
+  function isOpen() { return html.classList.contains('menu-open'); }
+  function open(keyboard) {
+    if (!single() || isOpen()) return;
+    html.classList.remove('hint-on');
+    html.classList.add('menu-open');
+    lastFocus = document.activeElement;
+    if (keyboard) {                                   // keyboard: move focus in
+      var p = pane(), cur = p && (p.querySelector('[aria-current="true"]') || p.querySelector('a,button,input,[tabindex]'));
+      if (cur) cur.focus({ preventScroll: true });
+    }
+  }
+  function close(silent) {
+    if (!isOpen()) return;
+    html.classList.remove('menu-open');
+    var p = pane();
+    if (!silent && lastFocus && lastFocus.focus && lastFocus !== document.body) lastFocus.focus({ preventScroll: true });
+    else if (p && p.contains(document.activeElement)) document.activeElement.blur();
+    lastFocus = null;
+  }
+
+  // the top-left zone: left quarter of the width, top sixth of the height.
+  // Entering it shows the menu link; nothing opens until the link is clicked.
+  function inZone(x, y) { return x <= innerWidth / 4 && y <= innerHeight / 6; }
+  var hintTimer = 0;
+  function hint(on) {
+    clearTimeout(hintTimer);
+    if (on) { html.classList.add('hint-on'); return; }
+    hintTimer = setTimeout(function () { html.classList.remove('hint-on'); }, 200);
+  }
+  addEventListener('pointermove', function (e) {
+    if (e.pointerType !== 'mouse') return;
+    hint(single() && !isOpen() && inZone(e.clientX, e.clientY));
+  }, { passive: true });
+  document.addEventListener('mouseleave', function () { hint(false); });
+
+  addEventListener('keydown', function (e) {
+    // ` (backtick) on its own — left alone while typing in a field
+    if (e.key === '`' && !e.metaKey && !e.ctrlKey && !e.altKey && !typing(document.activeElement)) {
+      e.preventDefault();
+      if (html.classList.contains('is-windowed')) { isOpen() ? close() : open(true); }
+      else setHidden(!hidden);                        // full-screen: hide, or dock it again
+      return;
+    }
+    if (e.key === 'Escape' && isOpen()) { e.preventDefault(); close(); }
+  });
+  addEventListener('pointerdown', function (e) {
+    if (!isOpen()) return;
+    var p = pane();
+    if (p && !p.contains(e.target) && !(e.target.closest && e.target.closest('.menu-hint'))) close();
+  });
+  addEventListener('click', function (e) {
+    var t = e.target.closest ? e.target : e.target.parentElement;
+    if (t.closest('.menu-hint')) { e.preventDefault(); isOpen() ? close() : open(false); return; }
+    if (t.closest('.pane-hide')) {                    // docked: "Hide" · hidden overlay: "Keep open"
+      e.preventDefault(); setHidden(!hidden); return;
+    }
+    if (isOpen() && t.closest('.pane-l .row, .pane-l .mcq-nav a')) close();
+  });
+
+  /* Focus rings: only after Tab. Shift, arrows, Space and clicks never show one. */
+  addEventListener('keydown', function (e) { if (e.key === 'Tab') html.classList.add('kbd-nav'); }, true);
+  addEventListener('pointerdown', function () { html.classList.remove('kbd-nav'); }, true);
+
+  /* 3. Safari pinch-zoom ---------------------------------------------------- */
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (t) {
+    document.addEventListener(t, function (e) { e.preventDefault(); }, { passive: false });
+  });
+
+  layout();
+  window.Minimono = {
+    open: function () { open(true); }, close: close,
+    hide: function () { setHidden(true); }, show: function () { setHidden(false); },
+    relayout: layout
+  };
+})();
+
+</script>
+<script>
+/* smooth-scroll.js — Safari's keyboard scrolling, for every pane.
+   ---------------------------------------------------------------------------
+   A port of WebKit's keyboard-scroll physics (ScrollAnimationKeyboard.cpp,
+   KeyboardScroll.h, macOS constants) so Space, arrows, Page Up/Down and
+   Home/End glide and settle on a spring in every scroller — the page, and
+   each two-pane split pane on its own.
+
+     ↑ / ↓            tap: glide one line (40px) · hold: accelerate to
+                      1000px/s in 0.2s, cruise, then the spring carries the
+                      leftover momentum and settles
+     Space / ⇧Space   the same, with a page as the step (the visible height
+     PgDn / PgUp      less 40px of overlap, never less than 87.5% of it):
+                      tap glides at least a page, hold accelerates
+     Home / End       glide to the top / bottom (also ⌘↑ / ⌘↓ on a Mac)
+   Key repeats are ignored while a key is held, as in WebKit.
+
+   Which scroller moves: the one under the pointer, else the one that holds
+   focus, else the last one clicked, else the page.
+   Left alone: any control that uses these keys itself — text fields,
+   sliders, radio groups, selects, contenteditable, tabs, listboxes — and
+   Space on a button, link, checkbox or anything else Space activates. Any key with ⌥/⌃
+   (and ⌘ except ⌘↑/⌘↓) passes through.
+   Respects prefers-reduced-motion: the same steps, applied instantly.
+   No init call — include before </body>. ~3KB. Exposes window.SmoothScroll.  */
+(function () {
+  'use strict';
+  if (window.SmoothScroll) return;
+
+  /* WebKit macOS KeyboardScrollParameters */
+  var MASS = 1, STIFF = 175, DAMP = 20, MAX_VEL_MULT = 25, TIME_TO_MAX = 0.2;
+  var LINE = 40;                         /* Scrollbar::pixelsPerLineStep()          */
+  var PAGE_MIN_FRACTION = 0.875;         /* Scrollbar::minFractionToStepWhenPaging  */
+  var PAGE_OVERLAP = 40;                 /* Scrollbar::maxOverlapBetweenPages        */
+
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
+  var docEl = function () { return document.scrollingElement || document.documentElement; };
+
+  function canScroll(el) {
+    if (el === docEl()) return el.scrollHeight > el.clientHeight;
+    var s = getComputedStyle(el), o = s.overflowY;
+    return (o === 'auto' || o === 'scroll' || o === 'overlay') && el.scrollHeight > el.clientHeight + 1;
+  }
+  function scrollerFrom(node) {
+    for (var el = node; el && el.nodeType === 1; el = el.parentElement) {
+      if (el === document.body || el === document.documentElement) break;
+      if (canScroll(el)) return el;
+    }
+    return canScroll(docEl()) ? docEl() : null;
+  }
+
+  var hovered = null, clicked = null;
+  addEventListener('pointermove', function (e) { if (e.pointerType === 'mouse') hovered = e.target; }, { passive: true });
+  addEventListener('pointerdown', function (e) { clicked = e.target; }, { passive: true });
+  document.addEventListener('mouseleave', function () { hovered = null; });
+
+  function pickScroller() {
+    var a = document.activeElement;
+    return (hovered && scrollerFrom(hovered)) ||
+           (a && a !== document.body && scrollerFrom(a)) ||
+           (clicked && scrollerFrom(clicked)) ||
+           scrollerFrom(document.body);
+  }
+
+  // controls that use arrows / Page / Home / End themselves keep them
+  function ownsKeys(el) {
+    if (!el || el === document.body) return false;
+    if (el.isContentEditable) return true;
+    var t = el.tagName;
+    if (t === 'TEXTAREA' || t === 'SELECT') return true;
+    if (t === 'INPUT') return !/^(button|submit|reset|checkbox|color|file|image)$/i.test(el.type);
+    var r = el.getAttribute && el.getAttribute('role');
+    return !!r && /^(slider|spinbutton|radio|radiogroup|tab|tablist|listbox|option|menu|menubar|menuitem|combobox|grid|tree|treeitem|textbox)$/.test(r);
+  }
+  function spaceActivates(el) {
+    if (!el || el === document.body) return false;
+    if (/^(BUTTON|A|SUMMARY|INPUT)$/.test(el.tagName)) return true;
+    var r = el.getAttribute && el.getAttribute('role');
+    return !!r && /^(button|link|tab|checkbox|radio|switch|menuitem|option|slider)$/.test(r);
+  }
+
+  /* One animator per scroller ------------------------------------------- */
+  var anims = new WeakMap();
+  function Anim(el) {
+    this.el = el; this.pos = el.scrollTop; this.vel = 0;
+    this.held = null; this.ideal = this.pos; this.minTravel = this.pos;
+    this.raf = 0; this.last = 0;
+  }
+  Anim.prototype.max = function () { return this.el.scrollHeight - this.el.clientHeight; };
+  Anim.prototype.sync = function () {
+    // the user may have scrolled by wheel/trackpad since we last moved it
+    if (!this.raf) { this.pos = this.el.scrollTop; this.ideal = this.pos; this.vel = 0; }
+  };
+  Anim.prototype.run = function () {
+    if (this.raf) return;
+    var self = this; this.last = performance.now();
+    this.raf = requestAnimationFrame(function f(t) { self.step(t) ? (self.raf = requestAnimationFrame(f)) : (self.raf = 0); });
+  };
+  Anim.prototype.stop = function () { if (this.raf) cancelAnimationFrame(this.raf); this.raf = 0; this.vel = 0; this.held = null; };
+  Anim.prototype.write = function () {
+    var max = this.max();
+    if (this.pos <= 0 || this.pos >= max) {          // hit an edge: stop there, no overshoot
+      this.pos = Math.min(Math.max(this.pos, 0), max);
+      this.vel = 0; this.ideal = this.pos;
+      this.el.scrollTop = this.pos;
+      return false;
+    }
+    this.el.scrollTop = this.pos;
+    return true;
+  };
+  /* ScrollAnimationKeyboard::animateScroll */
+  Anim.prototype.step = function (t) {
+    var dt = (t - this.last) / 1000; this.last = t;
+    if (dt <= 0) return true;
+    if (dt > 0.05) dt = 0.05;                          // a stalled frame shouldn't fling
+    var force = 0, spring = true, ideal = this.ideal;
+    if (this.held) {
+      force = this.held.force; spring = false; ideal = this.pos;
+      if (Math.abs(this.vel) >= Math.abs(this.held.maxVel)) force = 0;
+    }
+    var disp = this.pos - ideal;
+    if (spring) force -= disp * STIFF + this.vel * DAMP;
+    this.vel += force / MASS * dt;
+    this.pos += this.vel * dt;
+    var inside = this.write();
+    if (spring && disp * (this.pos - ideal) < 0) { this.vel = 0; this.pos = ideal; this.el.scrollTop = ideal; }
+    if (!inside && !this.held) return false;
+    if (!this.held && this.vel * this.vel < 1 && Math.abs(this.pos - ideal) < 0.5) { this.vel = 0; return false; }
+    return true;
+  };
+  /* startKeyboardScroll — velocity carries over, like WebKit */
+  Anim.prototype.hold = function (dir, step) {
+    var maxVel = step * MAX_VEL_MULT * dir;
+    this.held = { dir: dir, maxVel: maxVel, force: maxVel * MASS / TIME_TO_MAX };
+    this.minTravel = this.pos + step * dir;
+    this.run();
+  };
+  /* stopKeyboardScrollAnimation */
+  Anim.prototype.release = function () {
+    if (!this.held) return;
+    var d = Math.sqrt(this.vel * this.vel * MASS / STIFF) * (this.vel < 0 ? -1 : 1);
+    var settle = this.pos + d;
+    this.ideal = this.held.dir > 0 ? Math.max(settle, this.minTravel) : Math.min(settle, this.minTravel);
+    this.ideal = Math.round(Math.min(Math.max(this.ideal, 0), this.max()));
+    this.held = null;
+    this.run();
+  };
+  /* a jump to a target (top / bottom, or the public API): spring there */
+  Anim.prototype.to = function (target) {
+    var base = this.raf && !this.held ? this.ideal : this.pos;
+    if (typeof target === 'function') target = target(base);
+    this.held = null;
+    this.ideal = Math.round(Math.min(Math.max(target, 0), this.max()));
+    this.run();
+  };
+
+  function anim(el) { var a = anims.get(el); if (!a) { a = new Anim(el); anims.set(el, a); } a.sync(); return a; }
+  function pageStep(el) {
+    var h = el === docEl() ? innerHeight : el.clientHeight;
+    return Math.max(h * PAGE_MIN_FRACTION, h - PAGE_OVERLAP);
+  }
+
+  var heldKey = null, heldAnim = null;
+  function releaseHeld() { if (heldAnim) heldAnim.release(); heldKey = heldAnim = null; }
+
+  addEventListener('keydown', function (e) {
+    if (e.defaultPrevented || e.altKey || e.ctrlKey) return;
+    var k = e.key, cmdArrow = e.metaKey && (k === 'ArrowUp' || k === 'ArrowDown');
+    if (e.metaKey && !cmdArrow) return;
+    if (!/^( |ArrowUp|ArrowDown|PageUp|PageDown|Home|End)$/.test(k)) return;
+    var act = document.activeElement;
+    if (ownsKeys(act)) return;
+    if (k === ' ' && spaceActivates(act)) return;
+    if ((k === 'ArrowUp' || k === 'ArrowDown') && e.shiftKey && !cmdArrow) return;   // leave selection alone
+
+    var el = pickScroller(); if (!el) return;
+    e.preventDefault();
+    var edge = cmdArrow || k === 'Home' || k === 'End';
+    if (!edge && (e.repeat || heldKey)) return;                // WebKit ignores repeats and other keys while one is held
+    var a = anim(el), page = pageStep(el);
+
+    if (reduce && reduce.matches) {                       // same steps, no animation
+      a.stop();
+      var dy = k === 'ArrowDown' ? LINE : k === 'ArrowUp' ? -LINE :
+               (k === ' ' && !e.shiftKey) || k === 'PageDown' ? page : page * -1;
+      if (k === 'Home' || (cmdArrow && k === 'ArrowUp')) el.scrollTop = 0;
+      else if (k === 'End' || (cmdArrow && k === 'ArrowDown')) el.scrollTop = el.scrollHeight;
+      else el.scrollTop += dy;
+      return;
+    }
+
+    if (edge) {
+      a.to(k === 'Home' || k === 'ArrowUp' ? 0 : a.max());
+    } else if (k === 'ArrowUp' || k === 'ArrowDown') {
+      heldKey = k; heldAnim = a; a.hold(k === 'ArrowDown' ? 1 : -1, LINE);
+    } else {
+      heldKey = k; heldAnim = a;
+      a.hold((k === ' ' && !e.shiftKey) || k === 'PageDown' ? 1 : -1, page);
+    }
+  });
+  addEventListener('keyup', function (e) { if (e.key === heldKey) releaseHeld(); });
+  addEventListener('blur', releaseHeld);
+  document.addEventListener('visibilitychange', function () { if (document.hidden) releaseHeld(); });
+  /* a wheel/trackpad scroll takes over from a gliding key scroll */
+  addEventListener('wheel', function (e) {
+    var el = scrollerFrom(e.target), a = el && anims.get(el);
+    if (a && a.raf && !a.held) a.stop();
+  }, { passive: true });
+
+  window.SmoothScroll = {
+    /* programmatic glide, e.g. SmoothScroll.to(pane, 0) to send a pane home */
+    to: function (el, y) { anim(el || docEl()).to(y); },
+    by: function (el, dy) { var a = anim(el || docEl()); a.to(function (b) { return b + dy; }); }
+  };
+})();
+
+</script>
+<script>
+/* quiz.js — multiple-choice questions, the house way. Include before </body>; no init.
+
+   Write each quiz as JSON inside a .mcq element. The page builds it once,
+   at load; answering only changes classes and text.
+
+     <section class="mcq" data-title="Chapter 5 practice">
+       <script type="application/json">[
+         { "q": "If \\(t = \\sqrt{\\dfrac{2h}{g}}\\), how much taller must the table be to double \\(t\\)?",
+           "options": ["\\(2\\times\\)", "\\(4\\times\\)", "\\(8\\times\\)"],
+           "answer": 1,                       (0-based index into options, or a letter)
+           "why": "\\(t \\propto \\sqrt{h}\\), so doubling \\(t\\) takes \\(4h\\)." }
+       ]<\/script>                         (written <\/script here so the file can be inlined)
+     </section>
+
+   Randomized, always: the question order and each question's options are
+   shuffled the first time the quiz opens, kept through reloads (so progress
+   and the letters you talk about stay put), and reshuffled on Start over.
+   Never refer to a letter or a position in a question, option or why.
+
+   Optional: an empty <nav class="mcq-nav"></nav> (the left pane of a quiz
+   page) becomes the question numbers: plain = unanswered, underlined =
+   right, struck through = wrong. Clicking one glides to that question.
+
+   Answer with a click, or press A–F or 1–6. Keys go to the question that
+   holds focus or sits under the pointer, else the first unanswered one on
+   screen. An answer shows Correct / Incorrect, marks the right option,
+   strikes a wrong pick, shows the why, and locks the question. A keyboard
+   answer glides on to the next unanswered question.
+
+   Copy answers is always there: plain text with each question, its
+   options, your answer or Skipped, and the right answer. Math stays LaTeX
+   ($…$) so it pastes cleanly into a chat.
+
+   MCQ.audit() lists anything that gives an answer away: the right option
+   longest or shortest, options of very different length, a hedge only on
+   the right one or an absolute only on the wrong ones, "all/none of the
+   above", duplicates, a missing why, a slash fraction. It must come back
+   empty before a quiz is published; the same list goes to the console.     */
+(function () {
+  'use strict';
+  if (window.MCQ) return;
+  var LETTERS = 'ABCDEF';
+  var quizzes = [];
+  var hoverQ = null;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
+
+  /* ── helpers ──────────────────────────────────────────────────────────── */
+  function make(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  // punctuation right after inline math moves inside it, so a line can't start with ", "
+  function glue(s) { return String(s).replace(/\\\)([.,;:!?])/g, '$1\\)'); }
+  function asPlain(s) { return String(s).replace(/\\\(|\\\)/g, '$').replace(/\\\[|\\\]/g, '$$$$'); }
+  function hash(s) { var h = 0; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); }
+  function newSeed() {
+    try { var a = new Uint32Array(1); crypto.getRandomValues(a); return a[0]; }
+    catch (e) { return (Math.random() * 4294967296) >>> 0; }
+  }
+  function rng(seed) {                                 // mulberry32: small, seedable, even
+    return function () {
+      seed = (seed + 0x6D2B79F5) | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function shuffled(n, rand) {                         // Fisher–Yates
+    var a = []; for (var i = 0; i < n; i++) a.push(i);
+    for (var j = n - 1; j > 0; j--) { var k = Math.floor(rand() * (j + 1)), t = a[j]; a[j] = a[k]; a[k] = t; }
+    return a;
+  }
+  function answerIndex(answer, n) {
+    if (typeof answer === 'number') return answer >= 0 && answer < n ? answer : 0;
+    var j = LETTERS.indexOf(String(answer).trim().toUpperCase());
+    return j >= 0 && j < n ? j : 0;
+  }
+  function scrollerOf(node) {
+    for (var e = node.parentElement; e && e !== document.body; e = e.parentElement) {
+      var o = getComputedStyle(e).overflowY;
+      if ((o === 'auto' || o === 'scroll') && e.scrollHeight > e.clientHeight) return e;
+    }
+    return document.scrollingElement || document.documentElement;
+  }
+  function glideTo(node) {
+    var sc = scrollerOf(node), page = sc === (document.scrollingElement || document.documentElement);
+    var top = node.getBoundingClientRect().top - (page ? 0 : sc.getBoundingClientRect().top);
+    var y = Math.max(0, sc.scrollTop + top - sc.clientHeight * 0.18);
+    if (reduce && reduce.matches) sc.scrollTop = y;
+    else if (window.SmoothScroll) SmoothScroll.to(sc, y);
+    else sc.scrollTo({ top: y, behavior: 'smooth' });
+  }
+  function shown(q) { return q.li.offsetParent !== null; }
+  function onScreen(q) { var r = q.li.getBoundingClientRect(); return r.bottom > 40 && r.top < innerHeight - 40; }
+  function copyText(btn, text, fallback) {
+    var label = btn.firstChild, was = label.nodeValue;
+    function done() { fallback.hidden = true; label.nodeValue = 'Copied'; setTimeout(function () { label.nodeValue = was; }, 1400); }
+    function fail() { fallback.value = text; fallback.hidden = false; fallback.focus(); fallback.select(); }
+    try { navigator.clipboard.writeText(text).then(done, fail); } catch (e) { fail(); }
+  }
+
+  /* ── the giveaway check ───────────────────────────────────────────────── */
+  var HEDGE = /\b(usually|often|generally|typically|mostly|may|might|can|sometimes|tends? to|about|roughly)\b/i;
+  var ABSOLUTE = /\b(always|never|only|all|none|every|completely|entirely|impossible|guaranteed)\b/i;
+  function words(s) {                                  // what a reader sees: LaTeX commands and delimiters out
+    return String(s).replace(/\\[a-zA-Z]+/g, ' ').replace(/[\\{}()\[\]^_$]/g, '').replace(/\s+/g, ' ').trim();
+  }
+  function auditOne(d, i) {
+    var out = [], n = (d.options || []).length, ans = answerIndex(d.answer, n);
+    var say = function (msg) { out.push({ question: i + 1, text: words(d.q).slice(0, 60), issue: msg }); };
+    if (n < 3) say('fewer than 3 options');
+    if (!d.why) say('no why');
+    var opts = (d.options || []).map(words), lens = opts.map(function (o) { return o.length; });
+    if (new Set((d.options || []).map(function (o) { return String(o).replace(/\s+/g, ' ').trim().toLowerCase(); })).size < n) say('two options are the same');
+    if (opts.some(function (o) { return /\b(all|none|both|neither) of (the|these) (above|options)\b/i.test(o); })) say('"all / none / both of the above"');
+    var max = Math.max.apply(null, lens), min = Math.min.apply(null, lens);
+    if (max > 12) {                                    // short answers (numbers, symbols) can't give much away by length
+      if (max / Math.max(min, 1) > 1.5) say('options differ a lot in length (' + min + '–' + max + ' characters)');
+      var others = lens.filter(function (_, j) { return j !== ans; });
+      var nextLong = Math.max.apply(null, others), nextShort = Math.min.apply(null, others);
+      if (lens[ans] > nextLong && lens[ans] >= nextLong * 1.15) say('the right answer is the longest option');
+      if (lens[ans] < nextShort && lens[ans] <= nextShort * 0.85) say('the right answer is the shortest option');
+    }
+    var wrong = opts.filter(function (_, j) { return j !== ans; });
+    if (HEDGE.test(opts[ans]) && !wrong.some(function (o) { return HEDGE.test(o); })) say('only the right answer hedges ("usually", "can"…)');
+    if (!ABSOLUTE.test(opts[ans]) && wrong.length && wrong.every(function (o) { return ABSOLUTE.test(o); })) say('only the wrong answers use absolutes ("always", "never"…)');
+    [d.q, d.why].concat(d.options || []).forEach(function (s) {
+      (String(s || '').match(/\\\(([\s\S]*?)\\\)|\\\[([\s\S]*?)\\\]/g) || []).forEach(function (m) {
+        if (m.indexOf('/') !== -1) say('slash fraction in math: ' + m.slice(0, 30));
+      });
+      if (/\b(?:[Oo]ption|[Aa]nswer(?: is)?|[Cc]hoice|[Ll]etter) [A-F]\b/.test(words(s))) say('refers to a letter, but options are shuffled');
+    });
+    return out;
+  }
+
+  /* ── one quiz ─────────────────────────────────────────────────────────── */
+  function build(root) {
+    var src = root.querySelector('script[type="application/json"]'), data;
+    try { data = JSON.parse(src.textContent); } catch (e) { return; }
+    if (!Array.isArray(data) || !data.length) return;
+    var title = root.getAttribute('data-title') || document.title;
+    var key = 'minimono:mcq2:' + hash(data.map(function (d) { return d.q + '\u0001' + (d.options || []).join('\u0001'); }).join('\n'));
+    var state = null;
+    try { state = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
+    if (!state || typeof state.seed !== 'number' || !Array.isArray(state.answers)) state = { seed: newSeed(), answers: [] };
+
+    var quiz = { root: root, data: data, qs: [], order: [], nav: null };
+    var list = make('ol', 'mcq-list');
+    var nav = document.querySelector(root.getAttribute('data-nav') || '.mcq-nav');  // one nav per test
+    if (nav && !nav.dataset.built) { nav.dataset.built = '1'; quiz.nav = nav; }
+    var base = quizzes.reduce(function (s, z) { return s + z.qs.length; }, 0);
+
+    // every element is made once, here; shuffling only moves them
+    data.forEach(function (d, i) {
+      var li = make('li', 'mcq-q');
+      li.id = 'mcq-' + (base + i + 1);
+      li.tabIndex = -1;                                 // holds focus between answers, so Space still scrolls
+      var num = make('span', 'mcq-n');
+      num.setAttribute('aria-hidden', 'true');
+      var body = make('div', 'mcq-body');
+      var text = make('div', 'mcq-text', glue(d.q));
+      var opts = make('div', 'mcq-opts');
+      opts.setAttribute('role', 'group');
+      var btns = (d.options || []).map(function (o) {
+        var b = make('button', 'mcq-opt');
+        b.type = 'button';
+        var l = make('span', 'mcq-l');
+        b._letter = l.appendChild(document.createTextNode(''));
+        b.append(l, make('span', 'mcq-t', glue(o)));
+        return b;
+      });
+      var fb = make('p', 'mcq-fb');
+      fb.hidden = true;
+      fb.setAttribute('aria-live', 'polite');
+      var fbt = fb.appendChild(document.createTextNode(''));
+      var why = make('p', 'mcq-why', glue(d.why || ''));
+      why.hidden = true;
+      body.append(text, opts, fb, why);
+      li.append(num, body);
+
+      var q = { quiz: quiz, i: i, d: d, li: li, num: num.appendChild(document.createTextNode('')), opts: opts, btns: btns,
+                fb: fb, fbt: fbt, why: why, ans: answerIndex(d.answer, btns.length), chosen: -1, perm: [], navA: null };
+      li._mcq = q;
+      btns.forEach(function (b, o) {                   // o = the option's index in the JSON
+        b.addEventListener('click', function (e) { choose(q, q.perm.indexOf(o), e.detail === 0); });   // detail 0 = Enter / Space
+      });
+      li.addEventListener('pointerenter', function () { hoverQ = q; });
+      li.addEventListener('pointerleave', function () { if (hoverQ === q) hoverQ = null; });
+      if (quiz.nav) {
+        var a = make('a', 'mcq-nav-n');
+        a.href = '#' + li.id;
+        q.navT = a.appendChild(document.createTextNode(''));
+        a.addEventListener('click', function (e) { e.preventDefault(); glideTo(li); li.focus({ preventScroll: true }); });
+        q.navA = a;
+      }
+      quiz.qs.push(q);
+    });
+
+    var bar = make('div', 'mcq-bar');
+    var copyB = make('button', 'btn mcq-copy', 'Copy answers');
+    copyB.type = 'button';
+    var resetB = make('button', 'btn mcq-reset', 'Start over');
+    resetB.type = 'button';
+    var score = make('span', 'mcq-score');
+    score.setAttribute('aria-live', 'polite');
+    var scoreT = score.appendChild(document.createTextNode(''));
+    var fallback = make('textarea', 'mcq-fallback');
+    fallback.readOnly = true;
+    fallback.hidden = true;
+    fallback.setAttribute('aria-label', 'Answers to copy');
+    bar.append(copyB, resetB, score);
+    root.append(list, bar, fallback);
+
+    // lay the questions and options out in the order the seed gives
+    function arrange(seed) {
+      var rand = rng(seed);
+      quiz.order = shuffled(quiz.qs.length, rand).map(function (i) { return quiz.qs[i]; });
+      quiz.qs.forEach(function (q) { q.perm = shuffled(q.btns.length, rand); });
+      quiz.order.forEach(function (q, p) {
+        list.append(q.li);
+        q.num.nodeValue = String(p + 1);
+        q.opts.setAttribute('aria-label', 'Question ' + (p + 1));
+        q.perm.forEach(function (o, j) { q.opts.append(q.btns[o]); q.btns[o]._letter.nodeValue = LETTERS[j]; });
+        if (q.navA) { quiz.nav.append(q.navA); q.navT.nodeValue = String(p + 1); }
+      });
+    }
+    function mark(q) {
+      var done = q.chosen >= 0, right = done && q.chosen === q.ans;
+      q.li.classList.toggle('is-done', done);
+      q.li.classList.toggle('is-wrong', done && !right);
+      q.btns.forEach(function (b, o) {
+        b.classList.toggle('is-chosen', done && o === q.chosen);
+        b.classList.toggle('is-answer', done && o === q.ans);
+        if (done) b.setAttribute('aria-disabled', 'true'); else b.removeAttribute('aria-disabled');
+      });
+      q.fbt.nodeValue = !done ? '' : right ? 'Correct.' : 'Incorrect. The answer is ' + LETTERS[q.perm.indexOf(q.ans)] + '.';
+      q.fb.hidden = !done;
+      q.why.hidden = !done || !q.d.why;
+      if (q.navA) { q.navA.classList.toggle('is-right', right); q.navA.classList.toggle('is-wrong', done && !right); }
+    }
+    function save() {
+      try { localStorage.setItem(key, JSON.stringify({ seed: state.seed, answers: quiz.qs.map(function (q) { return q.chosen; }) })); } catch (e) {}
+    }
+    function tally() {
+      var answered = 0, right = 0;
+      quiz.qs.forEach(function (q) { if (q.chosen >= 0) { answered++; if (q.chosen === q.ans) right++; } });
+      var left = quiz.qs.length - answered;
+      scoreT.nodeValue = !answered ? '' : right + ' of ' + answered + ' correct' + (left ? ' · ' + left + ' left' : '');
+      save();
+    }
+    function next(q) {
+      var p = quiz.order.indexOf(q);
+      var rest = quiz.order.slice(p + 1).concat(quiz.order.slice(0, p)).filter(function (x) { return x.chosen < 0; });
+      if (rest.length) { rest[0].li.focus({ preventScroll: true }); glideTo(rest[0].li); }
+      else { q.li.focus({ preventScroll: true }); glideTo(root.querySelector('.frq-q') || bar); }  // on to the FRQs
+    }
+    function choose(q, j, advance) {                   // j = position on screen
+      if (q.chosen >= 0 || j < 0 || j >= q.btns.length) return;   // answered questions stay locked
+      q.chosen = q.perm[j];
+      mark(q);
+      tally();
+      if (advance) next(q);
+      else q.li.focus({ preventScroll: true });        // off the button, so Space scrolls again
+    }
+    quiz.choose = choose;
+
+    copyB.addEventListener('click', function () {
+      var lines = [title, ''], answered = 0, right = 0;
+      quiz.order.forEach(function (q, p) {
+        lines.push((p + 1) + '. ' + asPlain(q.d.q));
+        q.perm.forEach(function (o, j) { lines.push('   ' + LETTERS[j] + '. ' + asPlain(q.d.options[o])); });
+        var A = LETTERS[q.perm.indexOf(q.ans)];
+        if (q.chosen < 0) lines.push('   Skipped. Answer: ' + A);
+        else {
+          answered++;
+          var C = LETTERS[q.perm.indexOf(q.chosen)];
+          if (q.chosen === q.ans) { right++; lines.push('   Your answer: ' + C + ' (correct)'); }
+          else lines.push('   Your answer: ' + C + ' (incorrect). Answer: ' + A);
+        }
+        lines.push('');
+      });
+      var skipped = quiz.qs.length - answered;
+      lines.push('Score: ' + right + ' of ' + quiz.qs.length + (skipped ? ' (' + skipped + ' skipped)' : ''));
+      copyText(copyB, lines.join('\n'), fallback);
+    });
+    resetB.addEventListener('click', function () {      // a fresh order: same elements, moved
+      quiz.qs.forEach(function (q) { q.chosen = -1; mark(q); });
+      state.seed = newSeed();
+      arrange(state.seed);
+      tally();
+      var first = quiz.order[0];
+      glideTo(first.li);
+      first.li.focus({ preventScroll: true });
+    });
+
+    arrange(state.seed);
+    quiz.qs.forEach(function (q, i) {                  // reopen where you left off
+      var s = state.answers[i];
+      if (typeof s === 'number' && s >= 0 && s < q.btns.length) { q.chosen = s; mark(q); }
+    });
+    tally();
+    quizzes.push(quiz);
+
+    var issues = data.reduce(function (acc, d, i) { return acc.concat(auditOne(d, i)); }, []);
+    if (issues.length && window.console) console.warn('quiz.js: ' + issues.length + ' question(s) give the answer away', issues);
+
+    var MJ = window.MathJax, targets = [root].concat(quiz.nav ? [quiz.nav] : []);
+    if (MJ && MJ.startup && MJ.startup.promise) MJ.startup.promise.then(function () { return MJ.typesetPromise(targets); }).catch(function () {});
+    else if (MJ && typeof MJ.typesetPromise === 'function') MJ.typesetPromise(targets).catch(function () {});
+  }
+
+  /* ── keys: A–F or 1–6 answer the current question ─────────────────────── */
+  function current() {
+    var a = document.activeElement, li = a && a.closest && a.closest('.mcq-q');
+    var q = li && li._mcq;
+    if (q && q.chosen < 0 && shown(q)) return q;
+    if (hoverQ && hoverQ.chosen < 0 && shown(hoverQ)) return hoverQ;
+    var lis = document.querySelectorAll('.mcq-q');      // page order = the shuffled order
+    for (var i = 0; i < lis.length; i++) {
+      var x = lis[i]._mcq;
+      if (x && x.chosen < 0 && shown(x) && onScreen(x)) return x;
+    }
+    return null;
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey || e.repeat || e.defaultPrevented) return;
+    var a = document.activeElement;
+    if (a && (a.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))) return;
+    var j = e.key.length === 1 ? LETTERS.indexOf(e.key.toUpperCase()) : -1;
+    if (j < 0 && /^[1-6]$/.test(e.key)) j = +e.key - 1;
+    if (j < 0) return;
+    var q = current();
+    if (!q || j >= q.btns.length) return;
+    e.preventDefault();
+    q.quiz.choose(q, j, true);
+  });
+
+  function init() {
+    document.querySelectorAll('.mcq').forEach(function (r) {
+      if (!r.dataset.built) { r.dataset.built = '1'; build(r); }
+    });
+  }
+  init();                                               // the quiz markup sits above this script
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+
+  window.MCQ = {
+    init: init,
+    // every giveaway in every quiz on the page; must be empty before publishing
+    audit: function () {
+      return quizzes.reduce(function (acc, z) {
+        return acc.concat(z.data.reduce(function (a2, d, i) { return a2.concat(auditOne(d, i)); }, []));
+      }, []);
+    },
+    _shuffle: function (n, seed) { return shuffled(n, rng(seed)); }   // for tests
+  };
+})();
+
+</script>
+<script>
+
+/* page.js — this page's own behavior: FRQs, switching between the two tests,
+   and holding the questions back until the math is drawn. Everything is made
+   once at load; switching and answering only change attributes and text.  */
+(function () {
+  'use strict';
+  var html = document.documentElement;
+  var pane = document.querySelector('.pane-r');
+  var tests = [].slice.call(document.querySelectorAll('.test'));
+  var rows = [].slice.call(document.querySelectorAll('.pane-l .row[data-test]'));
+  var navs = {}, mem = {}, cur = null;
+
+  function make(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function glue(s) { return String(s).replace(/\\\)([.,;:!?])/g, '$1\\)'); }
+  function asPlain(s) { return String(s).replace(/\\\(|\\\)/g, '$').replace(/\\\[|\\\]/g, '$$$$'); }
+  function glide(el) {
+    var top = el.getBoundingClientRect().top - pane.getBoundingClientRect().top;
+    var y = Math.max(0, pane.scrollTop + top - pane.clientHeight * 0.18);
+    if (window.SmoothScroll) SmoothScroll.to(pane, y); else pane.scrollTop = y;
+  }
+  function copy(btn, text, fallback) {
+    var label = btn.firstChild, was = label.nodeValue;
+    function done() { fallback.hidden = true; label.nodeValue = 'Copied'; setTimeout(function () { label.nodeValue = was; }, 1400); }
+    function fail() { fallback.value = text; fallback.hidden = false; fallback.focus(); fallback.select(); }
+    try { navigator.clipboard.writeText(text).then(done, fail); } catch (e) { fail(); }
+  }
+
+  tests.forEach(function (t) {
+    var root = t.querySelector('.mcq');
+    var nav = document.querySelector(root.getAttribute('data-nav'));
+    navs[t.id] = nav;
+    var data = JSON.parse(t.querySelector('script.frq-data').textContent);
+    var n0 = JSON.parse(root.querySelector('script[type="application/json"]').textContent).length;
+    var key = 'bipn:frq:' + t.getAttribute('data-key');
+    var saved = null;
+    try { saved = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
+    if (!saved || !Array.isArray(saved.text)) saved = { text: [], open: [] };
+
+    var list = make('ol', 'frq-list');
+    var items = data.map(function (d, i) {
+      var n = n0 + i + 1;
+      var li = make('li', 'frq-q');
+      li.id = t.id + '-frq-' + (i + 1);
+      li.tabIndex = -1;
+      var num = make('span', 'mcq-n', String(n));
+      num.setAttribute('aria-hidden', 'true');
+      var body = make('div', 'mcq-body');
+      var text = make('div', 'mcq-text', glue(d.q));
+      var box = make('textarea', 'frq-in');
+      box.id = li.id + '-in';
+      box.rows = 6;
+      box.spellcheck = false;
+      box.setAttribute('aria-label', 'Your answer to question ' + n);
+      box.value = saved.text[i] || '';
+      var act = make('div', 'frq-act');
+      var btn = make('button', 'btn frq-show');
+      btn.type = 'button';
+      var label = btn.appendChild(document.createTextNode('Show answer'));
+      act.append(btn);
+      var ans = make('div', 'frq-ans');
+      ans.append(make('p', null, glue(d.answer)));
+      if (d.points && d.points.length) {
+        var ul = make('ul', 'frq-pts');
+        d.points.forEach(function (p) { ul.append(make('li', null, glue(p))); });
+        ans.append(ul);
+      }
+      body.append(text, box, act, ans);
+      li.append(num, body);
+      list.append(li);
+      var it = { d: d, n: n, li: li, box: box, ans: ans, navA: null };
+      it.open = function (v) {
+        ans.hidden = !v;
+        label.nodeValue = v ? 'Hide answer' : 'Show answer';
+        btn.setAttribute('aria-expanded', v ? 'true' : 'false');
+      };
+      it.open(!!saved.open[i]);
+      btn.addEventListener('click', function () { it.open(ans.hidden); save(); });
+      box.addEventListener('input', save);
+      if (nav) {
+        var a = make('a', 'mcq-nav-n', String(n));
+        a.href = '#' + li.id;
+        a.addEventListener('click', function (e) { e.preventDefault(); glide(li); li.focus({ preventScroll: true }); });
+        it.navA = a;
+      }
+      return it;
+    });
+    function save() {
+      try {
+        localStorage.setItem(key, JSON.stringify({
+          text: items.map(function (x) { return x.box.value; }),
+          open: items.map(function (x) { return !x.ans.hidden; })
+        }));
+      } catch (e) {}
+    }
+    function navTail() { if (nav) items.forEach(function (x) { nav.append(x.navA); }); }
+
+    var bar = root.querySelector('.mcq-bar');
+    var fallback = root.querySelector('.mcq-fallback');
+    var reset = root.querySelector('.mcq-reset');
+    root.insertBefore(list, bar);
+    navTail();
+
+    var copyW = make('button', 'btn frq-copy');
+    copyW.type = 'button';
+    copyW.appendChild(document.createTextNode('Copy written answers'));
+    bar.insertBefore(copyW, reset);
+    copyW.addEventListener('click', function () {
+      var lines = [root.getAttribute('data-title') + ', written answers', ''];
+      items.forEach(function (x) {
+        lines.push(x.n + '. ' + asPlain(x.d.q));
+        lines.push('   Your answer: ' + (x.box.value.trim() || 'Skipped'));
+        lines.push('   Model answer: ' + asPlain(x.d.answer));
+        (x.d.points || []).forEach(function (p) { lines.push('   - ' + asPlain(p)); });
+        lines.push('');
+      });
+      copy(copyW, lines.join('\n'), fallback);
+    });
+    reset.addEventListener('click', function () {   // quiz.js reshuffles first; then clear the written answers
+      items.forEach(function (x) { x.box.value = ''; x.open(false); });
+      save();
+      navTail();
+    });
+  });
+
+  // the two tests already exist; switching only flips `hidden` and aria-current
+  function show(id) {
+    if (!/^test-\d+$/.test(id) || !document.getElementById(id)) id = tests[0].id;
+    if (cur === id) return;
+    if (cur) mem[cur] = pane.scrollTop;
+    tests.forEach(function (t) { t.hidden = t.id !== id; });
+    rows.forEach(function (r) { r.setAttribute('aria-current', r.getAttribute('data-test') === id ? 'true' : 'false'); });
+    Object.keys(navs).forEach(function (k) { if (navs[k]) navs[k].hidden = k !== id; });
+    cur = id;
+    pane.scrollTop = mem[id] || 0;
+  }
+  function fromHash() { show((location.hash || '').slice(1)); }
+  addEventListener('hashchange', fromHash);
+  fromHash();
+
+  // the questions wait behind the loading ring until MathJax has drawn them
+  window.__mathReady = function () { html.classList.remove('mj-wait'); };
+  setTimeout(window.__mathReady, 9000);
+})();
+
+</script>
+</body>
+</html>
