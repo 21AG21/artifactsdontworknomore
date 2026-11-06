@@ -1,0 +1,1145 @@
+<!doctype html>
+<html lang="en" class="mj-wait">
+<head>
+<meta charset="utf-8">
+<title>BIPN 102 Midterm 1 Practice</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="BIPN 102 Human Physiology II: two 30-minute Midterm 1 practice tests, 30 MCQs and 2 FRQs each.">
+<style>
+/* minimono.css — the house style's base: tokens, type, the two-pane layout,
+   the windowed overlay, and flat native controls.
+   Targets two screens: MacBook Air 15" (1710×1107, 2×) and Dell P2423D
+   (2560×1440, 1×). Every line is 1px — half-pixels vanish on the Dell.     */
+
+/* ── Tokens ─────────────────────────────────────────────────────────────── */
+:root{
+  color-scheme: light dark;            /* native controls + scrollbars follow the theme */
+  --ground:#EEF1F4; --wall:#ffffff;
+  --ink:#0a0a0b; --ink-soft:#5F6368; --muted:#9c9ca3;
+  --hair:rgba(10,10,12,.13); --hair-soft:rgba(10,10,12,.08);
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",system-ui,sans-serif;
+  --pane-l:25%;                        /* the left pane is one quarter, always */
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --ground:#000000; --wall:#161618; --ink:#f6f6f8; --ink-soft:#a0a0a8; --muted:#67676f;
+  --hair:rgba(255,255,255,.16); --hair-soft:rgba(255,255,255,.09);
+}}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#000000; --wall:#161618; --ink:#f6f6f8; --ink-soft:#a0a0a8; --muted:#67676f;
+  --hair:rgba(255,255,255,.16); --hair-soft:rgba(255,255,255,.09);
+}
+:root[data-theme="light"]{ color-scheme: light; }
+
+/* ── Base ───────────────────────────────────────────────────────────────── */
+*,*::before,*::after{ box-sizing:border-box; }
+html,body{ margin:0; height:100%; overflow:hidden; }
+body{
+  background:var(--ground); color:var(--ink);
+  font:16px/1.5 var(--sans); -webkit-font-smoothing:antialiased;
+  font-variant-numeric:tabular-nums;
+}
+:focus, :focus-visible{ outline:none; }
+/* focus shows only after Tab (minimono.js sets .kbd-nav; any click clears it),
+   as a thin grey line — never a bright ring, never from Shift or a click */
+html.kbd-nav :focus-visible{ outline:1px solid var(--muted); outline-offset:3px; border-radius:6px; }
+/* text selection keeps the system highlight — never restyle ::selection */
+a{ color:inherit; text-decoration:none; }
+/* scrollbars: left to macOS — overlay, thin, shown while scrolling. Never hidden. */
+
+/* ── Type (tuned for 1710 and 2560 wide). Weights: 300 · 400 · 500, never more ─ */
+.hero { font-size:clamp(64px, 4.6vw, 112px); font-weight:300; line-height:1.02; letter-spacing:-.035em; margin:0; }
+.h2   { font-size:clamp(28px, 1.9vw, 40px);  font-weight:500; line-height:1.15; letter-spacing:-.02em; margin:0; }
+.text { font-size:clamp(17px, 1.05vw, 20px); line-height:1.55; max-width:68ch; }
+.label{ font-size:13px; font-weight:500; color:var(--ink-soft); letter-spacing:.005em; }
+.num  { font-weight:400; letter-spacing:-.02em; }
+
+/* ── Layout: two panes, left ¼ · right ¾, each its own scroller ─────────── */
+#app{ display:flex; height:100dvh; }
+.pane-l{
+  flex:0 0 var(--pane-l); height:100%; overflow-y:auto; overscroll-behavior:contain;
+  border-right:1px solid var(--hair-soft); background:var(--ground);
+  padding:48px 32px 64px;
+}
+.pane-r{ flex:1 1 auto; min-width:0; height:100%; overflow-y:auto; overscroll-behavior:contain; }
+.pane-r .body{ max-width:1120px; padding:56px clamp(48px, 5vw, 120px) 120px; }
+
+/* the list in the left pane */
+.row{
+  display:block; width:100%; padding:14px 0; border-bottom:1px solid var(--hair-soft);
+  font-size:clamp(17px, 1.15vw, 22px); color:var(--ink-soft); cursor:pointer;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.row:last-child{ border-bottom:0; }
+@media (hover:hover){ .row:hover{ color:var(--ink); } }
+.row[aria-current="true"]{ color:var(--ink); font-weight:500; }
+.row:active{ opacity:.6; }
+
+/* ── One-pane mode: windowed, or the person hid the left pane ────────────
+   The left pane leaves the layout; it comes back as an overlay (the SAME
+   element, moved) when the pointer enters the top-left zone — the left
+   quarter of the width, the top sixth of the height — or on `.           */
+.pane-hide{
+  border:0; background:none; padding:4px 0; margin:0;
+  font:inherit; font-size:13px; color:var(--ink-soft); cursor:pointer; text-align:left;
+}
+.pane-hide kbd{ font:inherit; color:var(--muted); margin-left:6px; }
+.pane-hide .keep{ display:none; }
+html.is-single .pane-hide .hide{ display:none; }
+html.is-single .pane-hide .keep{ display:inline; }
+html.is-windowed .pane-hide{ display:none; }        /* windowed: the overlay is the only way it shows */
+@media (hover:hover){ .pane-hide:hover{ color:var(--ink); } }
+.menu-hint{ display:none; }
+/* one-pane mode: the link sits in the top-left zone, invisible until the
+   pointer enters that zone (or it takes keyboard focus); always shown on touch */
+html.is-single .menu-hint{
+  display:block; position:fixed; z-index:15;
+  top:calc(env(safe-area-inset-top, 0px) + 18px); left:max(16px, env(safe-area-inset-left, 0px), 2vw);
+  padding:6px 10px; margin:0; border-radius:8px; background:var(--ground);
+  font-size:13px; color:var(--ink-soft); cursor:pointer;
+  opacity:0; pointer-events:none; transition:opacity .14s ease;
+}
+html.is-single .menu-hint kbd{ font:inherit; color:var(--muted); margin-left:6px; }
+html.is-single.hint-on .menu-hint,
+html.kbd-nav.is-single .menu-hint:focus-visible{ opacity:1; pointer-events:auto; }
+@media (hover:none){ html.is-single .menu-hint{ opacity:1; pointer-events:auto; } }
+@media (hover:hover){ html.is-single .menu-hint:hover{ color:var(--ink); } }
+
+html.is-single .pane-l{
+  position:fixed; z-index:20; inset:0 auto 0 0; width:clamp(280px, 25vw, 640px);
+  transform:translateX(-100%); visibility:hidden;
+  transition:transform .22s cubic-bezier(.32,.72,0,1), visibility 0s linear .22s;
+}
+html.is-single.menu-open .pane-l{
+  transform:none; visibility:visible; border-right:1px solid var(--hair);
+  transition:transform .22s cubic-bezier(.32,.72,0,1), visibility 0s;
+}
+
+/* ── Controls: native elements, flat ────────────────────────────────────── */
+/* slider + checkbox + radio take ink through accent-color, natively */
+input[type="range"], input[type="checkbox"], input[type="radio"]{ accent-color:var(--ink); }
+input[type="range"]{ width:100%; max-width:420px; cursor:pointer; }
+
+/* toggle: a checkbox with role="switch", drawn flat */
+input[type="checkbox"][role="switch"]{
+  -webkit-appearance:none; appearance:none; margin:0; flex:none; cursor:pointer;
+  position:relative; width:40px; height:24px; border-radius:999px;
+  background:var(--hair); transition:background .16s ease;
+}
+input[type="checkbox"][role="switch"]::before{
+  content:""; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:999px;
+  background:var(--ground); transition:transform .18s cubic-bezier(.32,.72,0,1);
+}
+input[type="checkbox"][role="switch"]:checked{ background:var(--ink); }
+input[type="checkbox"][role="switch"]:checked::before{ transform:translateX(16px); }
+
+/* segmented choice: a radio group; the chosen one is heavier ink + a 2px mark */
+.seg{ display:inline-flex; gap:28px; border:0; padding:0; margin:0; }
+.seg label{ position:relative; cursor:pointer; padding:6px 0; color:var(--ink-soft); font-weight:400; }
+.seg input{ position:absolute; opacity:0; width:1px; height:1px; }
+.seg input:checked + span{ color:var(--ink); font-weight:500; }
+.seg input:checked + span::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:2px; background:var(--ink); border-radius:2px;
+}
+html.kbd-nav .seg input:focus-visible + span{ outline:1px solid var(--muted); outline-offset:4px; border-radius:6px; }
+@media (hover:hover){ .seg label:hover span{ color:var(--ink); } }
+
+/* search */
+input[type="search"]{
+  -webkit-appearance:none; appearance:none; width:100%; max-width:420px;
+  font:inherit; font-size:16px; color:var(--ink);
+  background:var(--wall); border:0; border-radius:10px; padding:10px 14px;
+}
+input[type="search"]::placeholder{ color:var(--muted); }
+
+/* buttons: only for real actions — navigation is text */
+button{ font:inherit; cursor:pointer; }
+.btn{ border:0; border-radius:10px; padding:10px 18px; font-weight:500; background:var(--wall); color:var(--ink); }
+.btn.primary{ background:var(--ink); color:var(--ground); }
+.btn:active{ opacity:.6; }
+
+/* ── Multiple-choice questions (quiz.js builds them from JSON) ─────────────
+   State without color: the right answer gets an ink bar and Medium weight,
+   a wrong pick is struck through, everything else recedes to grey. */
+.mcq-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:44px; max-width:760px; }
+.mcq-q{ display:grid; grid-template-columns:2em minmax(0, 1fr); column-gap:10px; outline-offset:8px; }
+.mcq-n{ font-size:clamp(19px, 1.25vw, 24px); line-height:1.45; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+.mcq-body{ display:flex; flex-direction:column; gap:12px; min-width:0; }
+.mcq-text{ margin:0; font-size:clamp(19px, 1.25vw, 24px); line-height:1.45; color:var(--ink); }
+.mcq-text mjx-container[display="true"]{ margin:.5em 0 !important; }
+.mcq-opts{ display:flex; flex-direction:column; gap:2px; }
+.mcq-opt{
+  display:grid; grid-template-columns:1.5em minmax(0, 1fr); align-items:baseline; gap:8px;
+  width:calc(100% + 20px); margin:0 -10px; padding:9px 10px; border:0; border-radius:8px;
+  background:none; text-align:left; font:inherit; font-size:clamp(17px, 1.05vw, 20px); line-height:1.45;
+  color:var(--ink); cursor:pointer;
+}
+.mcq-l{ color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+@media (hover:hover){ .mcq-q:not(.is-done) .mcq-opt:hover{ background:var(--wall); } }
+.mcq-q:not(.is-done) .mcq-opt:active{ opacity:.6; }
+.mcq-q.is-done .mcq-opt{ cursor:default; color:var(--ink-soft); }
+.mcq-q.is-done .mcq-opt.is-answer{ color:var(--ink); font-weight:500; box-shadow:inset 2px 0 0 var(--ink); }
+.mcq-q.is-done .mcq-opt.is-answer .mcq-l{ color:var(--ink); }
+.mcq-q.is-done .mcq-opt.is-chosen:not(.is-answer) .mcq-t{ text-decoration:line-through; text-decoration-thickness:1px; }
+.mcq-fb{ margin:6px 0 0; font-size:17px; font-weight:500; color:var(--ink); }
+.mcq-why{ margin:0; font-size:17px; line-height:1.5; color:var(--ink-soft); max-width:62ch; }
+.mcq-bar{ display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin-top:44px; }
+.mcq-score{ font-size:15px; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+.mcq-fallback{ width:100%; max-width:760px; min-height:160px; margin-top:16px; font:14px/1.5 var(--sans); color:var(--ink);
+  background:var(--wall); border:0; border-radius:10px; padding:12px 14px; }
+/* the question numbers, in the left pane of a quiz page */
+.mcq-nav{ display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:4px; }
+.mcq-nav a{ display:block; padding:8px 0; border-radius:8px; text-align:center; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+@media (hover:hover){ .mcq-nav a:hover{ background:var(--wall); color:var(--ink); } }
+.mcq-nav a.is-right{ color:var(--ink); text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:.25em; }
+.mcq-nav a.is-wrong{ color:var(--ink); text-decoration:line-through; text-decoration-thickness:1px; }
+/* fractions stay full size inline */
+mjx-container[jax="SVG"]:not([display="true"]){ margin:0 .08em; }
+
+/* ── Loading: the one color exception — a thin rainbow ring, only while loading */
+.loading{
+  width:18px; height:18px; border-radius:50%;
+  background:conic-gradient(#ff3b30,#ff9500,#ffcc00,#34c759,#00c7be,#007aff,#af52de,#ff3b30);
+  -webkit-mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+          mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+  animation:mm-spin .9s linear infinite;
+}
+@keyframes mm-spin{ to{ transform:rotate(1turn); } }
+
+@media (prefers-reduced-motion:reduce){
+  *{ animation:none!important; transition:none!important; }
+}
+
+/* ── This page: a course, two timed tests, MCQs then FRQs ─────────────── */
+[hidden]{ display:none!important; }
+.pane-r{ position:relative; }
+.course{ display:flex; flex-direction:column; gap:6px; margin:28px 0 30px; }
+.course-n{ margin:0; font-size:clamp(36px, 2.6vw, 56px); font-weight:300; line-height:1.12; letter-spacing:-.03em; }
+.course-t{ margin:0; font-size:clamp(17px, 1.15vw, 22px); line-height:1.35; color:var(--ink); }
+.course-s{ margin:0; font-size:14px; line-height:1.5; color:var(--ink-soft); }
+.tests{ margin:0 0 26px; }
+.frq-list{ list-style:none; margin:44px 0 0; padding:0; display:flex; flex-direction:column; gap:44px; max-width:760px; }
+.frq-q{ display:grid; grid-template-columns:2em minmax(0, 1fr); column-gap:10px; outline-offset:8px; }
+.frq-in{ display:block; width:100%; min-height:8.5em; margin:0; resize:vertical; font:inherit; font-size:clamp(17px, 1.05vw, 20px);
+  line-height:1.5; color:var(--ink); background:var(--wall); border:0; border-radius:10px; padding:12px 14px; }
+.frq-act{ display:flex; gap:12px; }
+.frq-ans{ display:flex; flex-direction:column; gap:10px; }
+.frq-ans p{ margin:0; font-size:17px; line-height:1.5; color:var(--ink); max-width:62ch; }
+.frq-pts{ margin:0; padding:0 0 0 1.1em; display:flex; flex-direction:column; gap:6px; font-size:17px; line-height:1.5; color:var(--ink-soft); max-width:62ch; }
+.frq-pts li::marker{ color:var(--muted); }
+.frq-q mjx-container[display="true"]{ margin:.5em 0 !important; }
+.mj-ring{ position:absolute; top:60px; left:clamp(48px, 5vw, 120px); }
+html:not(.mj-wait) .mj-ring{ display:none; }
+html.mj-wait .pane-r .body{ visibility:hidden; }
+
+</style>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']], packages: { '[+]': ['mhchem'] } },
+  svg: { fontCache: 'global' },
+  startup: {
+    pageReady: function () {
+      return MathJax.startup.defaultPageReady().then(function () { if (window.__mathReady) window.__mathReady(); });
+    }
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg-full.js"></script>
+</head>
+<body>
+<div id="app">
+  <nav class="pane-l">
+    <button class="pane-hide" type="button"><span class="hide">Hide</span><span class="keep">Keep open</span><kbd>`</kbd></button>
+    <header class="course">
+      <h1 class="course-n">BIPN 102</h1>
+      <p class="course-t">Human Physiology II</p>
+      <p class="course-s">Midterm 1 &middot; 30 minutes each</p>
+      <p class="course-s">Breathing mechanics, airway resistance, ventilation, gas exchange and gas transport.</p>
+    </header>
+    <div class="tests">
+      <a class="row" href="#test-1" data-test="test-1" aria-current="true">Test 1</a>
+<a class="row" href="#test-2" data-test="test-2" aria-current="false">Test 2</a>
+    </div>
+    <nav class="mcq-nav" id="nav-test-1" aria-label="Test 1 questions"></nav>
+<nav class="mcq-nav" id="nav-test-2" aria-label="Test 2 questions" hidden></nav>
+  </nav>
+  <main class="pane-r">
+    <a class="menu-hint" href="#">Menu<kbd>`</kbd></a>
+    <div class="loading mj-ring" aria-hidden="true"></div>
+    <div class="body">
+<section class="test" id="test-1" data-key="bipn102-t1">
+<section class="mcq" data-title="BIPN 102 Midterm 1, Test 1" data-nav="#nav-test-1"><script type="application/json">[{"q": "At the start of a quiet breath in, the diaphragm contracts. What happens to alveolar pressure, and why does air flow in?", "options": ["It drops about 1 cmH₂O below the air outside, as lung volume grows", "It rises about 1 cmH₂O above the air outside, which pushes air inward", "It stays at outside pressure while the pleural pressure pulls air in", "It drops about 30 cmH₂O below the air outside, as the chest wall springs"], "answer": 0, "why": "By Boyle's law, pressure times volume stays constant for a fixed amount of gas. The diaphragm pulls down, the lungs expand, and alveolar pressure falls slightly below the air outside, by about 1 cmH₂O in quiet breathing. Air flows from higher to lower pressure, so it moves in until the pressures match again at the end of the breath."}, {"q": "At rest between breaths (FRC), intrapleural pressure is about −5 cmH₂O. Why is it below the air outside?", "options": ["The lungs pull inward and the chest wall pulls outward, stretching the sealed space", "The pleural fluid is pumped out continuously, which leaves a partial vacuum behind", "The diaphragm stays partly contracted between breaths, holding the pleura apart", "Surfactant in the pleural space lowers the surface tension below the air outside"], "answer": 0, "why": "The lungs are elastic and always want to shrink. The chest wall, at this volume, wants to spring outward. The thin, sealed layer of pleural fluid between them gets pulled from both sides, so its pressure falls below the air outside. That negative pressure holds the lungs open. Surfactant works inside the alveoli, not in the pleural space."}, {"q": "A stab wound lets air into the left pleural space. What happens?", "options": ["The left lung collapses and the left chest wall springs outward", "The left lung over-inflates and the left chest wall caves inward", "Both lungs collapse because the two pleural spaces are connected", "The left lung stays inflated because pleural fluid keeps it stuck"], "answer": 0, "why": "Once the pleural space opens to the air, its pressure rises to match the air outside. Nothing is pulling the lung outward any more, so the lung's own elastic recoil collapses it. The chest wall is no longer pulled inward either, so it springs out a bit. The two pleural spaces in humans are separate, so the other lung stays up."}, {"q": "A breath of 500 mL increases transpulmonary pressure from 5 to 7.5 cmH₂O. What is lung compliance?", "options": ["200 mL per cmH₂O", "100 mL per cmH₂O", "67 mL per cmH₂O", "1250 mL per cmH₂O"], "answer": 0, "why": "Compliance is how much the volume changes for each unit of pressure change: \\(C = \\dfrac{\\Delta V}{\\Delta P} = \\dfrac{500}{2.5} = 200\\) mL per cmH₂O. Using 7.5 alone (67) or 5 alone (100) mixes up the pressure change with the pressure itself. Higher compliance means the lung is easier to stretch."}, {"q": "Two alveoli are connected and have the same surface tension, but one has half the radius of the other. Without surfactant, what happens?", "options": ["The small one has twice the pressure, so it empties into the large one", "The large one has twice the pressure, so it empties into the small one", "Both have the same pressure, since they share the same surface tension", "The small one has four times the pressure, so both alveoli collapse"], "answer": 0, "why": "Laplace's law says \\(P = \\dfrac{2T}{r}\\). With the same tension, half the radius means twice the pressure, so air moves from the small alveolus into the big one, and the small one collapses. Surfactant prevents this. It lowers tension more as an alveolus shrinks, because its molecules crowd closer together, which keeps the pressures similar."}, {"q": "A baby born at 28 weeks breathes fast, with hard, grunting breaths. What is the main cause?", "options": ["Type II cells are not yet making enough surfactant, so compliance is low", "Type I cells are not yet thin enough, so oxygen cannot diffuse across well", "The airways are too narrow, so their resistance stays extremely high", "The diaphragm is too weak to contract, so the chest wall cannot expand"], "answer": 0, "why": "Type II alveolar cells start making enough surfactant only late in pregnancy, around 34 weeks. Without it, surface tension stays high, alveoli collapse at the end of each breath, and the lungs are very stiff (low compliance). Each breath takes great effort. This is neonatal respiratory distress syndrome, and it is treated with surfactant and with steroids given before birth."}, {"q": "Compared with a healthy lung, an emphysema lung has:", "options": ["Higher compliance and weaker recoil, so airways collapse on breathing out", "Lower compliance and stronger recoil, so the lung empties faster than usual", "Higher compliance and stronger recoil, so FRC falls below its normal level", "Lower compliance and weaker recoil, so the lung needs more effort to fill"], "answer": 0, "why": "Emphysema destroys the alveolar walls and their elastic fibers. The lung becomes floppy: easy to inflate (high compliance) but with little recoil. Recoil normally helps hold small airways open and drives air out. Without it, airways collapse during exhaling, air gets trapped, and FRC and residual volume go up."}, {"q": "Pulmonary fibrosis stiffens the lung tissue. Which spirometry pattern fits best?", "options": ["Low FVC and low FEV₁, with a normal or high FEV₁ to FVC ratio", "Normal FVC and low FEV₁, with a low FEV₁ to FVC ratio", "High FVC and high FEV₁, with a normal FEV₁ to FVC ratio", "Low FVC and normal FEV₁, with a low FEV₁ to FVC ratio"], "answer": 0, "why": "Fibrosis is a restrictive disease. The stiff lung cannot fill much, so the total amount breathed out (FVC) is low. FEV₁ is low too, but the lung's strong recoil and the tissue pulling on the airways keep them open, so air comes out fast. The ratio stays normal or rises. Obstructive diseases like asthma and COPD give a low ratio."}, {"q": "A bronchospasm cuts an airway's radius in half. If flow stays laminar, how does that airway's resistance change?", "options": ["It rises 16 times", "It rises 2 times", "It rises 4 times", "It rises 8 times"], "answer": 0, "why": "Poiseuille's law: \\(R = \\dfrac{8\\eta l}{\\pi r^4}\\). Resistance depends on the radius to the fourth power, so half the radius gives \\(2^4 = 16\\) times the resistance. This is why even mild narrowing of the airways in asthma makes breathing much harder."}, {"q": "In a healthy lung, most airway resistance is found in the:", "options": ["Medium-sized bronchi, since total cross-section is still small there", "Smallest bronchioles, since each one has the tiniest radius", "Alveolar ducts, since air must turn many corners to reach them", "Trachea, since all the air must pass through this single tube"], "answer": 0, "why": "Each small bronchiole is very narrow, but there are so many of them in parallel that their combined cross-sectional area is huge. Resistances in parallel add up like this: more paths means less total resistance. The medium-sized bronchi have few branches and moderate size, so they contribute the most resistance. This also means early disease in small airways can be silent on breathing tests."}, {"q": "During a hard, forced breath out, expiratory flow stops rising no matter how much harder the person pushes. Why?", "options": ["Higher pleural pressure also squeezes the airways, so resistance rises as well", "The expiratory muscles reach their peak force and cannot push any harder", "Surfactant runs out at low lung volumes, so the alveoli stick shut early", "Air reaches the speed of sound in the trachea, which limits flow everywhere"], "answer": 0, "why": "Pushing harder raises pleural pressure. That pressure squeezes the alveoli (driving air out) but also squeezes the airways from outside. Past a certain point, called the equal pressure point, any extra push narrows the airways just as much as it adds driving pressure. So flow levels off. This is why expiratory flow is said to be effort independent, and why it falls sharply in emphysema."}, {"q": "A diver at the surface breathes through a snorkel that adds 150 mL of dead space. Breathing stays at 500 mL per breath, 12 breaths per minute (anatomical dead space 150 mL). How does alveolar ventilation change?", "options": ["It falls from 4200 to 2400 mL per min", "It falls from 6000 to 4200 mL per min", "It stays at 6000 mL per min", "It falls from 4200 to 3600 mL per min"], "answer": 0, "why": "Alveolar ventilation is \\((V_T - V_D) \\times f\\). Before: \\((500 - 150) \\times 12 = 4200\\) mL per min. With the snorkel, dead space is 300 mL: \\((500 - 300) \\times 12 = 2400\\) mL per min. Minute ventilation (6000) is unchanged, but much less fresh air reaches the alveoli, so the diver must breathe deeper to make up for it."}, {"q": "Which breathing pattern gives the most alveolar ventilation if dead space is 150 mL?", "options": ["600 mL per breath at 10 breaths per min", "300 mL per breath at 20 breaths per min", "200 mL per breath at 30 breaths per min", "400 mL per breath at 15 breaths per min"], "answer": 0, "why": "All four give 6000 mL per min of total air. But each breath wastes 150 mL in dead space. \\((600 - 150) \\times 10 = 4500\\), \\((400 - 150) \\times 15 = 3750\\), \\((300 - 150) \\times 20 = 3000\\), and \\((200 - 150) \\times 30 = 1500\\) mL per min. Slow, deep breaths waste the least air, which is why fast shallow breathing can cause \\(\\ce{CO2}\\) to build up."}, {"q": "A climber is at 380 mmHg barometric pressure, breathing air (21% \\(\\ce{O2}\\)). Hyperventilation lowers arterial \\(P_{\\ce{CO2}}\\) to 30 mmHg. Using water vapor 47 mmHg and \\(R = 0.8\\), what is alveolar \\(P_{\\ce{O2}}\\)?", "options": ["32 mmHg", "20 mmHg", "42 mmHg", "70 mmHg"], "answer": 0, "why": "Use the alveolar gas equation: \\(P_{A\\ce{O2}} = F_{I\\ce{O2}}(P_B - 47) - \\dfrac{P_{a\\ce{CO2}}}{R}\\). Inspired: \\(0.21 \\times (380 - 47) = 70\\) mmHg. Then subtract \\(\\dfrac{30}{0.8} = 37.5\\), giving 32 mmHg. If the climber did not hyperventilate (\\(P_{\\ce{CO2}} = 40\\)), it would be only \\(70 - 50 = 20\\) mmHg. Lowering \\(\\ce{CO2}\\) makes room for more \\(\\ce{O2}\\) in the alveoli."}, {"q": "An opioid overdose causes slow, shallow breathing and a low arterial \\(P_{\\ce{O2}}\\). The gap between alveolar and arterial \\(P_{\\ce{O2}}\\) (the A–a gradient) is:", "options": ["Normal, since the lungs exchange gas well and the alveolar \\(P_{\\ce{O2}}\\) itself is low", "Large, since slow breathing causes ventilation and perfusion to become mismatched", "Large, since \\(\\ce{CO2}\\) builds up and blocks \\(\\ce{O2}\\) from crossing the alveolar wall", "Zero, since hypoventilation makes the alveolar and arterial \\(\\ce{O2}\\) exactly equal"], "answer": 0, "why": "In pure hypoventilation, less fresh air reaches the alveoli, so \\(\\ce{CO2}\\) rises and alveolar \\(P_{\\ce{O2}}\\) falls. But the lungs themselves are healthy, so blood matches the alveoli well, and the A–a gradient stays normal (about 5 to 15 mmHg). A large A–a gradient points to a lung problem such as V/Q mismatch, shunt or a diffusion barrier."}, {"q": "Air at sea level is 21% \\(\\ce{O2}\\) and pressure is 760 mmHg. In the trachea the air is warmed and fully humidified (water vapor 47 mmHg). What is tracheal \\(P_{\\ce{O2}}\\)?", "options": ["150 mmHg", "160 mmHg", "100 mmHg", "113 mmHg"], "answer": 0, "why": "Dry air at sea level has \\(P_{\\ce{O2}} = 0.21 \\times 760 = 160\\) mmHg. Once water vapor takes up 47 mmHg of the total, the other gases share \\(760 - 47 = 713\\) mmHg, so \\(P_{\\ce{O2}} = 0.21 \\times 713 = 150\\) mmHg. Alveolar \\(P_{\\ce{O2}}\\) is lower again (about 100) because \\(\\ce{CO2}\\) enters the alveoli and \\(\\ce{O2}\\) leaves."}, {"q": "According to Fick's law, which change cuts \\(\\ce{O2}\\) diffusion across the lung by the largest amount?", "options": ["The barrier doubles in thickness and its area halves", "The barrier doubles in thickness and its area doubles", "The \\(\\ce{O2}\\) partial pressure gradient doubles in size", "The barrier halves in thickness and its area halves"], "answer": 0, "why": "Fick's law: rate \\(\\propto \\dfrac{A \\cdot D \\cdot \\Delta P}{T}\\), where \\(A\\) is area and \\(T\\) is thickness. Doubling thickness halves the rate, and halving the area halves it again, giving \\(\\dfrac{1}{4}\\) of normal. That is what happens in severe fibrosis plus lost lung tissue. Doubling both thickness and area leaves the rate unchanged."}, {"q": "The \\(P_{\\ce{CO2}}\\) gradient across the lung is about 6 mmHg, while the \\(P_{\\ce{O2}}\\) gradient is about 60 mmHg. Yet both gases exchange fully. Why?", "options": ["\\(\\ce{CO2}\\) is 20 times more soluble in watery fluids than \\(\\ce{O2}\\) is", "\\(\\ce{CO2}\\) molecules are smaller, so they move through faster", "\\(\\ce{CO2}\\) is pumped across the alveolar wall by a transporter", "\\(\\ce{CO2}\\) leaves through separate, thinner capillaries in the lung"], "answer": 0, "why": "How fast a gas diffuses depends on its gradient and on its diffusion constant, which grows with solubility and shrinks with molecular size. \\(\\ce{CO2}\\) is actually heavier than \\(\\ce{O2}\\), but it is so much more soluble that it crosses about 20 times faster for the same gradient. So a small gradient is enough. No transporter moves either gas."}, {"q": "At rest, blood's \\(P_{\\ce{O2}}\\) matches alveolar air within the first third of the lung capillary. What does this mean?", "options": ["Oxygen uptake is perfusion-limited, and a reserve exists for exercise", "Oxygen uptake is diffusion-limited, and no reserve exists for exercise", "Oxygen uptake is perfusion-limited, and exercise lowers arterial \\(P_{\\ce{O2}}\\)", "Oxygen uptake is diffusion-limited, and more blood flow cannot help it"], "answer": 0, "why": "Since equilibrium happens early, the rest of the capillary adds nothing more, and the only way to take up more \\(\\ce{O2}\\) is to send more blood through. That is perfusion-limited. During exercise, blood moves faster and spends less time in the capillary, but healthy lungs still finish in time. In fibrosis, diffusion is slower, so exercise can cause arterial \\(P_{\\ce{O2}}\\) to fall."}, {"q": "A person stands upright. Compared with the lung's base, the lung's apex has:", "options": ["A higher V/Q ratio, a higher alveolar \\(P_{\\ce{O2}}\\) and a lower \\(P_{\\ce{CO2}}\\)", "A lower V/Q ratio, a lower alveolar \\(P_{\\ce{O2}}\\) and a higher \\(P_{\\ce{CO2}}\\)", "A higher V/Q ratio, a lower alveolar \\(P_{\\ce{O2}}\\) and a higher \\(P_{\\ce{CO2}}\\)", "A lower V/Q ratio, a higher alveolar \\(P_{\\ce{O2}}\\) and a lower \\(P_{\\ce{CO2}}\\)"], "answer": 0, "why": "Gravity affects both air and blood, but it affects blood much more. So from apex to base, blood flow rises steeply while ventilation rises gently. The apex ends up with more air than blood (high V/Q): its alveoli look more like inspired air, with high \\(P_{\\ce{O2}}\\) and low \\(P_{\\ce{CO2}}\\). The base has low V/Q."}, {"q": "Part of one lung stops receiving air because of a mucus plug. Its blood vessels then:", "options": ["Constrict, sending blood toward alveoli that still get air", "Dilate, so more blood can pick up the little \\(\\ce{O2}\\) present", "Stay unchanged, because lung vessels have no smooth muscle", "Dilate, since low \\(\\ce{O2}\\) relaxes vessel smooth muscle"], "answer": 0, "why": "Lung arterioles do the opposite of most body arterioles. Low alveolar \\(\\ce{O2}\\) makes them constrict (hypoxic pulmonary vasoconstriction). This sends blood away from poorly ventilated areas and toward well ventilated ones, keeping V/Q matched. In other organs, low \\(\\ce{O2}\\) makes arterioles dilate so tissue gets more blood."}, {"q": "A patient's arterial \\(P_{\\ce{O2}}\\) barely rises when breathing 100% \\(\\ce{O2}\\). Which problem fits best?", "options": ["A right-to-left shunt, where blood skips air-filled alveoli", "A low V/Q region, where alveoli get a little less air than usual", "Hypoventilation, where breathing is too slow to clear \\(\\ce{CO2}\\)", "A thick barrier, where \\(\\ce{O2}\\) crosses the alveolar wall slowly"], "answer": 0, "why": "In a shunt, some blood never meets alveolar air at all, so extra \\(\\ce{O2}\\) cannot reach it. Mixing that blood with well-oxygenated blood keeps arterial \\(P_{\\ce{O2}}\\) low. Low V/Q areas, slow diffusion and hypoventilation all improve on 100% \\(\\ce{O2}\\), because the alveolar \\(P_{\\ce{O2}}\\) in the involved areas rises a lot."}, {"q": "Blood has 15 g/dL hemoglobin, 98% saturated, with \\(P_{\\ce{O2}} = 100\\) mmHg. Each gram of Hb carries 1.34 mL of \\(\\ce{O2}\\), and plasma dissolves 0.003 mL/dL per mmHg. What is the \\(\\ce{O2}\\) content?", "options": ["20 mL per dL", "15 mL per dL", "0.3 mL per dL", "30 mL per dL"], "answer": 0, "why": "Bound \\(\\ce{O2}\\): \\(1.34 \\times 15 \\times 0.98 = 19.7\\) mL per dL. Dissolved \\(\\ce{O2}\\): \\(0.003 \\times 100 = 0.3\\) mL per dL. Total is about 20 mL per dL. Almost all \\(\\ce{O2}\\) is carried by hemoglobin; the dissolved part sets \\(P_{\\ce{O2}}\\) but carries very little."}, {"q": "A person in a closed garage has carbon monoxide poisoning. Compared with normal, which set of values fits?", "options": ["Normal arterial \\(P_{\\ce{O2}}\\), low \\(\\ce{O2}\\) content, a curve shifted left", "Low arterial \\(P_{\\ce{O2}}\\), low \\(\\ce{O2}\\) content, a curve shifted right", "Normal arterial \\(P_{\\ce{O2}}\\), normal \\(\\ce{O2}\\) content, a curve shifted left", "Low arterial \\(P_{\\ce{O2}}\\), normal \\(\\ce{O2}\\) content, a curve shifted right"], "answer": 0, "why": "CO binds hemoglobin about 240 times more tightly than \\(\\ce{O2}\\), so it takes over binding sites and \\(\\ce{O2}\\) content falls. The lungs still work, so dissolved \\(\\ce{O2}\\) and arterial \\(P_{\\ce{O2}}\\) are normal. CO also makes the remaining sites hold their \\(\\ce{O2}\\) more tightly (left shift), so tissues get even less. This is why CO is worse than simple anemia."}, {"q": "Which change shifts the hemoglobin–oxygen curve to the right?", "options": ["A rise in temperature, \\(\\ce{CO2}\\), \\(\\ce{H+}\\) or 2,3-BPG", "A drop in temperature, \\(\\ce{CO2}\\), \\(\\ce{H+}\\) or 2,3-BPG", "A rise in pH and a drop in 2,3-BPG inside red blood cells", "A rise in the amount of carbon monoxide bound to hemoglobin"], "answer": 0, "why": "A right shift means hemoglobin holds \\(\\ce{O2}\\) less tightly at a given \\(P_{\\ce{O2}}\\), so it unloads more. Working tissue is warm, acidic and full of \\(\\ce{CO2}\\), which all cause a right shift right where \\(\\ce{O2}\\) is needed. The effect of \\(\\ce{CO2}\\) and \\(\\ce{H+}\\) is the Bohr effect. Higher pH, lower 2,3-BPG and carbon monoxide shift it left."}, {"q": "Fetal hemoglobin holds \\(\\ce{O2}\\) more tightly than adult hemoglobin. Why?", "options": ["Its gamma chains bind 2,3-BPG weakly, so it is less pushed to release \\(\\ce{O2}\\)", "Its gamma chains bind 2,3-BPG strongly, so it is more drawn to grab \\(\\ce{O2}\\)", "It has more heme groups per molecule, so it grabs more \\(\\ce{O2}\\) at each pressure", "Fetal blood has a higher pH than maternal blood, so the curve shifts to the left"], "answer": 0, "why": "2,3-BPG fits into a pocket in adult hemoglobin and stabilizes the low-affinity form, which helps it release \\(\\ce{O2}\\). Fetal hemoglobin has gamma chains instead of beta chains, and they bind 2,3-BPG poorly. So fetal blood stays more saturated at the same \\(P_{\\ce{O2}}\\), which helps it pull \\(\\ce{O2}\\) across the placenta from the mother's blood."}, {"q": "The Haldane effect helps the blood pick up \\(\\ce{CO2}\\) in tissues because:", "options": ["Deoxygenated hemoglobin binds more \\(\\ce{H+}\\) and \\(\\ce{CO2}\\) than oxygenated hemoglobin", "Oxygenated hemoglobin binds more \\(\\ce{H+}\\) and \\(\\ce{CO2}\\) than deoxygenated hemoglobin", "Carbonic anhydrase speeds up only when hemoglobin is fully loaded with oxygen", "\\(\\ce{CO2}\\) pushes oxygen off hemoglobin, freeing heme sites for the \\(\\ce{CO2}\\)"], "answer": 0, "why": "When hemoglobin gives up \\(\\ce{O2}\\) in tissues, it becomes better at binding \\(\\ce{H+}\\) and at carrying \\(\\ce{CO2}\\) as carbamino groups. Soaking up \\(\\ce{H+}\\) also pulls the carbonic anhydrase reaction toward making more \\(\\ce{HCO3-}\\). In the lungs the reverse happens: oxygen binding makes hemoglobin release \\(\\ce{CO2}\\). \\(\\ce{CO2}\\) binds amino groups on the protein, not the heme."}, {"q": "Most \\(\\ce{CO2}\\) is carried from tissues to the lungs as:", "options": ["Bicarbonate in plasma, made inside red cells by carbonic anhydrase", "\\(\\ce{CO2}\\) dissolved in plasma, since \\(\\ce{CO2}\\) is highly soluble", "Carbaminohemoglobin, with \\(\\ce{CO2}\\) bound to the heme iron", "Carbonic acid in plasma, made by carbonic anhydrase in plasma"], "answer": 0, "why": "About 70% of \\(\\ce{CO2}\\) travels as \\(\\ce{HCO3-}\\). In red cells, carbonic anhydrase quickly turns \\(\\ce{CO2}\\) and water into \\(\\ce{H2CO3}\\), which splits into \\(\\ce{H+}\\) and \\(\\ce{HCO3-}\\). The \\(\\ce{HCO3-}\\) moves into plasma in exchange for \\(\\ce{Cl-}\\) (the chloride shift). About 20% rides on hemoglobin's amino groups, not the heme, and about 10% is dissolved."}, {"q": "Myoglobin's \\(\\ce{O2}\\) curve is hyperbolic and lies far left of hemoglobin's. What does this allow?", "options": ["Muscle myoglobin takes \\(\\ce{O2}\\) from blood and releases it at very low \\(P_{\\ce{O2}}\\)", "Myoglobin carries \\(\\ce{O2}\\) in the blood at a higher level than hemoglobin does", "Myoglobin unloads \\(\\ce{O2}\\) at moderate \\(P_{\\ce{O2}}\\), just as hemoglobin does", "Myoglobin binds \\(\\ce{O2}\\) with cooperativity, so its loading is extra sharp"], "answer": 0, "why": "Myoglobin has one heme and no cooperativity, and it binds \\(\\ce{O2}\\) tightly. In muscle, it grabs \\(\\ce{O2}\\) that hemoglobin releases, and it only lets go when muscle \\(P_{\\ce{O2}}\\) falls very low, such as during hard contraction. It works as a local \\(\\ce{O2}\\) store and shuttle. It stays inside muscle cells and does not carry \\(\\ce{O2}\\) in blood."}, {"q": "Why does the steep part of hemoglobin's curve (about 20 to 60 mmHg) matter?", "options": ["Tissues can unload a lot of \\(\\ce{O2}\\) for a small drop in \\(P_{\\ce{O2}}\\)", "The lungs can load a lot of \\(\\ce{O2}\\) for a small rise in \\(P_{\\ce{O2}}\\)", "Blood keeps the same saturation however much \\(P_{\\ce{O2}}\\) changes", "Hemoglobin's grip on \\(\\ce{O2}\\) is tightest in this pressure range"], "answer": 0, "why": "Cooperativity makes the curve sigmoid. In the steep middle part, small drops in \\(P_{\\ce{O2}}\\) in tissues cause large drops in saturation, so much \\(\\ce{O2}\\) is released. The flat top of the curve does the opposite job in the lungs: saturation stays high even if alveolar \\(P_{\\ce{O2}}\\) drops a fair amount."}]</script></section>
+<script type="application/json" class="frq-data">[{"q": "At rest, a person breathes 500 mL per breath, 12 times a minute, with 150 mL of dead space, and arterial \\(P_{\\ce{CO2}}\\) is 40 mmHg. After a sedative, the person breathes 250 mL per breath, 24 times a minute, while making the same amount of \\(\\ce{CO2}\\). (a) Find minute ventilation and alveolar ventilation before and after. (b) Predict the new arterial \\(P_{\\ce{CO2}}\\). (c) Explain what happens to alveolar \\(P_{\\ce{O2}}\\) and why.", "answer": "(a) Before: minute ventilation is \\(500 \\times 12 = 6000\\) mL per min and alveolar ventilation is \\((500 - 150) \\times 12 = 4200\\) mL per min. After: minute ventilation is \\(250 \\times 24 = 6000\\) mL per min, but alveolar ventilation is \\((250 - 150) \\times 24 = 2400\\) mL per min. (b) With \\(\\ce{CO2}\\) production fixed, \\(P_{a\\ce{CO2}}\\) is inversely proportional to alveolar ventilation: \\[ P_{a\\ce{CO2}} = 40 \\times \\frac{4200}{2400} = 70 \\text{ mmHg} \\] (c) By the alveolar gas equation, alveolar \\(P_{\\ce{O2}}\\) falls by about \\(\\dfrac{30}{0.8} = 37.5\\) mmHg, from about 100 to about 62 mmHg, because less fresh air reaches the alveoli while \\(\\ce{O2}\\) is still being taken up.", "points": ["Same minute ventilation (6000 mL per min) but alveolar ventilation falls from 4200 to 2400 mL per min", "\\(P_{a\\ce{CO2}}\\) rises to about 70 mmHg because it is inversely proportional to alveolar ventilation", "Alveolar \\(P_{\\ce{O2}}\\) falls by about 37.5 mmHg, to about 62 mmHg", "Key idea: dead space is wasted on every breath, so shallow breaths waste a bigger share"]}, {"q": "Compare three people: (1) healthy, Hb 15 g/dL; (2) anemic, Hb 7.5 g/dL; (3) carbon monoxide poisoning, Hb 15 g/dL with half of its sites bound to CO. All have arterial \\(P_{\\ce{O2}} = 100\\) mmHg and 98% saturation of the hemoglobin that is free to carry \\(\\ce{O2}\\). (a) Calculate the arterial \\(\\ce{O2}\\) content of each (use 1.34 mL per g and 0.003 mL per dL per mmHg). (b) Persons 2 and 3 have about the same content. Explain why person 3 is in more danger.", "answer": "(a) Healthy: \\(1.34 \\times 15 \\times 0.98 + 0.003 \\times 100 = 19.7 + 0.3 = 20.0\\) mL per dL. Anemic: \\(1.34 \\times 7.5 \\times 0.98 + 0.3 = 9.8 + 0.3 = 10.1\\) mL per dL. CO: half the hemoglobin is blocked, so the usable amount is the same as 7.5 g/dL, giving about 10.1 mL per dL. (b) CO also makes the remaining hemoglobin hold its \\(\\ce{O2}\\) more tightly, shifting the curve to the left. So in tissues, where \\(P_{\\ce{O2}}\\) is low, person 3's blood gives up much less of its \\(\\ce{O2}\\) than person 2's blood. CO also poisons cytochrome oxidase in mitochondria. Arterial \\(P_{\\ce{O2}}\\) is normal in both, so the body's \\(\\ce{O2}\\) sensors that respond to low \\(P_{\\ce{O2}}\\) are not strongly triggered.", "points": ["Healthy about 20 mL per dL; anemic about 10 mL per dL; CO about 10 mL per dL", "Dissolved \\(\\ce{O2}\\) (0.3 mL per dL) is the same in all three", "CO shifts the curve left, so less \\(\\ce{O2}\\) is unloaded in tissues", "Normal \\(P_{a\\ce{O2}}\\) means the carotid body sensors are not alarmed"]}]</script>
+</section>
+<section class="test" id="test-2" data-key="bipn102-t2" hidden>
+<section class="mcq" data-title="BIPN 102 Midterm 1, Test 2" data-nav="#nav-test-2"><script type="application/json">[{"q": "During a quiet breath in, intrapleural pressure goes from −5 to about −8 cmH₂O. What does this do?", "options": ["It raises transpulmonary pressure, which stretches the lungs open", "It lowers transpulmonary pressure, which lets the lungs relax shut", "It raises alveolar pressure, which pushes air out of the lungs again", "It lowers chest wall recoil, which pulls the diaphragm back upward"], "answer": 0, "why": "Transpulmonary pressure is alveolar pressure minus pleural pressure, and it is the pressure that holds the lungs open. As the chest expands, pleural pressure becomes more negative, so transpulmonary pressure gets bigger and the lungs stretch out. As they stretch, alveolar pressure briefly drops below the air outside and air flows in."}, {"q": "At FRC, which statement about the lungs and chest wall is true?", "options": ["The lungs pull inward and the chest wall pulls outward with equal force", "The lungs and the chest wall both pull inward with the same force", "The lungs pull outward and the chest wall pulls inward with equal force", "Neither the lungs nor the chest wall pulls in any direction at all"], "answer": 0, "why": "FRC is the relaxed volume of the whole system, where the lungs' inward recoil exactly balances the chest wall's outward spring. No muscle is working. Breathing in takes effort to move away from this balance, and quiet breathing out is passive: the lungs' recoil brings the system back to FRC."}, {"q": "Which lung volume cannot be measured with simple spirometry?", "options": ["Functional residual capacity", "Expiratory reserve volume", "Inspiratory reserve volume", "Forced vital capacity"], "answer": 0, "why": "A spirometer measures only air that moves in and out. The residual volume never leaves the lungs, so any value that includes it, such as FRC (residual volume plus expiratory reserve volume) or total lung capacity, needs another method, such as helium dilution or body plethysmography."}, {"q": "During an asthma attack, FEV₁ is 1.5 L and FVC is 3.0 L. What do these show?", "options": ["An obstructive pattern, with a FEV₁ to FVC ratio of 0.5", "A restrictive pattern, with a FEV₁ to FVC ratio of 0.5", "An obstructive pattern, with a FEV₁ to FVC ratio of 2.0", "A normal pattern, with a FEV₁ to FVC ratio of 0.5"], "answer": 0, "why": "\\(\\dfrac{1.5}{3.0} = 0.5\\), well below the normal ratio of about 0.8. Narrow airways slow how fast air can come out, so less of the vital capacity leaves in the first second. That is an obstructive pattern. In restrictive disease, FVC is small but air comes out fast, so the ratio is normal or high."}, {"q": "Albuterol relieves an asthma attack. How does it work?", "options": ["It activates \\(\\beta_2\\) receptors, raising cAMP and relaxing airway muscle", "It blocks \\(\\beta_2\\) receptors, lowering cAMP and relaxing airway muscle", "It activates muscarinic receptors, which relaxes the airway muscle", "It blocks histamine receptors, which stops new mucus from forming"], "answer": 0, "why": "Airway smooth muscle has \\(\\beta_2\\) adrenergic receptors. Activating them raises cAMP and activates protein kinase A, which relaxes the muscle and widens the airways. Because resistance depends on radius to the fourth power, a small widening gives big relief. Acetylcholine, through muscarinic receptors, does the opposite and narrows airways."}, {"q": "People with COPD often breathe out through pursed lips. Why does this help?", "options": ["It keeps airway pressure higher, so the airways stay open longer", "It lowers airway pressure, so the alveoli empty more completely", "It slows air down, so more \\(\\ce{O2}\\) can diffuse into the blood", "It stops air from going back in, which shrinks the dead space"], "answer": 0, "why": "Pursing the lips adds resistance at the mouth, so pressure inside the airways stays higher during breathing out. This moves the equal pressure point toward the large, stiff airways, so the floppy small airways are less likely to be squeezed shut. Less air gets trapped, and more can be breathed out."}, {"q": "A patient with pulmonary fibrosis tends to take rapid, shallow breaths. Why?", "options": ["Stiff lungs make each big breath costly, so small fast breaths take less work", "Narrow airways make fast airflow costly, so slow deep breaths take less work", "Fast breathing raises compliance, so the stiff lungs become easier to fill", "Shallow breathing lowers dead space, so more air reaches the alveoli each time"], "answer": 0, "why": "Work of breathing has two parts: stretching the lung (elastic work) and moving air through airways (resistive work). In stiff lungs, the elastic part dominates, and it grows steeply with breath size, so small, fast breaths cost less. In obstructive disease, the resistive part dominates, and it grows with flow speed, so slow, deep breaths cost less. Shallow breaths waste more air in dead space."}, {"q": "Lungs are inflated with saline in one test and with air in another. Why does the saline lung inflate more easily?", "options": ["Saline removes the air–liquid surface, so no surface tension pulls inward", "Saline is denser than air, so its weight stretches the lung open", "Saline dissolves the elastic fibers, so the lung tissue loses recoil", "Saline adds extra surfactant, so the surface tension becomes larger"], "answer": 0, "why": "In an air-filled lung, a thin liquid layer lines each alveolus, and its surface tension pulls inward strongly. It makes up a large part of the lung's recoil. Filling the lung with saline removes that air–liquid surface, leaving only tissue elasticity, so much less pressure is needed. This classic experiment showed how much surface tension matters, and it led to the discovery of surfactant."}, {"q": "The lung's pressure–volume curve differs between inflating and deflating (hysteresis). What mainly causes this?", "options": ["Surfactant spreads and packs differently as the alveolar surface grows and shrinks", "Airway resistance is higher while inflating because the airways are still narrow", "The chest wall stiffens while deflating because the muscles are relaxing", "Gas moves into the blood while inflating, so less volume stays in the lung"], "answer": 0, "why": "When the lung is inflated from low volume, extra pressure is needed to open collapsed units and spread surfactant over the growing surface. While deflating, surfactant molecules are packed tightly, surface tension is very low, and the lung holds more volume at the same pressure. A lung filled with saline has very little hysteresis, which shows it comes from the air–liquid surface."}, {"q": "A large pulmonary embolism blocks blood flow to part of a lung that still gets air. What happens to that area and to the exhaled breath?", "options": ["It becomes dead space, so exhaled \\(P_{\\ce{CO2}}\\) falls", "It becomes a shunt, so exhaled \\(P_{\\ce{CO2}}\\) rises", "It becomes dead space, so exhaled \\(P_{\\ce{CO2}}\\) rises", "It becomes a shunt, so exhaled \\(P_{\\ce{O2}}\\) falls"], "answer": 0, "why": "Alveoli that get air but no blood cannot exchange gas, so they are alveolar dead space (V/Q is very high). The air they breathe out has almost no \\(\\ce{CO2}\\), which dilutes the \\(\\ce{CO2}\\) from the rest of the lung, so the \\(P_{\\ce{CO2}}\\) of exhaled air falls. A shunt is the opposite case: blood with no air."}, {"q": "Arterial \\(P_{\\ce{CO2}}\\) is 40 mmHg and mixed exhaled \\(P_{\\ce{CO2}}\\) is 28 mmHg. Using the Bohr equation, what fraction of each breath is dead space?", "options": ["0.30", "0.70", "0.43", "0.12"], "answer": 0, "why": "\\(\\dfrac{V_D}{V_T} = \\dfrac{P_{a\\ce{CO2}} - P_{E\\ce{CO2}}}{P_{a\\ce{CO2}}} = \\dfrac{40 - 28}{40} = 0.30\\). Dead space air has no \\(\\ce{CO2}\\) and dilutes the alveolar air, so the more the exhaled \\(\\ce{CO2}\\) is diluted, the bigger the dead space. 0.70 is the fraction that reached the alveoli."}, {"q": "Someone breathes fast and deep on purpose for a minute. What happens to arterial \\(P_{\\ce{CO2}}\\) and \\(P_{\\ce{O2}}\\)?", "options": ["\\(P_{\\ce{CO2}}\\) falls a lot and \\(P_{\\ce{O2}}\\) rises a little", "\\(P_{\\ce{CO2}}\\) falls a little and \\(P_{\\ce{O2}}\\) rises a lot", "\\(P_{\\ce{CO2}}\\) rises a lot and \\(P_{\\ce{O2}}\\) falls a little", "\\(P_{\\ce{CO2}}\\) and \\(P_{\\ce{O2}}\\) both stay nearly the same"], "answer": 0, "why": "Arterial \\(P_{\\ce{CO2}}\\) is inversely proportional to alveolar ventilation, so doubling ventilation halves it. \\(\\ce{O2}\\) is different: alveolar \\(P_{\\ce{O2}}\\) can never rise above inspired \\(P_{\\ce{O2}}\\) (150 mmHg), and hemoglobin is already almost full, so \\(\\ce{O2}\\) content barely changes. Low \\(\\ce{CO2}\\) raises blood pH and can cause tingling and dizziness."}, {"q": "A patient breathes 30% \\(\\ce{O2}\\) at sea level (760 mmHg, water vapor 47 mmHg) with arterial \\(P_{\\ce{CO2}} = 40\\) mmHg and \\(R = 0.8\\). What is alveolar \\(P_{\\ce{O2}}\\)?", "options": ["164 mmHg", "214 mmHg", "100 mmHg", "178 mmHg"], "answer": 0, "why": "\\(P_{A\\ce{O2}} = 0.30 \\times (760 - 47) - \\dfrac{40}{0.8} = 213.9 - 50 = 164\\) mmHg. Forgetting to subtract the \\(\\ce{CO2}\\) term gives 214. Forgetting water vapor gives \\(228 - 50 = 178\\)."}, {"q": "At high altitude, which change happens over several days and helps tissues get \\(\\ce{O2}\\)?", "options": ["Red cells make more 2,3-BPG, shifting the curve right", "Red cells make less 2,3-BPG, shifting the curve left", "Hemoglobin's heme groups change to bind \\(\\ce{O2}\\) more tightly", "Plasma dissolves more \\(\\ce{O2}\\), since cold air is more soluble"], "answer": 0, "why": "Low \\(\\ce{O2}\\) makes red cells produce more 2,3-BPG within a day or two. This lowers hemoglobin's grip on \\(\\ce{O2}\\) (right shift), so tissues can unload more. Over weeks, the kidney's erythropoietin also raises the number of red cells. The hyperventilation at altitude makes the blood alkaline, which shifts the curve left, so the two effects partly balance."}, {"q": "A diver at 33 feet of seawater (2 atm total) breathes compressed air. Compared with the surface, the partial pressure of nitrogen in the alveoli is:", "options": ["About twice as high, so more nitrogen dissolves in the tissues", "About the same, since the nitrogen fraction of air stays 79%", "About half as high, since the water pushes nitrogen out of the lungs", "About four times as high, since pressure rises with depth squared"], "answer": 0, "why": "Partial pressure is fraction times total pressure. At 2 atm, the nitrogen fraction stays the same but the total doubles, so its partial pressure doubles. By Henry's law, about twice as much nitrogen dissolves in blood and tissues. Coming up too fast lets that nitrogen form bubbles, which causes decompression sickness."}, {"q": "During heavy exercise, the lung takes up much more \\(\\ce{O2}\\). Which change contributes the most?", "options": ["More lung capillaries open, raising the area for diffusion", "Each red cell stays longer in the lung capillaries", "The alveolar wall thins out to make diffusion faster", "Hemoglobin's affinity for \\(\\ce{O2}\\) rises in the lungs"], "answer": 0, "why": "At rest, many lung capillaries, especially at the top of the lung, carry little blood. During exercise, higher pressure opens (recruits) them and stretches others, so the area for exchange grows a lot. Red cells actually pass through faster, not slower, but there is enough reserve time to fill up. The barrier does not thin out."}, {"q": "Why is carbon monoxide used to measure the lung's diffusing capacity?", "options": ["Hemoglobin grabs it so tightly that plasma \\(P_{\\ce{CO}}\\) stays near zero", "It is less soluble than \\(\\ce{O2}\\), so it moves across the barrier slower", "It does not bind hemoglobin, so it shows the dissolved gas alone", "It equilibrates fast, so its uptake is limited by blood flow alone"], "answer": 0, "why": "CO binds hemoglobin so strongly that almost none stays dissolved in plasma, so its partial pressure in capillary blood stays near zero along the whole capillary. Its uptake is then set by how easily it crosses the barrier, not by blood flow. That makes it a clean measure of diffusion. Fibrosis and emphysema both lower the result."}, {"q": "What are the gas pressures in an alveolus with no blood flow (V/Q infinite) and in one with no air (V/Q zero)?", "options": ["No blood: like inspired air. No air: like mixed venous blood", "No blood: like mixed venous blood. No air: like inspired air", "No blood: like arterial blood. No air: like inspired air", "Both match normal alveolar gas, near 100 and 40 mmHg"], "answer": 0, "why": "With no blood, nothing removes \\(\\ce{O2}\\) or adds \\(\\ce{CO2}\\), so the alveolus fills with inspired air (\\(P_{\\ce{O2}}\\) about 150, \\(P_{\\ce{CO2}}\\) about 0). With no air, the trapped gas comes to equilibrium with the blood passing by, which is mixed venous blood (\\(P_{\\ce{O2}}\\) about 40, \\(P_{\\ce{CO2}}\\) about 45). Real lung units fall between these two extremes."}, {"q": "Why does a person lying down have more even blood flow from the top to the bottom of the lung than when standing?", "options": ["The vertical height of the lung is smaller, so gravity matters less", "Lying down raises pulmonary artery pressure above that in the aorta", "Hypoxic vasoconstriction turns off when a person is lying down", "The diaphragm moves up and pushes blood evenly into every vessel"], "answer": 0, "why": "Pulmonary pressures are low, so the weight of the blood creates big differences from top to bottom: about 1 cmH₂O per centimeter of height. An upright lung is about 30 cm tall, but a lung lying flat is only about 20 cm from front to back. Less height means smaller pressure differences, so blood flow is more even."}, {"q": "Hemoglobin is about 75% saturated in mixed venous blood at rest. What is the venous \\(P_{\\ce{O2}}\\) closest to?", "options": ["40 mmHg", "27 mmHg", "60 mmHg", "100 mmHg"], "answer": 0, "why": "Points to remember: 100 mmHg is about 98% saturated, 60 mmHg is about 90%, 40 mmHg is about 75% and 27 mmHg is about 50% (the \\(P_{50}\\)). At rest, tissues take only about a quarter of the \\(\\ce{O2}\\) that arrives, which leaves a large reserve for exercise."}, {"q": "A right shift of the hemoglobin curve changes \\(P_{50}\\) how?", "options": ["It raises \\(P_{50}\\), so a higher \\(P_{\\ce{O2}}\\) is needed to half-fill hemoglobin", "It lowers \\(P_{50}\\), so a lower \\(P_{\\ce{O2}}\\) is needed to half-fill hemoglobin", "It raises \\(P_{50}\\), so hemoglobin carries more \\(\\ce{O2}\\) at full saturation", "It leaves \\(P_{50}\\) alone and changes only the height of the curve"], "answer": 0, "why": "\\(P_{50}\\) is the \\(P_{\\ce{O2}}\\) at which hemoglobin is half saturated, normally about 27 mmHg. A right shift means lower affinity, so it takes more \\(\\ce{O2}\\) pressure to reach half saturation, and \\(P_{50}\\) goes up. A right shift does not change how much \\(\\ce{O2}\\) hemoglobin holds when completely full."}, {"q": "Acetazolamide blocks carbonic anhydrase. How does this change \\(\\ce{CO2}\\) handling by the blood in tissues?", "options": ["\\(\\ce{CO2}\\) turns into \\(\\ce{HCO3-}\\) slowly, so tissue \\(P_{\\ce{CO2}}\\) rises", "\\(\\ce{CO2}\\) turns into \\(\\ce{HCO3-}\\) quickly, so tissue \\(P_{\\ce{CO2}}\\) falls", "Hemoglobin can no longer bind \\(\\ce{CO2}\\) on its amino groups", "Red cells stop exchanging \\(\\ce{HCO3-}\\) for \\(\\ce{Cl-}\\) across their membrane"], "answer": 0, "why": "Without the enzyme, the reaction of \\(\\ce{CO2}\\) with water is very slow, too slow to finish during the second or so blood spends in a capillary. So less \\(\\ce{CO2}\\) is converted into \\(\\ce{HCO3-}\\), more stays as dissolved \\(\\ce{CO2}\\), and tissue \\(P_{\\ce{CO2}}\\) rises. Carbamino binding and the band 3 exchanger are not directly affected."}, {"q": "What does the chloride shift do in red blood cells passing through tissues?", "options": ["\\(\\ce{HCO3-}\\) moves out of the cell and \\(\\ce{Cl-}\\) moves in, through band 3", "\\(\\ce{Cl-}\\) moves out of the cell and \\(\\ce{HCO3-}\\) moves in, through band 3", "\\(\\ce{H+}\\) moves out of the cell and \\(\\ce{Cl-}\\) moves in, through a pump", "\\(\\ce{Cl-}\\) moves out of the cell and \\(\\ce{CO2}\\) moves in, through aquaporin"], "answer": 0, "why": "In tissue capillaries, red cells make lots of \\(\\ce{HCO3-}\\). The band 3 protein (anion exchanger 1) swaps it for \\(\\ce{Cl-}\\) from plasma, so plasma carries most of the \\(\\ce{HCO3-}\\) and charge stays balanced. In the lungs the swap runs backward, so \\(\\ce{HCO3-}\\) re-enters the cell and is turned back into \\(\\ce{CO2}\\) to be breathed out."}, {"q": "Methemoglobinemia turns some heme iron into \\(\\ce{Fe^{3+}}\\). Why does it starve tissues of \\(\\ce{O2}\\) beyond the loss of binding sites?", "options": ["The rest of the hemoglobin binds \\(\\ce{O2}\\) more tightly, so it unloads less", "The rest of the hemoglobin binds \\(\\ce{O2}\\) more loosely, so it unloads too early", "\\(\\ce{Fe^{3+}}\\) makes red cells burst, so hemoglobin is lost from the blood", "\\(\\ce{Fe^{3+}}\\) heme binds \\(\\ce{CO2}\\) instead, which blocks \\(\\ce{CO2}\\) removal"], "answer": 0, "why": "\\(\\ce{Fe^{3+}}\\) heme cannot bind \\(\\ce{O2}\\). It also changes the shape of the hemoglobin molecule so the other hemes in it hold \\(\\ce{O2}\\) more tightly, a left shift. So content drops and tissues get even less of what remains, just as with carbon monoxide. Some drugs and nitrates can cause it, and methylene blue treats it."}, {"q": "Why can breathing 100% \\(\\ce{O2}\\) at 3 atm (hyperbaric oxygen) keep someone alive even if their hemoglobin cannot carry \\(\\ce{O2}\\)?", "options": ["Arterial \\(P_{\\ce{O2}}\\) near 2000 mmHg puts 6 mL per dL of \\(\\ce{O2}\\) in plasma", "High pressure forces \\(\\ce{O2}\\) back onto hemoglobin that cannot carry it", "High pressure speeds the heart, so it pumps blood around the body faster", "High pressure makes \\(\\ce{O2}\\) cross cell membranes without any gradient"], "answer": 0, "why": "Dissolved \\(\\ce{O2}\\) is \\(0.003 \\times P_{\\ce{O2}}\\) mL per dL. At sea level that is just 0.3, but at about 2000 mmHg it is about 6 mL per dL. That roughly matches what tissues take from each dL of blood at rest (about 5). Hyperbaric oxygen also helps push carbon monoxide off hemoglobin faster."}, {"q": "A patient with carbon monoxide poisoning has a pulse oximeter reading of 99%. Why is this misleading?", "options": ["The sensor reads carboxyhemoglobin as if it were oxyhemoglobin", "The sensor reads dissolved \\(\\ce{O2}\\) rather than any hemoglobin", "The sensor reads carbon monoxide as a high arterial \\(P_{\\ce{O2}}\\)", "The sensor reads oxygen only in veins, where CO has no effect"], "answer": 0, "why": "A pulse oximeter compares how blood absorbs two colors of light. Carboxyhemoglobin is bright red and absorbs light much like oxyhemoglobin, so the device counts it as oxygenated. True \\(\\ce{O2}\\) saturation can be very low while the reading looks normal. A blood test called CO-oximetry, which uses more wavelengths, gives the true value."}, {"q": "Polycythemia raises hemoglobin to 20 g/dL. Which tradeoff does this bring?", "options": ["More \\(\\ce{O2}\\) per dL of blood, but thicker blood that flows less easily", "Less \\(\\ce{O2}\\) per dL of blood, but thinner blood that flows more easily", "More \\(\\ce{O2}\\) per dL of blood, with no change in how the blood flows", "A higher arterial \\(P_{\\ce{O2}}\\), but less \\(\\ce{O2}\\) per dL of blood"], "answer": 0, "why": "More hemoglobin means more binding sites, so \\(\\ce{O2}\\) content rises (about 27 mL per dL instead of 20). But more cells make blood more viscous, which raises resistance and the heart's workload and can lower flow. Arterial \\(P_{\\ce{O2}}\\) depends on the lungs, not on hemoglobin amount, so it does not change."}, {"q": "Moving down the airway tree, where is the first place gas exchange can happen?", "options": ["The respiratory bronchioles, whose walls carry a few alveoli", "The terminal bronchioles, the last tubes lined with cilia", "The main bronchi, where air first enters each separate lung", "The alveolar sacs, since no earlier tube has any alveoli"], "answer": 0, "why": "The conducting zone (trachea down to the terminal bronchioles) only moves air, so it is anatomical dead space. The respiratory zone starts with the respiratory bronchioles, which have scattered alveoli budding from their walls, followed by alveolar ducts and sacs. The volume of the conducting zone, about 150 mL, is the dead space used in ventilation math."}, {"q": "Which muscles contract during a hard, forced breath out?", "options": ["The internal intercostals and the abdominal wall muscles", "The external intercostals and the diaphragm together", "The diaphragm alone, which pushes up into the chest", "The scalenes and sternocleidomastoids in the neck"], "answer": 0, "why": "Quiet breathing out is passive: the lungs simply recoil. A forced breath out needs muscles that make the chest smaller. The internal intercostals pull the ribs down and in, and the abdominal muscles push the belly contents up against the diaphragm. The diaphragm, external intercostals, scalenes and sternocleidomastoids are muscles of breathing in."}, {"q": "A partly blocked airway halves the air reaching one lung region, while its blood flow stays the same. How do that region's alveolar gases change?", "options": ["\\(P_{\\ce{O2}}\\) falls and \\(P_{\\ce{CO2}}\\) rises, moving toward venous blood", "\\(P_{\\ce{O2}}\\) rises and \\(P_{\\ce{CO2}}\\) falls, moving toward inspired air", "\\(P_{\\ce{O2}}\\) and \\(P_{\\ce{CO2}}\\) both fall, since less gas enters the region", "Neither one changes, since blood flow sets the region's gas pressures"], "answer": 0, "why": "Lowering V/Q means blood keeps removing \\(\\ce{O2}\\) and adding \\(\\ce{CO2}\\), but less fresh air arrives to restore them. So alveolar gas drifts toward mixed venous values (\\(P_{\\ce{O2}}\\) near 40, \\(P_{\\ce{CO2}}\\) near 45). Blood leaving that region is less oxygenated, which lowers arterial \\(P_{\\ce{O2}}\\), and hypoxic vasoconstriction kicks in to send blood elsewhere."}]</script></section>
+<script type="application/json" class="frq-data">[{"q": "A hiker is at 500 mmHg barometric pressure, breathing air (21% \\(\\ce{O2}\\), water vapor 47 mmHg, \\(R = 0.8\\)). (a) Find alveolar \\(P_{\\ce{O2}}\\) if arterial \\(P_{\\ce{CO2}}\\) stays 40 mmHg. (b) Find it again after hyperventilation lowers \\(P_{\\ce{CO2}}\\) to 30 mmHg, and explain why it rises. (c) What inspired \\(\\ce{O2}\\) fraction would bring alveolar \\(P_{\\ce{O2}}\\) back to 100 mmHg while \\(P_{\\ce{CO2}}\\) is 30 mmHg?", "answer": "(a) Inspired \\(P_{\\ce{O2}} = 0.21 \\times (500 - 47) = 95.1\\) mmHg, so \\(P_{A\\ce{O2}} = 95.1 - \\dfrac{40}{0.8} = 45\\) mmHg. (b) \\(P_{A\\ce{O2}} = 95.1 - \\dfrac{30}{0.8} = 57.6\\) mmHg. Breathing faster replaces alveolar air more often, so less of the alveolar gas is \\(\\ce{CO2}\\) and more of it can be \\(\\ce{O2}\\). (c) Solve \\[ F_{I\\ce{O2}}(500 - 47) - \\frac{30}{0.8} = 100 \\quad\\Rightarrow\\quad F_{I\\ce{O2}} = \\frac{137.5}{453} = 0.30 \\] so about 30% \\(\\ce{O2}\\).", "points": ["About 45 mmHg without hyperventilation", "About 58 mmHg with \\(P_{\\ce{CO2}}\\) at 30, because less of each breath's space is taken up by \\(\\ce{CO2}\\)", "About 30% inspired \\(\\ce{O2}\\) restores 100 mmHg", "Shows the alveolar gas equation set up and used correctly"]}, {"q": "Compare emphysema with pulmonary fibrosis. For each, predict lung compliance, FVC, FEV₁, the FEV₁ to FVC ratio, residual volume and diffusing capacity, and explain the cause of each difference.", "answer": "Emphysema destroys alveolar walls and elastic fibers. Compliance goes up, so the lung is easy to fill but has little recoil. Without recoil holding them open, airways collapse when breathing out, so FEV₁ falls a lot, FVC falls less, the ratio is low (obstructive), and air gets trapped, so residual volume rises. Losing alveolar walls removes surface area and capillaries, so diffusing capacity falls. Fibrosis thickens and stiffens the lung. Compliance goes down, so the lung cannot fill: FVC and residual volume fall (restrictive). FEV₁ falls too, but strong recoil pulls the airways open, so the ratio is normal or high. The thick barrier lowers diffusing capacity.", "points": ["Emphysema: high compliance, low FEV₁ to FVC ratio, high residual volume", "Fibrosis: low compliance, low FVC, normal or high ratio, low residual volume", "Both lower diffusing capacity: lost area in emphysema, thick barrier in fibrosis", "Explains the ratio through recoil holding airways open"]}]</script>
+</section>
+    </div>
+  </main>
+</div>
+<script>
+/* minimono.js — the house style's behavior. Include before </body>; no init.
+   1. Two panes or one. Full-screen shows both (left ¼ · right ¾). The page
+      goes to one pane when the window isn't full-screen, or when the person
+      hides the left pane (`, or the pane's own "Hide"). Hiding is
+      remembered. Force the layout with <html data-layout="split|single">.
+   2. In one-pane mode the "Menu" link (.menu-hint) is invisible until the
+      pointer enters the top-left zone (left quarter, top sixth); clicking it,
+      or `, opens the left pane as an overlay. Esc, a click outside, or
+      choosing a row closes it. With no pointer (touch), the link stays shown.
+      The overlay is the SAME .pane-l element, moved by a class — never a
+      copy, never rebuilt — so its scroll position and selection survive.
+   3. Safari: trackpad pinch-zoom is blocked; ⌘+ / ⌘− still work.          */
+(function () {
+  'use strict';
+  var html = document.documentElement;
+  var KEY = 'minimono:pane-hidden';
+  var hidden = false;
+  try { hidden = localStorage.getItem(KEY) === '1'; } catch (e) {}
+
+  /* 1. Two panes or one ---------------------------------------------------- */
+  function isFull() {
+    var forced = html.getAttribute('data-layout');
+    if (forced === 'split') return true;
+    if (forced === 'single') return false;
+    // Full-screen or maximized. At the top level, measure the window itself
+    // (outerWidth): ⌘+ zoom shrinks innerWidth but not the window. Embedded
+    // in a frame, the frame's own width is what's available.
+    var top = true;
+    try { top = window.top === window; } catch (e) { top = false; }
+    var w = top && outerWidth > 0 ? outerWidth : innerWidth;
+    return w >= screen.availWidth - 24;
+  }
+  function layout() {
+    var windowed = !isFull();
+    html.classList.toggle('is-windowed', windowed);
+    var single = windowed || hidden;
+    if (single !== html.classList.contains('is-single')) {
+      if (!single) close(true);
+      html.classList.toggle('is-single', single);
+    }
+  }
+  function setHidden(v) {
+    hidden = v;
+    try { localStorage.setItem(KEY, v ? '1' : '0'); } catch (e) {}
+    close(true);
+    layout();
+  }
+  var raf = 0;
+  addEventListener('resize', function () { if (!raf) raf = requestAnimationFrame(function () { raf = 0; layout(); }); });
+  new MutationObserver(layout).observe(html, { attributes: true, attributeFilter: ['data-layout'] });
+
+  /* 2. The overlay --------------------------------------------------------- */
+  var lastFocus = null;
+  function pane() { return document.querySelector('.pane-l'); }
+  function typing(el) {
+    if (!el || el === document.body) return false;
+    if (el.isContentEditable) return true;
+    if (el.tagName === 'TEXTAREA' || el.tagName === 'SELECT') return true;
+    return el.tagName === 'INPUT' && !/^(button|submit|reset|checkbox|radio|range|color|file|image)$/i.test(el.type);
+  }
+  function single() { return html.classList.contains('is-single'); }
+  function isOpen() { return html.classList.contains('menu-open'); }
+  function open(keyboard) {
+    if (!single() || isOpen()) return;
+    html.classList.remove('hint-on');
+    html.classList.add('menu-open');
+    lastFocus = document.activeElement;
+    if (keyboard) {                                   // keyboard: move focus in
+      var p = pane(), cur = p && (p.querySelector('[aria-current="true"]') || p.querySelector('a,button,input,[tabindex]'));
+      if (cur) cur.focus({ preventScroll: true });
+    }
+  }
+  function close(silent) {
+    if (!isOpen()) return;
+    html.classList.remove('menu-open');
+    var p = pane();
+    if (!silent && lastFocus && lastFocus.focus && lastFocus !== document.body) lastFocus.focus({ preventScroll: true });
+    else if (p && p.contains(document.activeElement)) document.activeElement.blur();
+    lastFocus = null;
+  }
+
+  // the top-left zone: left quarter of the width, top sixth of the height.
+  // Entering it shows the menu link; nothing opens until the link is clicked.
+  function inZone(x, y) { return x <= innerWidth / 4 && y <= innerHeight / 6; }
+  var hintTimer = 0;
+  function hint(on) {
+    clearTimeout(hintTimer);
+    if (on) { html.classList.add('hint-on'); return; }
+    hintTimer = setTimeout(function () { html.classList.remove('hint-on'); }, 200);
+  }
+  addEventListener('pointermove', function (e) {
+    if (e.pointerType !== 'mouse') return;
+    hint(single() && !isOpen() && inZone(e.clientX, e.clientY));
+  }, { passive: true });
+  document.addEventListener('mouseleave', function () { hint(false); });
+
+  addEventListener('keydown', function (e) {
+    // ` (backtick) on its own — left alone while typing in a field
+    if (e.key === '`' && !e.metaKey && !e.ctrlKey && !e.altKey && !typing(document.activeElement)) {
+      e.preventDefault();
+      if (html.classList.contains('is-windowed')) { isOpen() ? close() : open(true); }
+      else setHidden(!hidden);                        // full-screen: hide, or dock it again
+      return;
+    }
+    if (e.key === 'Escape' && isOpen()) { e.preventDefault(); close(); }
+  });
+  addEventListener('pointerdown', function (e) {
+    if (!isOpen()) return;
+    var p = pane();
+    if (p && !p.contains(e.target) && !(e.target.closest && e.target.closest('.menu-hint'))) close();
+  });
+  addEventListener('click', function (e) {
+    var t = e.target.closest ? e.target : e.target.parentElement;
+    if (t.closest('.menu-hint')) { e.preventDefault(); isOpen() ? close() : open(false); return; }
+    if (t.closest('.pane-hide')) {                    // docked: "Hide" · hidden overlay: "Keep open"
+      e.preventDefault(); setHidden(!hidden); return;
+    }
+    if (isOpen() && t.closest('.pane-l .row, .pane-l .mcq-nav a')) close();
+  });
+
+  /* Focus rings: only after Tab. Shift, arrows, Space and clicks never show one. */
+  addEventListener('keydown', function (e) { if (e.key === 'Tab') html.classList.add('kbd-nav'); }, true);
+  addEventListener('pointerdown', function () { html.classList.remove('kbd-nav'); }, true);
+
+  /* 3. Safari pinch-zoom ---------------------------------------------------- */
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (t) {
+    document.addEventListener(t, function (e) { e.preventDefault(); }, { passive: false });
+  });
+
+  layout();
+  window.Minimono = {
+    open: function () { open(true); }, close: close,
+    hide: function () { setHidden(true); }, show: function () { setHidden(false); },
+    relayout: layout
+  };
+})();
+
+</script>
+<script>
+/* smooth-scroll.js — Safari's keyboard scrolling, for every pane.
+   ---------------------------------------------------------------------------
+   A port of WebKit's keyboard-scroll physics (ScrollAnimationKeyboard.cpp,
+   KeyboardScroll.h, macOS constants) so Space, arrows, Page Up/Down and
+   Home/End glide and settle on a spring in every scroller — the page, and
+   each two-pane split pane on its own.
+
+     ↑ / ↓            tap: glide one line (40px) · hold: accelerate to
+                      1000px/s in 0.2s, cruise, then the spring carries the
+                      leftover momentum and settles
+     Space / ⇧Space   the same, with a page as the step (the visible height
+     PgDn / PgUp      less 40px of overlap, never less than 87.5% of it):
+                      tap glides at least a page, hold accelerates
+     Home / End       glide to the top / bottom (also ⌘↑ / ⌘↓ on a Mac)
+   Key repeats are ignored while a key is held, as in WebKit.
+
+   Which scroller moves: the one under the pointer, else the one that holds
+   focus, else the last one clicked, else the page.
+   Left alone: any control that uses these keys itself — text fields,
+   sliders, radio groups, selects, contenteditable, tabs, listboxes — and
+   Space on a button, link, checkbox or anything else Space activates. Any key with ⌥/⌃
+   (and ⌘ except ⌘↑/⌘↓) passes through.
+   Respects prefers-reduced-motion: the same steps, applied instantly.
+   No init call — include before </body>. ~3KB. Exposes window.SmoothScroll.  */
+(function () {
+  'use strict';
+  if (window.SmoothScroll) return;
+
+  /* WebKit macOS KeyboardScrollParameters */
+  var MASS = 1, STIFF = 175, DAMP = 20, MAX_VEL_MULT = 25, TIME_TO_MAX = 0.2;
+  var LINE = 40;                         /* Scrollbar::pixelsPerLineStep()          */
+  var PAGE_MIN_FRACTION = 0.875;         /* Scrollbar::minFractionToStepWhenPaging  */
+  var PAGE_OVERLAP = 40;                 /* Scrollbar::maxOverlapBetweenPages        */
+
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
+  var docEl = function () { return document.scrollingElement || document.documentElement; };
+
+  function canScroll(el) {
+    if (el === docEl()) return el.scrollHeight > el.clientHeight;
+    var s = getComputedStyle(el), o = s.overflowY;
+    return (o === 'auto' || o === 'scroll' || o === 'overlay') && el.scrollHeight > el.clientHeight + 1;
+  }
+  function scrollerFrom(node) {
+    for (var el = node; el && el.nodeType === 1; el = el.parentElement) {
+      if (el === document.body || el === document.documentElement) break;
+      if (canScroll(el)) return el;
+    }
+    return canScroll(docEl()) ? docEl() : null;
+  }
+
+  var hovered = null, clicked = null;
+  addEventListener('pointermove', function (e) { if (e.pointerType === 'mouse') hovered = e.target; }, { passive: true });
+  addEventListener('pointerdown', function (e) { clicked = e.target; }, { passive: true });
+  document.addEventListener('mouseleave', function () { hovered = null; });
+
+  function pickScroller() {
+    var a = document.activeElement;
+    return (hovered && scrollerFrom(hovered)) ||
+           (a && a !== document.body && scrollerFrom(a)) ||
+           (clicked && scrollerFrom(clicked)) ||
+           scrollerFrom(document.body);
+  }
+
+  // controls that use arrows / Page / Home / End themselves keep them
+  function ownsKeys(el) {
+    if (!el || el === document.body) return false;
+    if (el.isContentEditable) return true;
+    var t = el.tagName;
+    if (t === 'TEXTAREA' || t === 'SELECT') return true;
+    if (t === 'INPUT') return !/^(button|submit|reset|checkbox|color|file|image)$/i.test(el.type);
+    var r = el.getAttribute && el.getAttribute('role');
+    return !!r && /^(slider|spinbutton|radio|radiogroup|tab|tablist|listbox|option|menu|menubar|menuitem|combobox|grid|tree|treeitem|textbox)$/.test(r);
+  }
+  function spaceActivates(el) {
+    if (!el || el === document.body) return false;
+    if (/^(BUTTON|A|SUMMARY|INPUT)$/.test(el.tagName)) return true;
+    var r = el.getAttribute && el.getAttribute('role');
+    return !!r && /^(button|link|tab|checkbox|radio|switch|menuitem|option|slider)$/.test(r);
+  }
+
+  /* One animator per scroller ------------------------------------------- */
+  var anims = new WeakMap();
+  function Anim(el) {
+    this.el = el; this.pos = el.scrollTop; this.vel = 0;
+    this.held = null; this.ideal = this.pos; this.minTravel = this.pos;
+    this.raf = 0; this.last = 0;
+  }
+  Anim.prototype.max = function () { return this.el.scrollHeight - this.el.clientHeight; };
+  Anim.prototype.sync = function () {
+    // the user may have scrolled by wheel/trackpad since we last moved it
+    if (!this.raf) { this.pos = this.el.scrollTop; this.ideal = this.pos; this.vel = 0; }
+  };
+  Anim.prototype.run = function () {
+    if (this.raf) return;
+    var self = this; this.last = performance.now();
+    this.raf = requestAnimationFrame(function f(t) { self.step(t) ? (self.raf = requestAnimationFrame(f)) : (self.raf = 0); });
+  };
+  Anim.prototype.stop = function () { if (this.raf) cancelAnimationFrame(this.raf); this.raf = 0; this.vel = 0; this.held = null; };
+  Anim.prototype.write = function () {
+    var max = this.max();
+    if (this.pos <= 0 || this.pos >= max) {          // hit an edge: stop there, no overshoot
+      this.pos = Math.min(Math.max(this.pos, 0), max);
+      this.vel = 0; this.ideal = this.pos;
+      this.el.scrollTop = this.pos;
+      return false;
+    }
+    this.el.scrollTop = this.pos;
+    return true;
+  };
+  /* ScrollAnimationKeyboard::animateScroll */
+  Anim.prototype.step = function (t) {
+    var dt = (t - this.last) / 1000; this.last = t;
+    if (dt <= 0) return true;
+    if (dt > 0.05) dt = 0.05;                          // a stalled frame shouldn't fling
+    var force = 0, spring = true, ideal = this.ideal;
+    if (this.held) {
+      force = this.held.force; spring = false; ideal = this.pos;
+      if (Math.abs(this.vel) >= Math.abs(this.held.maxVel)) force = 0;
+    }
+    var disp = this.pos - ideal;
+    if (spring) force -= disp * STIFF + this.vel * DAMP;
+    this.vel += force / MASS * dt;
+    this.pos += this.vel * dt;
+    var inside = this.write();
+    if (spring && disp * (this.pos - ideal) < 0) { this.vel = 0; this.pos = ideal; this.el.scrollTop = ideal; }
+    if (!inside && !this.held) return false;
+    if (!this.held && this.vel * this.vel < 1 && Math.abs(this.pos - ideal) < 0.5) { this.vel = 0; return false; }
+    return true;
+  };
+  /* startKeyboardScroll — velocity carries over, like WebKit */
+  Anim.prototype.hold = function (dir, step) {
+    var maxVel = step * MAX_VEL_MULT * dir;
+    this.held = { dir: dir, maxVel: maxVel, force: maxVel * MASS / TIME_TO_MAX };
+    this.minTravel = this.pos + step * dir;
+    this.run();
+  };
+  /* stopKeyboardScrollAnimation */
+  Anim.prototype.release = function () {
+    if (!this.held) return;
+    var d = Math.sqrt(this.vel * this.vel * MASS / STIFF) * (this.vel < 0 ? -1 : 1);
+    var settle = this.pos + d;
+    this.ideal = this.held.dir > 0 ? Math.max(settle, this.minTravel) : Math.min(settle, this.minTravel);
+    this.ideal = Math.round(Math.min(Math.max(this.ideal, 0), this.max()));
+    this.held = null;
+    this.run();
+  };
+  /* a jump to a target (top / bottom, or the public API): spring there */
+  Anim.prototype.to = function (target) {
+    var base = this.raf && !this.held ? this.ideal : this.pos;
+    if (typeof target === 'function') target = target(base);
+    this.held = null;
+    this.ideal = Math.round(Math.min(Math.max(target, 0), this.max()));
+    this.run();
+  };
+
+  function anim(el) { var a = anims.get(el); if (!a) { a = new Anim(el); anims.set(el, a); } a.sync(); return a; }
+  function pageStep(el) {
+    var h = el === docEl() ? innerHeight : el.clientHeight;
+    return Math.max(h * PAGE_MIN_FRACTION, h - PAGE_OVERLAP);
+  }
+
+  var heldKey = null, heldAnim = null;
+  function releaseHeld() { if (heldAnim) heldAnim.release(); heldKey = heldAnim = null; }
+
+  addEventListener('keydown', function (e) {
+    if (e.defaultPrevented || e.altKey || e.ctrlKey) return;
+    var k = e.key, cmdArrow = e.metaKey && (k === 'ArrowUp' || k === 'ArrowDown');
+    if (e.metaKey && !cmdArrow) return;
+    if (!/^( |ArrowUp|ArrowDown|PageUp|PageDown|Home|End)$/.test(k)) return;
+    var act = document.activeElement;
+    if (ownsKeys(act)) return;
+    if (k === ' ' && spaceActivates(act)) return;
+    if ((k === 'ArrowUp' || k === 'ArrowDown') && e.shiftKey && !cmdArrow) return;   // leave selection alone
+
+    var el = pickScroller(); if (!el) return;
+    e.preventDefault();
+    var edge = cmdArrow || k === 'Home' || k === 'End';
+    if (!edge && (e.repeat || heldKey)) return;                // WebKit ignores repeats and other keys while one is held
+    var a = anim(el), page = pageStep(el);
+
+    if (reduce && reduce.matches) {                       // same steps, no animation
+      a.stop();
+      var dy = k === 'ArrowDown' ? LINE : k === 'ArrowUp' ? -LINE :
+               (k === ' ' && !e.shiftKey) || k === 'PageDown' ? page : page * -1;
+      if (k === 'Home' || (cmdArrow && k === 'ArrowUp')) el.scrollTop = 0;
+      else if (k === 'End' || (cmdArrow && k === 'ArrowDown')) el.scrollTop = el.scrollHeight;
+      else el.scrollTop += dy;
+      return;
+    }
+
+    if (edge) {
+      a.to(k === 'Home' || k === 'ArrowUp' ? 0 : a.max());
+    } else if (k === 'ArrowUp' || k === 'ArrowDown') {
+      heldKey = k; heldAnim = a; a.hold(k === 'ArrowDown' ? 1 : -1, LINE);
+    } else {
+      heldKey = k; heldAnim = a;
+      a.hold((k === ' ' && !e.shiftKey) || k === 'PageDown' ? 1 : -1, page);
+    }
+  });
+  addEventListener('keyup', function (e) { if (e.key === heldKey) releaseHeld(); });
+  addEventListener('blur', releaseHeld);
+  document.addEventListener('visibilitychange', function () { if (document.hidden) releaseHeld(); });
+  /* a wheel/trackpad scroll takes over from a gliding key scroll */
+  addEventListener('wheel', function (e) {
+    var el = scrollerFrom(e.target), a = el && anims.get(el);
+    if (a && a.raf && !a.held) a.stop();
+  }, { passive: true });
+
+  window.SmoothScroll = {
+    /* programmatic glide, e.g. SmoothScroll.to(pane, 0) to send a pane home */
+    to: function (el, y) { anim(el || docEl()).to(y); },
+    by: function (el, dy) { var a = anim(el || docEl()); a.to(function (b) { return b + dy; }); }
+  };
+})();
+
+</script>
+<script>
+/* quiz.js — multiple-choice questions, the house way. Include before </body>; no init.
+
+   Write each quiz as JSON inside a .mcq element. The page builds it once,
+   at load; answering only changes classes and text.
+
+     <section class="mcq" data-title="Chapter 5 practice">
+       <script type="application/json">[
+         { "q": "If \\(t = \\sqrt{\\dfrac{2h}{g}}\\), how much taller must the table be to double \\(t\\)?",
+           "options": ["\\(2\\times\\)", "\\(4\\times\\)", "\\(8\\times\\)"],
+           "answer": 1,                       (0-based index into options, or a letter)
+           "why": "\\(t \\propto \\sqrt{h}\\), so doubling \\(t\\) takes \\(4h\\)." }
+       ]<\/script>                         (written <\/script here so the file can be inlined)
+     </section>
+
+   Randomized, always: the question order and each question's options are
+   shuffled the first time the quiz opens, kept through reloads (so progress
+   and the letters you talk about stay put), and reshuffled on Start over.
+   Never refer to a letter or a position in a question, option or why.
+
+   Optional: an empty <nav class="mcq-nav"></nav> (the left pane of a quiz
+   page) becomes the question numbers: plain = unanswered, underlined =
+   right, struck through = wrong. Clicking one glides to that question.
+
+   Answer with a click, or press A–F or 1–6. Keys go to the question that
+   holds focus or sits under the pointer, else the first unanswered one on
+   screen. An answer shows Correct / Incorrect, marks the right option,
+   strikes a wrong pick, shows the why, and locks the question. A keyboard
+   answer glides on to the next unanswered question.
+
+   Copy answers is always there: plain text with each question, its
+   options, your answer or Skipped, and the right answer. Math stays LaTeX
+   ($…$) so it pastes cleanly into a chat.
+
+   MCQ.audit() lists anything that gives an answer away: the right option
+   longest or shortest, options of very different length, a hedge only on
+   the right one or an absolute only on the wrong ones, "all/none of the
+   above", duplicates, a missing why, a slash fraction. It must come back
+   empty before a quiz is published; the same list goes to the console.     */
+(function () {
+  'use strict';
+  if (window.MCQ) return;
+  var LETTERS = 'ABCDEF';
+  var quizzes = [];
+  var hoverQ = null;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
+
+  /* ── helpers ──────────────────────────────────────────────────────────── */
+  function make(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  // punctuation right after inline math moves inside it, so a line can't start with ", "
+  function glue(s) { return String(s).replace(/\\\)([.,;:!?])/g, '$1\\)'); }
+  function asPlain(s) { return String(s).replace(/\\\(|\\\)/g, '$').replace(/\\\[|\\\]/g, '$$$$'); }
+  function hash(s) { var h = 0; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); }
+  function newSeed() {
+    try { var a = new Uint32Array(1); crypto.getRandomValues(a); return a[0]; }
+    catch (e) { return (Math.random() * 4294967296) >>> 0; }
+  }
+  function rng(seed) {                                 // mulberry32: small, seedable, even
+    return function () {
+      seed = (seed + 0x6D2B79F5) | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function shuffled(n, rand) {                         // Fisher–Yates
+    var a = []; for (var i = 0; i < n; i++) a.push(i);
+    for (var j = n - 1; j > 0; j--) { var k = Math.floor(rand() * (j + 1)), t = a[j]; a[j] = a[k]; a[k] = t; }
+    return a;
+  }
+  function answerIndex(answer, n) {
+    if (typeof answer === 'number') return answer >= 0 && answer < n ? answer : 0;
+    var j = LETTERS.indexOf(String(answer).trim().toUpperCase());
+    return j >= 0 && j < n ? j : 0;
+  }
+  function scrollerOf(node) {
+    for (var e = node.parentElement; e && e !== document.body; e = e.parentElement) {
+      var o = getComputedStyle(e).overflowY;
+      if ((o === 'auto' || o === 'scroll') && e.scrollHeight > e.clientHeight) return e;
+    }
+    return document.scrollingElement || document.documentElement;
+  }
+  function glideTo(node) {
+    var sc = scrollerOf(node), page = sc === (document.scrollingElement || document.documentElement);
+    var top = node.getBoundingClientRect().top - (page ? 0 : sc.getBoundingClientRect().top);
+    var y = Math.max(0, sc.scrollTop + top - sc.clientHeight * 0.18);
+    if (reduce && reduce.matches) sc.scrollTop = y;
+    else if (window.SmoothScroll) SmoothScroll.to(sc, y);
+    else sc.scrollTo({ top: y, behavior: 'smooth' });
+  }
+  function shown(q) { return q.li.offsetParent !== null; }
+  function onScreen(q) { var r = q.li.getBoundingClientRect(); return r.bottom > 40 && r.top < innerHeight - 40; }
+  function copyText(btn, text, fallback) {
+    var label = btn.firstChild, was = label.nodeValue;
+    function done() { fallback.hidden = true; label.nodeValue = 'Copied'; setTimeout(function () { label.nodeValue = was; }, 1400); }
+    function fail() { fallback.value = text; fallback.hidden = false; fallback.focus(); fallback.select(); }
+    try { navigator.clipboard.writeText(text).then(done, fail); } catch (e) { fail(); }
+  }
+
+  /* ── the giveaway check ───────────────────────────────────────────────── */
+  var HEDGE = /\b(usually|often|generally|typically|mostly|may|might|can|sometimes|tends? to|about|roughly)\b/i;
+  var ABSOLUTE = /\b(always|never|only|all|none|every|completely|entirely|impossible|guaranteed)\b/i;
+  function words(s) {                                  // what a reader sees: LaTeX commands and delimiters out
+    return String(s).replace(/\\[a-zA-Z]+/g, ' ').replace(/[\\{}()\[\]^_$]/g, '').replace(/\s+/g, ' ').trim();
+  }
+  function auditOne(d, i) {
+    var out = [], n = (d.options || []).length, ans = answerIndex(d.answer, n);
+    var say = function (msg) { out.push({ question: i + 1, text: words(d.q).slice(0, 60), issue: msg }); };
+    if (n < 3) say('fewer than 3 options');
+    if (!d.why) say('no why');
+    var opts = (d.options || []).map(words), lens = opts.map(function (o) { return o.length; });
+    if (new Set((d.options || []).map(function (o) { return String(o).replace(/\s+/g, ' ').trim().toLowerCase(); })).size < n) say('two options are the same');
+    if (opts.some(function (o) { return /\b(all|none|both|neither) of (the|these) (above|options)\b/i.test(o); })) say('"all / none / both of the above"');
+    var max = Math.max.apply(null, lens), min = Math.min.apply(null, lens);
+    if (max > 12) {                                    // short answers (numbers, symbols) can't give much away by length
+      if (max / Math.max(min, 1) > 1.5) say('options differ a lot in length (' + min + '–' + max + ' characters)');
+      var others = lens.filter(function (_, j) { return j !== ans; });
+      var nextLong = Math.max.apply(null, others), nextShort = Math.min.apply(null, others);
+      if (lens[ans] > nextLong && lens[ans] >= nextLong * 1.15) say('the right answer is the longest option');
+      if (lens[ans] < nextShort && lens[ans] <= nextShort * 0.85) say('the right answer is the shortest option');
+    }
+    var wrong = opts.filter(function (_, j) { return j !== ans; });
+    if (HEDGE.test(opts[ans]) && !wrong.some(function (o) { return HEDGE.test(o); })) say('only the right answer hedges ("usually", "can"…)');
+    if (!ABSOLUTE.test(opts[ans]) && wrong.length && wrong.every(function (o) { return ABSOLUTE.test(o); })) say('only the wrong answers use absolutes ("always", "never"…)');
+    [d.q, d.why].concat(d.options || []).forEach(function (s) {
+      (String(s || '').match(/\\\(([\s\S]*?)\\\)|\\\[([\s\S]*?)\\\]/g) || []).forEach(function (m) {
+        if (m.indexOf('/') !== -1) say('slash fraction in math: ' + m.slice(0, 30));
+      });
+      if (/\b(?:[Oo]ption|[Aa]nswer(?: is)?|[Cc]hoice|[Ll]etter) [A-F]\b/.test(words(s))) say('refers to a letter, but options are shuffled');
+    });
+    return out;
+  }
+
+  /* ── one quiz ─────────────────────────────────────────────────────────── */
+  function build(root) {
+    var src = root.querySelector('script[type="application/json"]'), data;
+    try { data = JSON.parse(src.textContent); } catch (e) { return; }
+    if (!Array.isArray(data) || !data.length) return;
+    var title = root.getAttribute('data-title') || document.title;
+    var key = 'minimono:mcq2:' + hash(data.map(function (d) { return d.q + '\u0001' + (d.options || []).join('\u0001'); }).join('\n'));
+    var state = null;
+    try { state = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
+    if (!state || typeof state.seed !== 'number' || !Array.isArray(state.answers)) state = { seed: newSeed(), answers: [] };
+
+    var quiz = { root: root, data: data, qs: [], order: [], nav: null };
+    var list = make('ol', 'mcq-list');
+    var nav = document.querySelector(root.getAttribute('data-nav') || '.mcq-nav');  // one nav per test
+    if (nav && !nav.dataset.built) { nav.dataset.built = '1'; quiz.nav = nav; }
+    var base = quizzes.reduce(function (s, z) { return s + z.qs.length; }, 0);
+
+    // every element is made once, here; shuffling only moves them
+    data.forEach(function (d, i) {
+      var li = make('li', 'mcq-q');
+      li.id = 'mcq-' + (base + i + 1);
+      li.tabIndex = -1;                                 // holds focus between answers, so Space still scrolls
+      var num = make('span', 'mcq-n');
+      num.setAttribute('aria-hidden', 'true');
+      var body = make('div', 'mcq-body');
+      var text = make('div', 'mcq-text', glue(d.q));
+      var opts = make('div', 'mcq-opts');
+      opts.setAttribute('role', 'group');
+      var btns = (d.options || []).map(function (o) {
+        var b = make('button', 'mcq-opt');
+        b.type = 'button';
+        var l = make('span', 'mcq-l');
+        b._letter = l.appendChild(document.createTextNode(''));
+        b.append(l, make('span', 'mcq-t', glue(o)));
+        return b;
+      });
+      var fb = make('p', 'mcq-fb');
+      fb.hidden = true;
+      fb.setAttribute('aria-live', 'polite');
+      var fbt = fb.appendChild(document.createTextNode(''));
+      var why = make('p', 'mcq-why', glue(d.why || ''));
+      why.hidden = true;
+      body.append(text, opts, fb, why);
+      li.append(num, body);
+
+      var q = { quiz: quiz, i: i, d: d, li: li, num: num.appendChild(document.createTextNode('')), opts: opts, btns: btns,
+                fb: fb, fbt: fbt, why: why, ans: answerIndex(d.answer, btns.length), chosen: -1, perm: [], navA: null };
+      li._mcq = q;
+      btns.forEach(function (b, o) {                   // o = the option's index in the JSON
+        b.addEventListener('click', function (e) { choose(q, q.perm.indexOf(o), e.detail === 0); });   // detail 0 = Enter / Space
+      });
+      li.addEventListener('pointerenter', function () { hoverQ = q; });
+      li.addEventListener('pointerleave', function () { if (hoverQ === q) hoverQ = null; });
+      if (quiz.nav) {
+        var a = make('a', 'mcq-nav-n');
+        a.href = '#' + li.id;
+        q.navT = a.appendChild(document.createTextNode(''));
+        a.addEventListener('click', function (e) { e.preventDefault(); glideTo(li); li.focus({ preventScroll: true }); });
+        q.navA = a;
+      }
+      quiz.qs.push(q);
+    });
+
+    var bar = make('div', 'mcq-bar');
+    var copyB = make('button', 'btn mcq-copy', 'Copy answers');
+    copyB.type = 'button';
+    var resetB = make('button', 'btn mcq-reset', 'Start over');
+    resetB.type = 'button';
+    var score = make('span', 'mcq-score');
+    score.setAttribute('aria-live', 'polite');
+    var scoreT = score.appendChild(document.createTextNode(''));
+    var fallback = make('textarea', 'mcq-fallback');
+    fallback.readOnly = true;
+    fallback.hidden = true;
+    fallback.setAttribute('aria-label', 'Answers to copy');
+    bar.append(copyB, resetB, score);
+    root.append(list, bar, fallback);
+
+    // lay the questions and options out in the order the seed gives
+    function arrange(seed) {
+      var rand = rng(seed);
+      quiz.order = shuffled(quiz.qs.length, rand).map(function (i) { return quiz.qs[i]; });
+      quiz.qs.forEach(function (q) { q.perm = shuffled(q.btns.length, rand); });
+      quiz.order.forEach(function (q, p) {
+        list.append(q.li);
+        q.num.nodeValue = String(p + 1);
+        q.opts.setAttribute('aria-label', 'Question ' + (p + 1));
+        q.perm.forEach(function (o, j) { q.opts.append(q.btns[o]); q.btns[o]._letter.nodeValue = LETTERS[j]; });
+        if (q.navA) { quiz.nav.append(q.navA); q.navT.nodeValue = String(p + 1); }
+      });
+    }
+    function mark(q) {
+      var done = q.chosen >= 0, right = done && q.chosen === q.ans;
+      q.li.classList.toggle('is-done', done);
+      q.li.classList.toggle('is-wrong', done && !right);
+      q.btns.forEach(function (b, o) {
+        b.classList.toggle('is-chosen', done && o === q.chosen);
+        b.classList.toggle('is-answer', done && o === q.ans);
+        if (done) b.setAttribute('aria-disabled', 'true'); else b.removeAttribute('aria-disabled');
+      });
+      q.fbt.nodeValue = !done ? '' : right ? 'Correct.' : 'Incorrect. The answer is ' + LETTERS[q.perm.indexOf(q.ans)] + '.';
+      q.fb.hidden = !done;
+      q.why.hidden = !done || !q.d.why;
+      if (q.navA) { q.navA.classList.toggle('is-right', right); q.navA.classList.toggle('is-wrong', done && !right); }
+    }
+    function save() {
+      try { localStorage.setItem(key, JSON.stringify({ seed: state.seed, answers: quiz.qs.map(function (q) { return q.chosen; }) })); } catch (e) {}
+    }
+    function tally() {
+      var answered = 0, right = 0;
+      quiz.qs.forEach(function (q) { if (q.chosen >= 0) { answered++; if (q.chosen === q.ans) right++; } });
+      var left = quiz.qs.length - answered;
+      scoreT.nodeValue = !answered ? '' : right + ' of ' + answered + ' correct' + (left ? ' · ' + left + ' left' : '');
+      save();
+    }
+    function next(q) {
+      var p = quiz.order.indexOf(q);
+      var rest = quiz.order.slice(p + 1).concat(quiz.order.slice(0, p)).filter(function (x) { return x.chosen < 0; });
+      if (rest.length) { rest[0].li.focus({ preventScroll: true }); glideTo(rest[0].li); }
+      else { q.li.focus({ preventScroll: true }); glideTo(root.querySelector('.frq-q') || bar); }  // on to the FRQs
+    }
+    function choose(q, j, advance) {                   // j = position on screen
+      if (q.chosen >= 0 || j < 0 || j >= q.btns.length) return;   // answered questions stay locked
+      q.chosen = q.perm[j];
+      mark(q);
+      tally();
+      if (advance) next(q);
+      else q.li.focus({ preventScroll: true });        // off the button, so Space scrolls again
+    }
+    quiz.choose = choose;
+
+    copyB.addEventListener('click', function () {
+      var lines = [title, ''], answered = 0, right = 0;
+      quiz.order.forEach(function (q, p) {
+        lines.push((p + 1) + '. ' + asPlain(q.d.q));
+        q.perm.forEach(function (o, j) { lines.push('   ' + LETTERS[j] + '. ' + asPlain(q.d.options[o])); });
+        var A = LETTERS[q.perm.indexOf(q.ans)];
+        if (q.chosen < 0) lines.push('   Skipped. Answer: ' + A);
+        else {
+          answered++;
+          var C = LETTERS[q.perm.indexOf(q.chosen)];
+          if (q.chosen === q.ans) { right++; lines.push('   Your answer: ' + C + ' (correct)'); }
+          else lines.push('   Your answer: ' + C + ' (incorrect). Answer: ' + A);
+        }
+        lines.push('');
+      });
+      var skipped = quiz.qs.length - answered;
+      lines.push('Score: ' + right + ' of ' + quiz.qs.length + (skipped ? ' (' + skipped + ' skipped)' : ''));
+      copyText(copyB, lines.join('\n'), fallback);
+    });
+    resetB.addEventListener('click', function () {      // a fresh order: same elements, moved
+      quiz.qs.forEach(function (q) { q.chosen = -1; mark(q); });
+      state.seed = newSeed();
+      arrange(state.seed);
+      tally();
+      var first = quiz.order[0];
+      glideTo(first.li);
+      first.li.focus({ preventScroll: true });
+    });
+
+    arrange(state.seed);
+    quiz.qs.forEach(function (q, i) {                  // reopen where you left off
+      var s = state.answers[i];
+      if (typeof s === 'number' && s >= 0 && s < q.btns.length) { q.chosen = s; mark(q); }
+    });
+    tally();
+    quizzes.push(quiz);
+
+    var issues = data.reduce(function (acc, d, i) { return acc.concat(auditOne(d, i)); }, []);
+    if (issues.length && window.console) console.warn('quiz.js: ' + issues.length + ' question(s) give the answer away', issues);
+
+    var MJ = window.MathJax, targets = [root].concat(quiz.nav ? [quiz.nav] : []);
+    if (MJ && MJ.startup && MJ.startup.promise) MJ.startup.promise.then(function () { return MJ.typesetPromise(targets); }).catch(function () {});
+    else if (MJ && typeof MJ.typesetPromise === 'function') MJ.typesetPromise(targets).catch(function () {});
+  }
+
+  /* ── keys: A–F or 1–6 answer the current question ─────────────────────── */
+  function current() {
+    var a = document.activeElement, li = a && a.closest && a.closest('.mcq-q');
+    var q = li && li._mcq;
+    if (q && q.chosen < 0 && shown(q)) return q;
+    if (hoverQ && hoverQ.chosen < 0 && shown(hoverQ)) return hoverQ;
+    var lis = document.querySelectorAll('.mcq-q');      // page order = the shuffled order
+    for (var i = 0; i < lis.length; i++) {
+      var x = lis[i]._mcq;
+      if (x && x.chosen < 0 && shown(x) && onScreen(x)) return x;
+    }
+    return null;
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey || e.repeat || e.defaultPrevented) return;
+    var a = document.activeElement;
+    if (a && (a.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))) return;
+    var j = e.key.length === 1 ? LETTERS.indexOf(e.key.toUpperCase()) : -1;
+    if (j < 0 && /^[1-6]$/.test(e.key)) j = +e.key - 1;
+    if (j < 0) return;
+    var q = current();
+    if (!q || j >= q.btns.length) return;
+    e.preventDefault();
+    q.quiz.choose(q, j, true);
+  });
+
+  function init() {
+    document.querySelectorAll('.mcq').forEach(function (r) {
+      if (!r.dataset.built) { r.dataset.built = '1'; build(r); }
+    });
+  }
+  init();                                               // the quiz markup sits above this script
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+
+  window.MCQ = {
+    init: init,
+    // every giveaway in every quiz on the page; must be empty before publishing
+    audit: function () {
+      return quizzes.reduce(function (acc, z) {
+        return acc.concat(z.data.reduce(function (a2, d, i) { return a2.concat(auditOne(d, i)); }, []));
+      }, []);
+    },
+    _shuffle: function (n, seed) { return shuffled(n, rng(seed)); }   // for tests
+  };
+})();
+
+</script>
+<script>
+
+/* page.js — this page's own behavior: FRQs, switching between the two tests,
+   and holding the questions back until the math is drawn. Everything is made
+   once at load; switching and answering only change attributes and text.  */
+(function () {
+  'use strict';
+  var html = document.documentElement;
+  var pane = document.querySelector('.pane-r');
+  var tests = [].slice.call(document.querySelectorAll('.test'));
+  var rows = [].slice.call(document.querySelectorAll('.pane-l .row[data-test]'));
+  var navs = {}, mem = {}, cur = null;
+
+  function make(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function glue(s) { return String(s).replace(/\\\)([.,;:!?])/g, '$1\\)'); }
+  function asPlain(s) { return String(s).replace(/\\\(|\\\)/g, '$').replace(/\\\[|\\\]/g, '$$$$'); }
+  function glide(el) {
+    var top = el.getBoundingClientRect().top - pane.getBoundingClientRect().top;
+    var y = Math.max(0, pane.scrollTop + top - pane.clientHeight * 0.18);
+    if (window.SmoothScroll) SmoothScroll.to(pane, y); else pane.scrollTop = y;
+  }
+  function copy(btn, text, fallback) {
+    var label = btn.firstChild, was = label.nodeValue;
+    function done() { fallback.hidden = true; label.nodeValue = 'Copied'; setTimeout(function () { label.nodeValue = was; }, 1400); }
+    function fail() { fallback.value = text; fallback.hidden = false; fallback.focus(); fallback.select(); }
+    try { navigator.clipboard.writeText(text).then(done, fail); } catch (e) { fail(); }
+  }
+
+  tests.forEach(function (t) {
+    var root = t.querySelector('.mcq');
+    var nav = document.querySelector(root.getAttribute('data-nav'));
+    navs[t.id] = nav;
+    var data = JSON.parse(t.querySelector('script.frq-data').textContent);
+    var n0 = JSON.parse(root.querySelector('script[type="application/json"]').textContent).length;
+    var key = 'bipn:frq:' + t.getAttribute('data-key');
+    var saved = null;
+    try { saved = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
+    if (!saved || !Array.isArray(saved.text)) saved = { text: [], open: [] };
+
+    var list = make('ol', 'frq-list');
+    var items = data.map(function (d, i) {
+      var n = n0 + i + 1;
+      var li = make('li', 'frq-q');
+      li.id = t.id + '-frq-' + (i + 1);
+      li.tabIndex = -1;
+      var num = make('span', 'mcq-n', String(n));
+      num.setAttribute('aria-hidden', 'true');
+      var body = make('div', 'mcq-body');
+      var text = make('div', 'mcq-text', glue(d.q));
+      var box = make('textarea', 'frq-in');
+      box.id = li.id + '-in';
+      box.rows = 6;
+      box.spellcheck = false;
+      box.setAttribute('aria-label', 'Your answer to question ' + n);
+      box.value = saved.text[i] || '';
+      var act = make('div', 'frq-act');
+      var btn = make('button', 'btn frq-show');
+      btn.type = 'button';
+      var label = btn.appendChild(document.createTextNode('Show answer'));
+      act.append(btn);
+      var ans = make('div', 'frq-ans');
+      ans.append(make('p', null, glue(d.answer)));
+      if (d.points && d.points.length) {
+        var ul = make('ul', 'frq-pts');
+        d.points.forEach(function (p) { ul.append(make('li', null, glue(p))); });
+        ans.append(ul);
+      }
+      body.append(text, box, act, ans);
+      li.append(num, body);
+      list.append(li);
+      var it = { d: d, n: n, li: li, box: box, ans: ans, navA: null };
+      it.open = function (v) {
+        ans.hidden = !v;
+        label.nodeValue = v ? 'Hide answer' : 'Show answer';
+        btn.setAttribute('aria-expanded', v ? 'true' : 'false');
+      };
+      it.open(!!saved.open[i]);
+      btn.addEventListener('click', function () { it.open(ans.hidden); save(); });
+      box.addEventListener('input', save);
+      if (nav) {
+        var a = make('a', 'mcq-nav-n', String(n));
+        a.href = '#' + li.id;
+        a.addEventListener('click', function (e) { e.preventDefault(); glide(li); li.focus({ preventScroll: true }); });
+        it.navA = a;
+      }
+      return it;
+    });
+    function save() {
+      try {
+        localStorage.setItem(key, JSON.stringify({
+          text: items.map(function (x) { return x.box.value; }),
+          open: items.map(function (x) { return !x.ans.hidden; })
+        }));
+      } catch (e) {}
+    }
+    function navTail() { if (nav) items.forEach(function (x) { nav.append(x.navA); }); }
+
+    var bar = root.querySelector('.mcq-bar');
+    var fallback = root.querySelector('.mcq-fallback');
+    var reset = root.querySelector('.mcq-reset');
+    root.insertBefore(list, bar);
+    navTail();
+
+    var copyW = make('button', 'btn frq-copy');
+    copyW.type = 'button';
+    copyW.appendChild(document.createTextNode('Copy written answers'));
+    bar.insertBefore(copyW, reset);
+    copyW.addEventListener('click', function () {
+      var lines = [root.getAttribute('data-title') + ', written answers', ''];
+      items.forEach(function (x) {
+        lines.push(x.n + '. ' + asPlain(x.d.q));
+        lines.push('   Your answer: ' + (x.box.value.trim() || 'Skipped'));
+        lines.push('   Model answer: ' + asPlain(x.d.answer));
+        (x.d.points || []).forEach(function (p) { lines.push('   - ' + asPlain(p)); });
+        lines.push('');
+      });
+      copy(copyW, lines.join('\n'), fallback);
+    });
+    reset.addEventListener('click', function () {   // quiz.js reshuffles first; then clear the written answers
+      items.forEach(function (x) { x.box.value = ''; x.open(false); });
+      save();
+      navTail();
+    });
+  });
+
+  // the two tests already exist; switching only flips `hidden` and aria-current
+  function show(id) {
+    if (!/^test-\d+$/.test(id) || !document.getElementById(id)) id = tests[0].id;
+    if (cur === id) return;
+    if (cur) mem[cur] = pane.scrollTop;
+    tests.forEach(function (t) { t.hidden = t.id !== id; });
+    rows.forEach(function (r) { r.setAttribute('aria-current', r.getAttribute('data-test') === id ? 'true' : 'false'); });
+    Object.keys(navs).forEach(function (k) { if (navs[k]) navs[k].hidden = k !== id; });
+    cur = id;
+    pane.scrollTop = mem[id] || 0;
+  }
+  function fromHash() { show((location.hash || '').slice(1)); }
+  addEventListener('hashchange', fromHash);
+  fromHash();
+
+  // the questions wait behind the loading ring until MathJax has drawn them
+  window.__mathReady = function () { html.classList.remove('mj-wait'); };
+  setTimeout(window.__mathReady, 9000);
+})();
+
+</script>
+</body>
+</html>
