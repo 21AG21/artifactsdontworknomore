@@ -1,0 +1,1145 @@
+<!doctype html>
+<html lang="en" class="mj-wait">
+<head>
+<meta charset="utf-8">
+<title>BIPN 134 Midterm 1 Practice</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="BIPN 134 Human Reproduction: two 30-minute Midterm 1 practice tests, 30 MCQs and 2 FRQs each.">
+<style>
+/* minimono.css — the house style's base: tokens, type, the two-pane layout,
+   the windowed overlay, and flat native controls.
+   Targets two screens: MacBook Air 15" (1710×1107, 2×) and Dell P2423D
+   (2560×1440, 1×). Every line is 1px — half-pixels vanish on the Dell.     */
+
+/* ── Tokens ─────────────────────────────────────────────────────────────── */
+:root{
+  color-scheme: light dark;            /* native controls + scrollbars follow the theme */
+  --ground:#EEF1F4; --wall:#ffffff;
+  --ink:#0a0a0b; --ink-soft:#5F6368; --muted:#9c9ca3;
+  --hair:rgba(10,10,12,.13); --hair-soft:rgba(10,10,12,.08);
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",system-ui,sans-serif;
+  --pane-l:25%;                        /* the left pane is one quarter, always */
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --ground:#000000; --wall:#161618; --ink:#f6f6f8; --ink-soft:#a0a0a8; --muted:#67676f;
+  --hair:rgba(255,255,255,.16); --hair-soft:rgba(255,255,255,.09);
+}}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#000000; --wall:#161618; --ink:#f6f6f8; --ink-soft:#a0a0a8; --muted:#67676f;
+  --hair:rgba(255,255,255,.16); --hair-soft:rgba(255,255,255,.09);
+}
+:root[data-theme="light"]{ color-scheme: light; }
+
+/* ── Base ───────────────────────────────────────────────────────────────── */
+*,*::before,*::after{ box-sizing:border-box; }
+html,body{ margin:0; height:100%; overflow:hidden; }
+body{
+  background:var(--ground); color:var(--ink);
+  font:16px/1.5 var(--sans); -webkit-font-smoothing:antialiased;
+  font-variant-numeric:tabular-nums;
+}
+:focus, :focus-visible{ outline:none; }
+/* focus shows only after Tab (minimono.js sets .kbd-nav; any click clears it),
+   as a thin grey line — never a bright ring, never from Shift or a click */
+html.kbd-nav :focus-visible{ outline:1px solid var(--muted); outline-offset:3px; border-radius:6px; }
+/* text selection keeps the system highlight — never restyle ::selection */
+a{ color:inherit; text-decoration:none; }
+/* scrollbars: left to macOS — overlay, thin, shown while scrolling. Never hidden. */
+
+/* ── Type (tuned for 1710 and 2560 wide). Weights: 300 · 400 · 500, never more ─ */
+.hero { font-size:clamp(64px, 4.6vw, 112px); font-weight:300; line-height:1.02; letter-spacing:-.035em; margin:0; }
+.h2   { font-size:clamp(28px, 1.9vw, 40px);  font-weight:500; line-height:1.15; letter-spacing:-.02em; margin:0; }
+.text { font-size:clamp(17px, 1.05vw, 20px); line-height:1.55; max-width:68ch; }
+.label{ font-size:13px; font-weight:500; color:var(--ink-soft); letter-spacing:.005em; }
+.num  { font-weight:400; letter-spacing:-.02em; }
+
+/* ── Layout: two panes, left ¼ · right ¾, each its own scroller ─────────── */
+#app{ display:flex; height:100dvh; }
+.pane-l{
+  flex:0 0 var(--pane-l); height:100%; overflow-y:auto; overscroll-behavior:contain;
+  border-right:1px solid var(--hair-soft); background:var(--ground);
+  padding:48px 32px 64px;
+}
+.pane-r{ flex:1 1 auto; min-width:0; height:100%; overflow-y:auto; overscroll-behavior:contain; }
+.pane-r .body{ max-width:1120px; padding:56px clamp(48px, 5vw, 120px) 120px; }
+
+/* the list in the left pane */
+.row{
+  display:block; width:100%; padding:14px 0; border-bottom:1px solid var(--hair-soft);
+  font-size:clamp(17px, 1.15vw, 22px); color:var(--ink-soft); cursor:pointer;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.row:last-child{ border-bottom:0; }
+@media (hover:hover){ .row:hover{ color:var(--ink); } }
+.row[aria-current="true"]{ color:var(--ink); font-weight:500; }
+.row:active{ opacity:.6; }
+
+/* ── One-pane mode: windowed, or the person hid the left pane ────────────
+   The left pane leaves the layout; it comes back as an overlay (the SAME
+   element, moved) when the pointer enters the top-left zone — the left
+   quarter of the width, the top sixth of the height — or on `.           */
+.pane-hide{
+  border:0; background:none; padding:4px 0; margin:0;
+  font:inherit; font-size:13px; color:var(--ink-soft); cursor:pointer; text-align:left;
+}
+.pane-hide kbd{ font:inherit; color:var(--muted); margin-left:6px; }
+.pane-hide .keep{ display:none; }
+html.is-single .pane-hide .hide{ display:none; }
+html.is-single .pane-hide .keep{ display:inline; }
+html.is-windowed .pane-hide{ display:none; }        /* windowed: the overlay is the only way it shows */
+@media (hover:hover){ .pane-hide:hover{ color:var(--ink); } }
+.menu-hint{ display:none; }
+/* one-pane mode: the link sits in the top-left zone, invisible until the
+   pointer enters that zone (or it takes keyboard focus); always shown on touch */
+html.is-single .menu-hint{
+  display:block; position:fixed; z-index:15;
+  top:calc(env(safe-area-inset-top, 0px) + 18px); left:max(16px, env(safe-area-inset-left, 0px), 2vw);
+  padding:6px 10px; margin:0; border-radius:8px; background:var(--ground);
+  font-size:13px; color:var(--ink-soft); cursor:pointer;
+  opacity:0; pointer-events:none; transition:opacity .14s ease;
+}
+html.is-single .menu-hint kbd{ font:inherit; color:var(--muted); margin-left:6px; }
+html.is-single.hint-on .menu-hint,
+html.kbd-nav.is-single .menu-hint:focus-visible{ opacity:1; pointer-events:auto; }
+@media (hover:none){ html.is-single .menu-hint{ opacity:1; pointer-events:auto; } }
+@media (hover:hover){ html.is-single .menu-hint:hover{ color:var(--ink); } }
+
+html.is-single .pane-l{
+  position:fixed; z-index:20; inset:0 auto 0 0; width:clamp(280px, 25vw, 640px);
+  transform:translateX(-100%); visibility:hidden;
+  transition:transform .22s cubic-bezier(.32,.72,0,1), visibility 0s linear .22s;
+}
+html.is-single.menu-open .pane-l{
+  transform:none; visibility:visible; border-right:1px solid var(--hair);
+  transition:transform .22s cubic-bezier(.32,.72,0,1), visibility 0s;
+}
+
+/* ── Controls: native elements, flat ────────────────────────────────────── */
+/* slider + checkbox + radio take ink through accent-color, natively */
+input[type="range"], input[type="checkbox"], input[type="radio"]{ accent-color:var(--ink); }
+input[type="range"]{ width:100%; max-width:420px; cursor:pointer; }
+
+/* toggle: a checkbox with role="switch", drawn flat */
+input[type="checkbox"][role="switch"]{
+  -webkit-appearance:none; appearance:none; margin:0; flex:none; cursor:pointer;
+  position:relative; width:40px; height:24px; border-radius:999px;
+  background:var(--hair); transition:background .16s ease;
+}
+input[type="checkbox"][role="switch"]::before{
+  content:""; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:999px;
+  background:var(--ground); transition:transform .18s cubic-bezier(.32,.72,0,1);
+}
+input[type="checkbox"][role="switch"]:checked{ background:var(--ink); }
+input[type="checkbox"][role="switch"]:checked::before{ transform:translateX(16px); }
+
+/* segmented choice: a radio group; the chosen one is heavier ink + a 2px mark */
+.seg{ display:inline-flex; gap:28px; border:0; padding:0; margin:0; }
+.seg label{ position:relative; cursor:pointer; padding:6px 0; color:var(--ink-soft); font-weight:400; }
+.seg input{ position:absolute; opacity:0; width:1px; height:1px; }
+.seg input:checked + span{ color:var(--ink); font-weight:500; }
+.seg input:checked + span::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:2px; background:var(--ink); border-radius:2px;
+}
+html.kbd-nav .seg input:focus-visible + span{ outline:1px solid var(--muted); outline-offset:4px; border-radius:6px; }
+@media (hover:hover){ .seg label:hover span{ color:var(--ink); } }
+
+/* search */
+input[type="search"]{
+  -webkit-appearance:none; appearance:none; width:100%; max-width:420px;
+  font:inherit; font-size:16px; color:var(--ink);
+  background:var(--wall); border:0; border-radius:10px; padding:10px 14px;
+}
+input[type="search"]::placeholder{ color:var(--muted); }
+
+/* buttons: only for real actions — navigation is text */
+button{ font:inherit; cursor:pointer; }
+.btn{ border:0; border-radius:10px; padding:10px 18px; font-weight:500; background:var(--wall); color:var(--ink); }
+.btn.primary{ background:var(--ink); color:var(--ground); }
+.btn:active{ opacity:.6; }
+
+/* ── Multiple-choice questions (quiz.js builds them from JSON) ─────────────
+   State without color: the right answer gets an ink bar and Medium weight,
+   a wrong pick is struck through, everything else recedes to grey. */
+.mcq-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:44px; max-width:760px; }
+.mcq-q{ display:grid; grid-template-columns:2em minmax(0, 1fr); column-gap:10px; outline-offset:8px; }
+.mcq-n{ font-size:clamp(19px, 1.25vw, 24px); line-height:1.45; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+.mcq-body{ display:flex; flex-direction:column; gap:12px; min-width:0; }
+.mcq-text{ margin:0; font-size:clamp(19px, 1.25vw, 24px); line-height:1.45; color:var(--ink); }
+.mcq-text mjx-container[display="true"]{ margin:.5em 0 !important; }
+.mcq-opts{ display:flex; flex-direction:column; gap:2px; }
+.mcq-opt{
+  display:grid; grid-template-columns:1.5em minmax(0, 1fr); align-items:baseline; gap:8px;
+  width:calc(100% + 20px); margin:0 -10px; padding:9px 10px; border:0; border-radius:8px;
+  background:none; text-align:left; font:inherit; font-size:clamp(17px, 1.05vw, 20px); line-height:1.45;
+  color:var(--ink); cursor:pointer;
+}
+.mcq-l{ color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+@media (hover:hover){ .mcq-q:not(.is-done) .mcq-opt:hover{ background:var(--wall); } }
+.mcq-q:not(.is-done) .mcq-opt:active{ opacity:.6; }
+.mcq-q.is-done .mcq-opt{ cursor:default; color:var(--ink-soft); }
+.mcq-q.is-done .mcq-opt.is-answer{ color:var(--ink); font-weight:500; box-shadow:inset 2px 0 0 var(--ink); }
+.mcq-q.is-done .mcq-opt.is-answer .mcq-l{ color:var(--ink); }
+.mcq-q.is-done .mcq-opt.is-chosen:not(.is-answer) .mcq-t{ text-decoration:line-through; text-decoration-thickness:1px; }
+.mcq-fb{ margin:6px 0 0; font-size:17px; font-weight:500; color:var(--ink); }
+.mcq-why{ margin:0; font-size:17px; line-height:1.5; color:var(--ink-soft); max-width:62ch; }
+.mcq-bar{ display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin-top:44px; }
+.mcq-score{ font-size:15px; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+.mcq-fallback{ width:100%; max-width:760px; min-height:160px; margin-top:16px; font:14px/1.5 var(--sans); color:var(--ink);
+  background:var(--wall); border:0; border-radius:10px; padding:12px 14px; }
+/* the question numbers, in the left pane of a quiz page */
+.mcq-nav{ display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:4px; }
+.mcq-nav a{ display:block; padding:8px 0; border-radius:8px; text-align:center; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+@media (hover:hover){ .mcq-nav a:hover{ background:var(--wall); color:var(--ink); } }
+.mcq-nav a.is-right{ color:var(--ink); text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:.25em; }
+.mcq-nav a.is-wrong{ color:var(--ink); text-decoration:line-through; text-decoration-thickness:1px; }
+/* fractions stay full size inline */
+mjx-container[jax="SVG"]:not([display="true"]){ margin:0 .08em; }
+
+/* ── Loading: the one color exception — a thin rainbow ring, only while loading */
+.loading{
+  width:18px; height:18px; border-radius:50%;
+  background:conic-gradient(#ff3b30,#ff9500,#ffcc00,#34c759,#00c7be,#007aff,#af52de,#ff3b30);
+  -webkit-mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+          mask:radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+  animation:mm-spin .9s linear infinite;
+}
+@keyframes mm-spin{ to{ transform:rotate(1turn); } }
+
+@media (prefers-reduced-motion:reduce){
+  *{ animation:none!important; transition:none!important; }
+}
+
+/* ── This page: a course, two timed tests, MCQs then FRQs ─────────────── */
+[hidden]{ display:none!important; }
+.pane-r{ position:relative; }
+.course{ display:flex; flex-direction:column; gap:6px; margin:28px 0 30px; }
+.course-n{ margin:0; font-size:clamp(36px, 2.6vw, 56px); font-weight:300; line-height:1.12; letter-spacing:-.03em; }
+.course-t{ margin:0; font-size:clamp(17px, 1.15vw, 22px); line-height:1.35; color:var(--ink); }
+.course-s{ margin:0; font-size:14px; line-height:1.5; color:var(--ink-soft); }
+.tests{ margin:0 0 26px; }
+.frq-list{ list-style:none; margin:44px 0 0; padding:0; display:flex; flex-direction:column; gap:44px; max-width:760px; }
+.frq-q{ display:grid; grid-template-columns:2em minmax(0, 1fr); column-gap:10px; outline-offset:8px; }
+.frq-in{ display:block; width:100%; min-height:8.5em; margin:0; resize:vertical; font:inherit; font-size:clamp(17px, 1.05vw, 20px);
+  line-height:1.5; color:var(--ink); background:var(--wall); border:0; border-radius:10px; padding:12px 14px; }
+.frq-act{ display:flex; gap:12px; }
+.frq-ans{ display:flex; flex-direction:column; gap:10px; }
+.frq-ans p{ margin:0; font-size:17px; line-height:1.5; color:var(--ink); max-width:62ch; }
+.frq-pts{ margin:0; padding:0 0 0 1.1em; display:flex; flex-direction:column; gap:6px; font-size:17px; line-height:1.5; color:var(--ink-soft); max-width:62ch; }
+.frq-pts li::marker{ color:var(--muted); }
+.frq-q mjx-container[display="true"]{ margin:.5em 0 !important; }
+.mj-ring{ position:absolute; top:60px; left:clamp(48px, 5vw, 120px); }
+html:not(.mj-wait) .mj-ring{ display:none; }
+html.mj-wait .pane-r .body{ visibility:hidden; }
+
+</style>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']], packages: { '[+]': ['mhchem'] } },
+  svg: { fontCache: 'global' },
+  startup: {
+    pageReady: function () {
+      return MathJax.startup.defaultPageReady().then(function () { if (window.__mathReady) window.__mathReady(); });
+    }
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg-full.js"></script>
+</head>
+<body>
+<div id="app">
+  <nav class="pane-l">
+    <button class="pane-hide" type="button"><span class="hide">Hide</span><span class="keep">Keep open</span><kbd>`</kbd></button>
+    <header class="course">
+      <h1 class="course-n">BIPN 134</h1>
+      <p class="course-t">Human Reproduction</p>
+      <p class="course-s">Midterm 1 &middot; 30 minutes each</p>
+      <p class="course-s">Gametogenesis, the HPG axis, two-cell theory, follicle growth, the menstrual cycle and sperm capacitation.</p>
+    </header>
+    <div class="tests">
+      <a class="row" href="#test-1" data-test="test-1" aria-current="true">Test 1</a>
+<a class="row" href="#test-2" data-test="test-2" aria-current="false">Test 2</a>
+    </div>
+    <nav class="mcq-nav" id="nav-test-1" aria-label="Test 1 questions"></nav>
+<nav class="mcq-nav" id="nav-test-2" aria-label="Test 2 questions" hidden></nav>
+  </nav>
+  <main class="pane-r">
+    <a class="menu-hint" href="#">Menu<kbd>`</kbd></a>
+    <div class="loading mj-ring" aria-hidden="true"></div>
+    <div class="body">
+<section class="test" id="test-1" data-key="bipn134-t1">
+<section class="mcq" data-title="BIPN 134 Midterm 1, Test 1" data-nav="#nav-test-1"><script type="application/json">[{"q": "At which stage is a human oocyte held from before birth until the LH surge that precedes its ovulation?", "options": ["Prophase of meiosis I", "Metaphase of meiosis II", "Prophase of meiosis II", "Interphase before meiosis"], "answer": 0, "why": "Oogonia enter meiosis before birth and stop in prophase I (the diplotene, or dictyate, stage). They can wait there for up to 50 years. The LH surge restarts meiosis: the oocyte finishes meiosis I, makes the first polar body, and stops again at metaphase II. Meiosis II is finished only if a sperm enters."}, {"q": "When does a woman have the most oocytes in her ovaries?", "options": ["At about 20 weeks of fetal life, with about 7 million", "At birth, with about 7 million that slowly decline", "At puberty, with about 7 million ready to mature", "At about age 25, with about 7 million in reserve"], "answer": 0, "why": "Oogonia multiply by mitosis until mid-pregnancy, reaching about 7 million. Most then die by atresia, leaving about 1 to 2 million at birth and about 400,000 at puberty. Only about 400 will ever be ovulated. Oogonia stop dividing before birth, so no new eggs are made later."}, {"q": "Sertoli cells are joined by tight junctions near the base of the seminiferous tubule. What does this barrier do?", "options": ["It shields developing sperm from immune attack and controls their fluid", "It keeps testosterone out of the tubule so sperm develop more slowly", "It stops Leydig cells from moving into the tubule during puberty", "It lets antibodies enter the tubule to protect sperm from infection"], "answer": 0, "why": "Spermatocytes and spermatids carry new proteins that appeared only after the immune system learned what \"self\" is, so immune cells could attack them. The blood–testis barrier keeps immune cells and antibodies away from these cells and lets Sertoli cells set up the special fluid inside the tubule. Spermatogonia sit outside the barrier, near the blood."}, {"q": "Inhibin B lowers FSH but not LH. Which cells make it, and what tells them to?", "options": ["Sertoli cells, in response to FSH and active spermatogenesis", "Leydig cells, in response to LH and rising testosterone", "Sertoli cells, in response to LH and rising testosterone", "Leydig cells, in response to FSH and active spermatogenesis"], "answer": 0, "why": "FSH acts on Sertoli cells, which support sperm development and release inhibin B. Inhibin B feeds back on the pituitary to lower FSH specifically, so FSH and Sertoli function balance each other. LH acts on Leydig cells, and testosterone feeds back on both the hypothalamus and pituitary."}, {"q": "A male bodybuilder takes high doses of testosterone. What happens to his testes?", "options": ["They shrink and make fewer sperm, as LH falls and testicular testosterone drops", "They grow and make more sperm, as the extra testosterone reaches the tubules", "They stay the same size and make more sperm, since FSH rises to compensate", "They shrink but keep making normal sperm, as blood testosterone stays high"], "answer": 0, "why": "Extra testosterone feeds back to cut GnRH, LH and FSH. Without LH, Leydig cells stop making testosterone, and the very high testosterone level inside the testis (about 100 times blood levels) falls. Blood levels from the drug are far too low to support sperm production, so sperm counts drop and the testes shrink. This is how testosterone-based male contraceptives would work."}, {"q": "Finasteride shrinks an enlarged prostate. How?", "options": ["It blocks 5\\(\\alpha\\)-reductase, so less testosterone becomes DHT", "It blocks aromatase, so less testosterone becomes estradiol", "It blocks androgen receptors, so testosterone cannot bind", "It blocks LH receptors, so Leydig cells make less testosterone"], "answer": 0, "why": "In the prostate, 5\\(\\alpha\\)-reductase turns testosterone into dihydrotestosterone (DHT), which binds the androgen receptor much more strongly. DHT drives prostate growth. Blocking the enzyme lowers DHT in the prostate without stopping testosterone from acting on muscle or libido as strongly."}, {"q": "A man has no working aromatase. In his 20s he is still growing taller. Why?", "options": ["Estradiol is needed to close the growth plates, even in men", "Testosterone is needed to close the growth plates, so his levels must be low", "Aromatase makes growth hormone, so he has too much of it", "Aromatase breaks down growth hormone, so it builds up in his blood"], "answer": 0, "why": "In both sexes, estrogen is the main signal that closes the growth plates at the end of puberty. Men make estradiol from testosterone using aromatase. Without it, the plates stay open and the long bones keep growing slowly. Men with estrogen receptor defects show the same pattern."}, {"q": "According to the two-cell theory of ovarian steroid production, which statement is correct?", "options": ["Theca cells make androgens under LH; granulosa cells turn them into estradiol under FSH", "Granulosa cells make androgens under LH; theca cells turn them into estradiol under FSH", "Theca cells make estradiol under FSH; granulosa cells turn it into androgens under LH", "Granulosa cells make cholesterol under FSH; theca cells turn it into estradiol under LH"], "answer": 0, "why": "Theca cells, outside the basement membrane, have LH receptors and the enzymes to make androstenedione from cholesterol, but no aromatase. The androgen moves into the granulosa cells, which have FSH receptors and aromatase. FSH raises aromatase, which turns androgens into estradiol. Both cells and both hormones are needed."}, {"q": "Several antral follicles start growing, but only one ovulates. How is the dominant follicle chosen?", "options": ["Rising estradiol lowers FSH, and the follicle most sensitive to FSH survives", "Rising LH kills the others, and the follicle with no LH receptors survives", "Rising progesterone lowers FSH, and the follicle with the most theca survives", "Rising inhibin raises FSH, and the follicle that grows fastest survives"], "answer": 0, "why": "Each follicle needs enough FSH to avoid dying. As follicles grow, their estradiol and inhibin B lower FSH. The follicle with the most FSH receptors and best blood supply keeps growing at the lower FSH level, and it gains LH receptors on its granulosa cells, so LH can support it too. The others fall below their FSH threshold and undergo atresia."}, {"q": "What must happen for estradiol to switch from inhibiting to triggering LH release?", "options": ["Estradiol must stay high (about 200 pg/mL or more) for about 2 days", "Estradiol must fall quickly to near zero, which removes inhibition", "Progesterone must stay high for about 2 days, which primes the pituitary", "Estradiol must rise briefly for an hour, which unblocks GnRH neurons"], "answer": 0, "why": "At low and moderate levels, estradiol suppresses GnRH and LH. When the dominant follicle keeps estradiol high for a day or two, estradiol switches to positive feedback, mainly through kisspeptin neurons in the hypothalamus and by making the pituitary more sensitive to GnRH. The result is the LH surge."}, {"q": "About how long after the start of the LH surge does ovulation happen?", "options": ["About 36 hours", "About 6 hours", "About 6 days", "About 14 days"], "answer": 0, "why": "Ovulation comes about 36 hours after the surge begins, and about 10 to 12 hours after the peak. This is why urine LH tests can predict ovulation a day or so ahead. In IVF, hCG (which acts on LH receptors) is given about 36 hours before eggs are collected."}, {"q": "Without pregnancy, the corpus luteum stops working after about 14 days. What keeps it going if pregnancy begins?", "options": ["hCG from the embryo's trophoblast, acting on its LH receptors", "FSH from the mother's pituitary, acting on its FSH receptors", "Progesterone from the endometrium, acting on its own receptors", "Prolactin from the mother's pituitary, acting on the ovary"], "answer": 0, "why": "The corpus luteum needs LH to survive, but its own progesterone and estradiol keep LH low, so it runs down in about two weeks. If an embryo implants, its trophoblast makes hCG, which is very similar to LH and binds the same receptor. hCG keeps the corpus luteum making progesterone until the placenta takes over at about 8 to 10 weeks."}, {"q": "Cycle lengths vary from 25 to 35 days among women. Which phase usually accounts for this difference?", "options": ["The follicular phase, while the luteal phase stays about 14 days", "The luteal phase, while the follicular phase stays about 14 days", "Menstruation alone, while both other phases stay the same", "Both phases equally, each changing by the same number of days"], "answer": 0, "why": "The corpus luteum has a fairly fixed lifespan, so the luteal phase is about 14 days in most cycles. The time needed to choose and grow a dominant follicle varies more, so differences in cycle length come mainly from the follicular phase. That is why ovulation is about 14 days before the next period, not 14 days after the last one."}, {"q": "Basal body temperature rises by about 0.3–0.5 °C partway through the cycle. What causes the rise?", "options": ["Progesterone from the corpus luteum, acting on the hypothalamus", "Estradiol from the dominant follicle, acting on the hypothalamus", "LH from the pituitary, acting directly on body tissues", "FSH from the pituitary, acting directly on body tissues"], "answer": 0, "why": "After ovulation, the corpus luteum releases a lot of progesterone, which raises the temperature set point in the hypothalamus. So the rise in temperature confirms that ovulation has already happened. It is too late to predict ovulation in that same cycle, but it helps track cycles over time."}, {"q": "Which change in the endometrium directly causes menstruation?", "options": ["Falling progesterone makes the spiral arteries constrict and the tissue break down", "Rising progesterone makes the spiral arteries dilate and the tissue overgrow", "Rising estradiol makes the glands secrete so much that the lining sloughs off", "Falling FSH makes the uterus contract strongly enough to push the lining out"], "answer": 0, "why": "Progesterone keeps the secretory endometrium stable. When the corpus luteum regresses and progesterone falls, prostaglandins make the spiral arteries constrict, the upper layer loses its blood supply and dies, and it sheds. The deep basal layer survives and rebuilds the lining in the next cycle under estradiol."}, {"q": "How does cervical mucus change just before ovulation?", "options": ["It becomes thin, watery and stretchy, which helps sperm pass", "It becomes thick and sticky, which blocks sperm and microbes", "It becomes acidic and dry, which kills sperm in the vagina", "It stays the same, as mucus does not respond to hormones"], "answer": 0, "why": "High estradiol before ovulation makes the cervix produce lots of thin, clear mucus that can be stretched into long threads. Its fibers line up into channels that help sperm swim through. After ovulation, progesterone makes the mucus thick and sticky again, which blocks sperm. Progestin contraceptives use this effect."}, {"q": "How does the speed of GnRH pulses affect which gonadotropin is made?", "options": ["Fast pulses favor LH, while slow pulses favor FSH", "Fast pulses favor FSH, while slow pulses favor LH", "Fast and slow pulses both favor LH to the same degree", "Steady GnRH favors FSH, while any pulses favor LH"], "answer": 0, "why": "The gonadotropes read GnRH pulse frequency. Faster pulses, as in the late follicular phase, favor LH. Slower pulses, as in the luteal phase when progesterone slows GnRH, favor FSH, which helps start growing follicles for the next cycle. A steady GnRH signal shuts both down."}, {"q": "A college distance runner with low body fat stops having periods. Which hormone pattern fits?", "options": ["Low LH and FSH, low estradiol, from fewer GnRH pulses", "High LH and FSH, low estradiol, from failing ovaries", "Low LH and FSH, high estradiol, from extra fat tissue", "High LH and FSH, high estradiol, from overactive follicles"], "answer": 0, "why": "Low energy availability lowers leptin and other signals of fuel, which reduces kisspeptin and GnRH pulses. LH and FSH fall, follicles do not mature, and estradiol drops. This functional hypothalamic amenorrhea is reversible with better energy balance, but the low estradiol causes bone loss over time. Ovarian failure would raise LH and FSH."}, {"q": "Which gland adds most of the volume of semen and provides fructose for sperm?", "options": ["The seminal vesicles", "The prostate gland", "The bulbourethral glands", "The epididymal duct"], "answer": 0, "why": "Seminal vesicle fluid makes up about 60–70% of semen. It is alkaline and contains fructose for energy, prostaglandins and proteins that make the semen clot briefly. The prostate adds about 20–30%, including PSA, which liquefies the clot. Sperm themselves are only a few percent of the volume."}, {"q": "Why are the testes held outside the body, and how does the pampiniform plexus help?", "options": ["Sperm develop best 2–3 °C below core, and the plexus cools arterial blood", "Sperm develop best 2–3 °C above core, and the plexus warms arterial blood", "Testosterone needs cool tissue to work, and the plexus drains it to the body", "Sperm need low pressure to form, and the plexus lowers scrotal blood pressure"], "answer": 0, "why": "Spermatogenesis works best a few degrees below body temperature. The pampiniform plexus is a net of veins wrapped around the testicular artery. Cool blood leaving the testis takes heat from warm blood coming in, a countercurrent exchange. Undescended testes (cryptorchidism) stay too warm, which lowers sperm production and raises cancer risk."}, {"q": "Androgen-binding protein (ABP) is secreted by Sertoli cells into the tubule. What is its job?", "options": ["It keeps testosterone concentrated in the tubule fluid around sperm", "It blocks testosterone from reaching sperm until they mature", "It carries testosterone out of the testis to the rest of the body", "It turns testosterone into DHT inside the seminiferous tubules"], "answer": 0, "why": "FSH makes Sertoli cells release ABP. ABP binds testosterone and holds it in the tubule fluid and the epididymis, keeping androgen levels very high where sperm develop and mature. This is part of why testicular testosterone matters far more than blood testosterone for sperm production."}, {"q": "A boy has no sense of smell and does not enter puberty. LH and FSH are low. What is the most likely cause?", "options": ["GnRH neurons failed to migrate from the nose into the hypothalamus", "The pituitary was damaged by a tumor pressing up from below", "The testes lack LH receptors, so they cannot make testosterone", "The hypothalamus makes too much kisspeptin, which blocks GnRH"], "answer": 0, "why": "GnRH neurons start in the olfactory placode in the nose and migrate into the brain along the olfactory nerves. In Kallmann syndrome, a gene defect stops this migration, so the olfactory system and the GnRH system both fail. With no GnRH, LH and FSH stay low. Pulsed GnRH or gonadotropins can start puberty and fertility."}, {"q": "One primary spermatocyte and one primary oocyte each finish meiosis. How many mature gametes result from each?", "options": ["Four sperm, but one egg", "One sperm, but four eggs", "Four sperm and four eggs", "Two sperm and one egg"], "answer": 0, "why": "In males, both meiotic divisions split the cytoplasm evenly, giving four spermatids that each become a sperm. In females, each division is lopsided: almost all the cytoplasm stays in the egg, and the extra chromosomes are thrown away in small polar bodies. So one primary oocyte makes one egg with large stores for the early embryo."}, {"q": "Capacitation happens in the female reproductive tract. Which change is part of it?", "options": ["Cholesterol leaves the sperm membrane, and \\(\\ce{HCO3-}\\) raises cAMP", "Cholesterol is added to the sperm membrane, and \\(\\ce{HCO3-}\\) lowers cAMP", "The acrosome is lost, and the sperm stop swimming until they reach the egg", "The flagellum is shed, and the sperm drift with fluid toward the oviduct"], "answer": 0, "why": "Albumin in the female tract pulls cholesterol out of the sperm membrane, making it more fluid. Bicarbonate activates the sperm's soluble adenylyl cyclase, raising cAMP and protein kinase A, which leads to tyrosine phosphorylation of many proteins. Capacitated sperm can undergo the acrosome reaction and switch to hyperactivated swimming. Sperm taken straight from semen cannot fertilize."}, {"q": "Before ovulation, FSH causes granulosa cells to gain a new receptor. Which one, and why does it matter?", "options": ["LH receptors, so they can respond to the surge and make progesterone", "FSH receptors, so they can respond twice as strongly to FSH alone", "Prolactin receptors, so they can make milk proteins after the birth", "Oxytocin receptors, so they can squeeze the egg out of the follicle"], "answer": 0, "why": "In the dominant follicle, FSH and estradiol induce LH receptors on granulosa cells. This lets the follicle survive as FSH falls and lets the granulosa cells respond to the LH surge by luteinizing. After ovulation, these cells become the large luteal cells that make most of the corpus luteum's progesterone."}, {"q": "How does the combined birth control pill (an estrogen plus a progestin) prevent ovulation?", "options": ["Its steroids hold LH and FSH down, so no follicle matures and no surge occurs", "Its steroids raise LH and FSH, so many follicles grow and none can win out", "Its steroids block estrogen receptors in the uterus, so no follicle can grow", "Its steroids kill the oocytes, so no egg is left in the ovary to be released"], "answer": 0, "why": "The constant moderate levels of estrogen and progestin keep negative feedback on GnRH, LH and FSH. Without enough FSH, no dominant follicle develops, and without high estradiol from such a follicle, no LH surge happens. The progestin also thickens cervical mucus and thins the endometrium."}, {"q": "Anti-Müllerian hormone (AMH) in a woman's blood is used to estimate her remaining egg supply. Which cells make it?", "options": ["Granulosa cells of small growing follicles", "Theca cells of the dominant follicle alone", "Luteal cells of the corpus luteum each cycle", "Gonadotrope cells in the anterior pituitary"], "answer": 0, "why": "AMH is made by granulosa cells of preantral and small antral follicles. The more of these follicles a woman has, the higher her AMH, so it tracks the size of the remaining pool. It barely changes across the cycle, which makes it a convenient test. In males, AMH from Sertoli cells is what makes the Müllerian ducts regress."}, {"q": "Sperm leaving the testis cannot swim forward or fertilize an egg. Where do they gain these abilities?", "options": ["In the epididymis, over about 2 weeks", "In the vas deferens, in about 1 hour", "In the seminal vesicles, during ejaculation", "In the prostate, from its added proteins"], "answer": 0, "why": "Testicular sperm are carried passively by fluid. During their roughly 12-day trip through the epididymis, their membranes and proteins change, and they gain the ability to swim forward and to bind an egg. The last steps, capacitation and hyperactivation, happen later in the female tract."}, {"q": "A man with low GnRH (hypogonadotropic hypogonadism) wants to father a child. Why is he treated with hCG and FSH rather than with testosterone?", "options": ["hCG raises testosterone inside the testis, and FSH drives the Sertoli cells", "Testosterone injections raise testosterone inside the testis far too much", "hCG and FSH replace GnRH in the hypothalamus, which restores LH pulses", "Testosterone cannot bind androgen receptors unless hCG is also present"], "answer": 0, "why": "Sperm production needs very high testosterone inside the testis plus FSH action on Sertoli cells. hCG acts on Leydig cell LH receptors, so the testis makes its own testosterone right where it is needed. Testosterone injections would raise blood levels but further suppress LH and FSH, so they do not support sperm production and can even lower it."}, {"q": "What feature defines an antral follicle?", "options": ["A fluid-filled space among many layers of granulosa cells", "A single layer of flat granulosa cells around the oocyte", "A ruptured wall that has already released its oocyte", "A mass of luteal cells that make progesterone for days"], "answer": 0, "why": "A primordial follicle has one layer of flat granulosa cells. Primary and secondary (preantral) follicles add layers and a theca. When fluid gathers between the granulosa cells, forming an antrum, the follicle is antral. From this stage on, growth depends strongly on FSH, which is why only antral follicles compete each cycle."}]</script></section>
+<script type="application/json" class="frq-data">[{"q": "A male athlete takes high doses of an anabolic steroid (a testosterone analog) for six months. (a) Predict changes in GnRH, LH, FSH and inhibin B. (b) Predict changes in testicular testosterone, sperm count and testis size, and explain them. (c) Explain why sperm counts take several months to recover after he stops.", "answer": "(a) The steroid feeds back on the hypothalamus and pituitary, so GnRH pulses, LH and FSH all fall. With little FSH and fewer developing sperm, Sertoli cells make less inhibin B. (b) Without LH, Leydig cells stop making testosterone, so testosterone inside the testis falls far below the very high level sperm production needs, even though blood androgen from the drug is high. Spermatogenesis slows sharply, the sperm count falls (sometimes to zero), and the testes shrink because the tubules hold fewer developing cells. (c) After stopping, the axis must first restart GnRH, LH and FSH, which can take weeks to months after long suppression. Then spermatogenesis from spermatogonia takes about 2 to 2.5 months, plus about 2 weeks in the epididymis, before sperm reach semen.", "points": ["GnRH, LH, FSH and inhibin B all fall", "Testicular testosterone falls despite high blood androgen", "Sperm count and testis size fall", "Recovery is slow: the axis must restart, then about 74 days of spermatogenesis"]}, {"q": "(a) Describe the two-cell, two-gonadotropin theory of estradiol production in a growing follicle. (b) An aromatase inhibitor (letrozole) is given in the early follicular phase. Predict its effect on estradiol and on FSH, and explain why this can help a woman who does not ovulate. (c) Why can't theca cells alone make estradiol?", "answer": "(a) LH binds theca cells, which turn cholesterol into androstenedione. The androgen diffuses across the basement membrane into granulosa cells, where FSH drives aromatase to turn it into estradiol. So LH controls the raw material and FSH controls the final step. (b) Letrozole blocks aromatase, so estradiol falls. Lower estradiol removes negative feedback on the hypothalamus and pituitary, so FSH rises. The extra FSH can push one or more follicles to grow and become dominant, which can lead to ovulation once the drug is stopped and estradiol rises. (c) Theca cells have the enzymes to make androgens but lack aromatase, the enzyme that turns androgens into estrogens. Granulosa cells have aromatase but no blood supply or cholesterol-processing enzymes to make androgens from scratch.", "points": ["Theca: LH, cholesterol to androgen; granulosa: FSH, aromatase, androgen to estradiol", "Letrozole lowers estradiol, which raises FSH by removing feedback", "Higher FSH recruits and grows a dominant follicle", "Theca lacks aromatase; granulosa lacks the androgen-making steps"]}]</script>
+</section>
+<section class="test" id="test-2" data-key="bipn134-t2" hidden>
+<section class="mcq" data-title="BIPN 134 Midterm 1, Test 2" data-nav="#nav-test-2"><script type="application/json">[{"q": "Why do the risks of chromosome errors such as Down syndrome rise with the mother's age?", "options": ["Oocytes wait decades in meiosis I, and the proteins holding pairs together wear out", "Oocytes keep dividing by mitosis for life, so older eggs carry more copy mistakes", "Older ovaries make more oocytes, so faulty ones are less likely to be removed", "Sperm from older partners carry more extra chromosomes into the fertilized egg"], "answer": 0, "why": "Homologous chromosomes are held together in prophase I by cohesin proteins that were loaded before birth and are not replaced. Over 35 to 45 years they slowly wear away, so pairs can separate early or unevenly when meiosis finally restarts. That raises nondisjunction, such as an extra chromosome 21. Most extra copies of chromosome 21 come from the egg."}, {"q": "During spermiogenesis, a round spermatid becomes a sperm. Which change happens?", "options": ["The Golgi makes the acrosome and most cytoplasm is shed", "The cell divides twice to make four smaller sperm cells", "The nucleus grows larger and fills with active chromatin", "The mitochondria move into the head around the nucleus"], "answer": 0, "why": "Spermiogenesis has no cell division. The Golgi forms the acrosome, a cap of enzymes over the nucleus. The DNA is packed tightly with protamines, the flagellum grows, and mitochondria wrap around the midpiece to power it. Extra cytoplasm is shed as a residual body that Sertoli cells eat."}, {"q": "A chemotherapy drug kills dividing spermatogonia but spares later cells. When does the sperm count in semen fall?", "options": ["After about two months, once the cells already in progress have been released", "Within one day, since the drug quickly kills sperm stored in the epididymis", "After about one week, since meiosis is the slowest step of spermatogenesis", "Never, since Sertoli cells can turn into new spermatogonia to replace them"], "answer": 0, "why": "Cells already beyond the spermatogonia stage keep developing and are released on schedule. The full process from spermatogonium to sperm takes about 64 to 74 days, plus about 12 days in the epididymis. So semen counts stay normal for a while and then fall about two months later. Whether they recover depends on whether the stem cells survive."}, {"q": "A man has both testes removed. Later he gets testosterone injections that bring LH back to normal. What happens to FSH?", "options": ["It stays high, because inhibin B from Sertoli cells is still missing", "It returns to normal, because testosterone is the main brake on FSH", "It falls below normal, because injected testosterone suppresses FSH", "It stays high, because estradiol made in the testis is still missing"], "answer": 0, "why": "Testosterone (partly after conversion to estradiol in the brain) is the main brake on LH. FSH has two brakes: testosterone and inhibin B from Sertoli cells. With no testes, inhibin B is gone, so even normal testosterone cannot fully suppress FSH, and it stays high."}, {"q": "A toxin destroys Sertoli cells but spares Leydig cells. What happens to LH and FSH?", "options": ["FSH rises, while LH stays about normal", "LH rises, while FSH stays about normal", "Both LH and FSH rise to the same degree", "Both LH and FSH fall to the same degree"], "answer": 0, "why": "Losing Sertoli cells removes inhibin B, so FSH is released from its specific brake and rises. Leydig cells still make testosterone, which keeps LH under normal control. A selective FSH rise is a clinical sign of damaged seminiferous tubules."}, {"q": "Clomiphene is used to make ovulation happen. It blocks estrogen receptors in the hypothalamus. How does that help?", "options": ["The brain senses too little estrogen, so it raises GnRH, LH and FSH", "The brain senses too much estrogen, so it triggers an early LH surge", "The ovary senses too little estrogen, so it makes more follicles from oogonia", "The uterus senses too little estrogen, so it signals the ovary to ovulate"], "answer": 0, "why": "Clomiphene is a selective estrogen receptor modulator that acts as a blocker in the hypothalamus. The brain reads the block as low estrogen and releases more GnRH, so LH and FSH rise. More FSH drives follicles to grow. Its blocking effect on the cervix and endometrium can be a downside."}, {"q": "In a growing follicle, which change is caused by FSH acting on granulosa cells?", "options": ["More aromatase and new LH receptors on the granulosa cells", "More androgen synthesis enzymes inside the granulosa cells", "Fewer FSH receptors, so the follicle can no longer grow", "Fewer gap junctions with the oocyte, so meiosis resumes"], "answer": 0, "why": "FSH works through cAMP in granulosa cells to raise aromatase (so more estradiol is made), to make the cells divide, and to add LH receptors late in development. These LH receptors let the dominant follicle keep growing as FSH falls and respond to the surge. Androgen-making enzymes are in theca cells."}, {"q": "Which events are triggered by the LH surge?", "options": ["Meiosis I resumes, the cumulus expands, the follicle ruptures, and luteinization begins", "Meiosis II finishes, the zona hardens, the follicle grows, and estradiol keeps rising", "Oogonia divide, new follicles form, inhibin rises, and FSH receptors increase", "Meiosis I resumes, the corpus luteum regresses, progesterone falls and menses begins"], "answer": 0, "why": "The surge acts on granulosa and theca cells (the oocyte has few LH receptors). It makes them send signals that restart meiosis I, make the cumulus cells around the egg spread out in a sticky matrix, activate enzymes that break down the follicle wall so it ruptures, and turn granulosa and theca cells into luteal cells that make progesterone."}, {"q": "As the corpus luteum fails at the end of a cycle, FSH starts to rise. Why?", "options": ["Progesterone, estradiol and inhibin A all fall, which removes feedback", "Progesterone rises sharply, which triggers a second gonadotropin surge", "The endometrium releases a hormone that stimulates the pituitary directly", "The new follicles release FSH themselves to speed their own early growth"], "answer": 0, "why": "The corpus luteum makes progesterone, estradiol and inhibin A, which together hold FSH down. As it regresses, all three fall, the brake is released, and FSH rises in the last days of the cycle. That rise recruits the group of follicles that will compete in the next cycle. The same drop in progesterone triggers menstruation."}, {"q": "Home pregnancy tests detect hCG. Why does hCG keep progesterone high in early pregnancy?", "options": ["hCG binds LH receptors on the corpus luteum, keeping it alive and making progesterone", "hCG binds FSH receptors on the follicles, so a new follicle grows and makes progesterone", "hCG is turned into progesterone directly by the endometrium around the implanted embryo", "hCG blocks progesterone breakdown in the liver, so its level stays high in the blood"], "answer": 0, "why": "hCG and LH share the same alpha chain and very similar beta chains, so hCG activates the LH receptor. It keeps the corpus luteum from regressing, so progesterone stays high and the endometrium is maintained. hCG has a longer half-life than LH, and its beta chain has an extra tail that pregnancy tests can detect."}, {"q": "Which hormone peaks in the blood about one day before the LH surge?", "options": ["Estradiol", "Progesterone", "Inhibin A", "Testosterone"], "answer": 0, "why": "The dominant follicle's estradiol output rises steeply in the late follicular phase and peaks about a day before the LH surge, triggering it through positive feedback. Estradiol dips briefly during the surge and rises again in the luteal phase. Progesterone and inhibin A rise mainly after ovulation, from the corpus luteum."}, {"q": "In the luteal phase, which hormone slows GnRH pulses?", "options": ["Progesterone", "Estradiol", "Inhibin B", "Prolactin"], "answer": 0, "why": "Progesterone, through the hypothalamus, slows GnRH pulses to about one every 3 to 4 hours. This lowers LH, which slowly lets the corpus luteum run down, and the slow pulses favor FSH, preparing for the next cycle. Inhibin B comes mainly from small follicles in the follicular phase."}, {"q": "During the secretory phase, what do endometrial glands do?", "options": ["They coil and secrete glycogen-rich fluid to feed an early embryo", "They multiply quickly and grow straight under estradiol alone", "They break down and release blood into the uterine cavity", "They close off the cervix to keep sperm out of the uterus"], "answer": 0, "why": "After ovulation, progesterone acts on an endometrium that estradiol has already built up. The glands become coiled and release fluid rich in glycogen and other nutrients, and the tissue becomes ready for an embryo to implant (the window of implantation). The fast, straight growth happens earlier, in the proliferative phase."}, {"q": "A woman has an inactivating mutation in her FSH receptor. Her follicles start growing but stop at an early antral stage. Why?", "options": ["Granulosa cells cannot raise aromatase, so estradiol stays low", "Theca cells cannot make androgens, so no substrate is available", "The oocyte cannot finish meiosis, so the follicle stops in place", "The pituitary cannot make LH, so the theca cells never develop"], "answer": 0, "why": "The earliest follicle stages grow without FSH, but antral growth needs FSH to drive granulosa division, aromatase and estradiol. Without working FSH receptors, follicles stall, estradiol stays low, and FSH and LH rise because there is no feedback. These women do not ovulate or go through normal puberty."}, {"q": "A girl with a leptin gene mutation is very obese but does not go through puberty. Leptin treatment starts puberty. What does this show?", "options": ["The brain needs a leptin signal of fat stores to drive GnRH", "High body fat directly blocks the ovary from making estradiol", "Leptin is made by the ovary and needed for follicle growth", "Leptin replaces FSH at the ovary once puberty has started"], "answer": 0, "why": "Leptin from fat cells tells the hypothalamus how much energy is stored. Without it, the brain behaves as if the body were starving, and kisspeptin and GnRH stay low, no matter how much fat there actually is. This is why very low body fat and leptin deficiency both block reproduction."}, {"q": "A woman with anorexia nervosa has no periods. What long-term risk follows from her hormone pattern?", "options": ["Bone loss, from low estradiol", "Endometrial cancer, from high estradiol", "Ovarian cysts, from high LH", "Breast growth, from high prolactin"], "answer": 0, "why": "Low energy shuts down GnRH, so LH, FSH and estradiol are all low. Estradiol is needed to keep bone formation in balance with bone breakdown. Long periods of low estradiol, especially in the teen years when bone mass should be peaking, can cause osteoporosis and stress fractures. High estradiol without progesterone would instead raise endometrial cancer risk."}, {"q": "Sildenafil (Viagra) helps erections. How?", "options": ["It blocks PDE5, so cGMP from nitric oxide lasts longer", "It blocks PDE5, so cAMP from norepinephrine lasts longer", "It releases nitric oxide directly from blood vessel walls", "It activates \\(\\alpha_1\\) receptors, which tighten the penile veins"], "answer": 0, "why": "During arousal, parasympathetic nerves release nitric oxide, which raises cGMP in the smooth muscle of the penile arteries and erectile tissue. The muscle relaxes, blood fills the spaces, and the veins are squeezed shut. PDE5 breaks down cGMP, so blocking it keeps the muscle relaxed longer. Sympathetic activity ends the erection."}, {"q": "A man has a vasectomy. How does it change his semen?", "options": ["Its volume barely changes, but it contains no sperm", "Its volume falls by about half, and it contains no sperm", "Its volume barely changes, and it still holds some sperm forever", "Its volume rises, since fluid backs up into the glands"], "answer": 0, "why": "Sperm make up only a few percent of semen volume. The seminal vesicles and prostate, which make most of the fluid, empty into the ducts beyond the cut point. So semen looks and feels about the same. After a few weeks, sperm stored beyond the cut are used up, and the semen then contains no sperm."}, {"q": "Prostate-specific antigen (PSA) is a protein enzyme in semen. What is its job in reproduction?", "options": ["It cuts semenogelin, liquefying the semen clot to set the sperm free", "It cuts the zona pellucida, letting sperm reach the egg's membrane", "It cuts cervical mucus, opening channels for sperm to swim through", "It cuts the sperm's acrosome, releasing its enzymes in the vagina"], "answer": 0, "why": "Right after ejaculation, proteins from the seminal vesicles (semenogelins) make semen form a gel that holds it near the cervix. Over 15 to 30 minutes, PSA, a protease from the prostate, cuts these proteins, and the semen liquefies, freeing sperm to swim. PSA levels in blood are also used to screen for prostate disease."}, {"q": "Hyperactivation gives capacitated sperm a strong, whip-like beat. Which channel's \\(\\ce{Ca^{2+}}\\) entry drives it?", "options": ["CatSper, in the sperm tail membrane", "Voltage-gated \\(\\ce{Na+}\\) channels, in the head", "Aquaporins, in the sperm midpiece", "Gap junctions, linking sperm to the egg"], "answer": 0, "why": "CatSper is a \\(\\ce{Ca^{2+}}\\) channel found only in sperm, located along the principal piece of the tail. It opens with alkaline pH, and in humans progesterone from the cumulus cells also activates it. The \\(\\ce{Ca^{2+}}\\) changes how the flagellum bends, producing the strong strokes needed to swim through the oviduct and the egg's coverings. Men without CatSper are infertile."}, {"q": "In the lab, which two things must be added to the medium for human sperm to capacitate?", "options": ["Albumin and bicarbonate", "Glucose and insulin", "Testosterone and FSH", "Calcium and estradiol"], "answer": 0, "why": "Albumin pulls cholesterol out of the sperm membrane, and bicarbonate activates the sperm's soluble adenylyl cyclase to raise cAMP. Together they start the chain of changes that make sperm able to fertilize. Calcium in the medium is also needed for later steps, but albumin and bicarbonate are the key triggers."}, {"q": "When are the first and second polar bodies released?", "options": ["The first at the LH surge, and the second after a sperm enters", "The first before birth, and the second at the LH surge", "The first at puberty, and the second at the LH surge", "The first after a sperm enters, and the second at implantation"], "answer": 0, "why": "The LH surge restarts meiosis I, which ends with the first polar body just before ovulation. The egg then stops at metaphase II. Only if a sperm enters does the egg finish meiosis II and release the second polar body. If no sperm arrives, the egg never completes meiosis."}, {"q": "A woman of 41 has a high FSH on day 3 of her cycle and a low AMH. What does this suggest?", "options": ["Few follicles remain, so less inhibin and estradiol let FSH rise", "Many follicles remain, so extra inhibin and estradiol keep FSH high", "Her pituitary is overactive, so FSH rises no matter what the ovary does", "Her ovaries are resistant to FSH, so AMH falls as a direct result"], "answer": 0, "why": "Early in the cycle, the growing follicles make inhibin B and estradiol, which keep FSH down. When few follicles remain, there is less of this feedback, so FSH climbs. AMH, made by small growing follicles, falls as the pool shrinks. Together these point to a low ovarian reserve."}, {"q": "Erection and ejaculation are controlled by different parts of the autonomic nervous system. Which pairing is correct?", "options": ["Erection is mainly parasympathetic; ejaculation is mainly sympathetic", "Erection is mainly sympathetic; ejaculation is mainly parasympathetic", "Erection and ejaculation are both mainly parasympathetic", "Erection and ejaculation are both mainly sympathetic"], "answer": 0, "why": "Parasympathetic nerves from the sacral spinal cord release nitric oxide to dilate the penile arteries and produce erection. Sympathetic nerves from the lumbar cord contract the smooth muscle of the vas deferens, seminal vesicles and prostate (emission) and close the bladder neck. Somatic nerves then contract the pelvic floor muscles for ejaculation."}, {"q": "A man's sperm count is low, but his LH, FSH and testosterone are normal. A large varicocele (swollen veins) is found around one testis. How might it lower sperm production?", "options": ["Pooled warm blood raises testis temperature above the ideal", "Pooled blood carries too much testosterone into the tubules", "Swollen veins squeeze the vas deferens shut, blocking sperm", "Swollen veins make Sertoli cells release too much inhibin"], "answer": 0, "why": "A varicocele is a swelling of the pampiniform plexus, usually on the left. Blood pools in it instead of cooling the incoming arterial blood, so the testis runs warmer, which harms sperm production. It is one of the most common fixable causes of male infertility."}, {"q": "Why does the dominant follicle survive even as FSH falls in the late follicular phase?", "options": ["Its granulosa cells gain LH receptors and have the most FSH receptors", "Its theca cells gain FSH receptors and stop making any androgens", "Its oocyte releases LH, which supports the granulosa cells directly", "Its granulosa cells stop making estradiol, which saves FSH for it"], "answer": 0, "why": "The dominant follicle has more granulosa cells, more FSH receptors and better blood supply, so it can keep responding at lower FSH. It also gains LH receptors on its granulosa cells, so LH can take over some of FSH's support. Smaller follicles cannot do this and die by atresia."}, {"q": "Why is the LH surge large enough to cause ovulation, when LH pulses at other times are much smaller?", "options": ["High estradiol makes the pituitary much more sensitive to each GnRH pulse", "High progesterone blocks LH breakdown, so the level slowly builds up", "High inhibin makes the pituitary switch from making FSH to making LH", "High FSH turns into LH in the blood once it reaches a certain level"], "answer": 0, "why": "Sustained high estradiol does two things: it increases GnRH release (through kisspeptin neurons), and it greatly increases the number of GnRH receptors and the stores of LH in gonadotropes. Each GnRH pulse then releases far more LH. A little progesterone from the luteinizing follicle helps the surge too."}, {"q": "Two groups of kisspeptin neurons control GnRH. Which pairing of location and role is correct?", "options": ["Arcuate neurons drive pulses; AVPV neurons drive the surge", "AVPV neurons drive pulses; arcuate neurons drive the surge", "Arcuate neurons drive the surge and also the pulses", "AVPV neurons make GnRH; arcuate neurons make LH"], "answer": 0, "why": "Kisspeptin neurons in the arcuate nucleus (with neurokinin B and dynorphin) act as the GnRH pulse generator and carry negative feedback from sex steroids. Kisspeptin neurons in the anteroventral periventricular area (AVPV), which are more numerous in females, are switched on by high estradiol and drive the preovulatory GnRH and LH surge."}, {"q": "In a follicle, LH is high while FSH is low. Following the two-cell theory, what does the follicle make?", "options": ["Extra androgens, with little estradiol", "Extra estradiol, with few androgens", "Extra progesterone, with no androgens", "Little of any steroid, as both cells stop"], "answer": 0, "why": "High LH drives theca cells to make plenty of androstenedione. With low FSH, granulosa cells have little aromatase, so much of that androgen is not turned into estradiol. The extra androgen can enter the blood and also harms follicle growth. This imbalance is part of what happens in polycystic ovary syndrome."}, {"q": "Out of tens of millions of sperm in an ejaculate, only a few hundred reach the oviduct near the egg. Where do sperm wait for ovulation?", "options": ["Bound to the epithelium of the lower oviduct", "Inside the uterine glands of the endometrium", "In the vaginal fluid next to the cervix", "In the ovary, inside the follicle's antrum"], "answer": 0, "why": "Many sperm die in the acidic vagina, are trapped in cervical mucus or are removed by immune cells. Those reaching the oviduct bind to its lining in the isthmus, which keeps them alive and slows capacitation. Around ovulation, signals release them, they capacitate and hyperactivate, and they swim toward the egg."}]</script></section>
+<script type="application/json" class="frq-data">[{"q": "Describe a 28-day menstrual cycle. (a) For the follicular phase, ovulation and the luteal phase, give the main pattern of LH, FSH, estradiol and progesterone, and the state of the endometrium. (b) Explain what ends the luteal phase in a cycle without pregnancy. (c) Explain how pregnancy changes the end of the luteal phase.", "answer": "(a) Early follicular phase (days 1 to 7): FSH rises a bit and recruits follicles; estradiol and progesterone are low; the endometrium sheds (menses) and then starts to grow. Late follicular phase (about days 8 to 13): the dominant follicle makes rising estradiol, FSH falls, and the endometrium thickens (proliferative phase). Ovulation (about day 14): sustained high estradiol triggers the LH surge (with a smaller FSH rise), and ovulation follows about 36 hours later. Luteal phase (days 15 to 28): the corpus luteum makes progesterone, plus estradiol and inhibin A; LH and FSH are low; the endometrium becomes secretory. (b) The corpus luteum needs LH, but its own progesterone and estradiol keep LH low, so it runs down after about 14 days. Progesterone and estradiol fall, the spiral arteries constrict, and the lining sheds; FSH rises as feedback is lost. (c) The embryo's hCG acts on LH receptors and rescues the corpus luteum, so progesterone stays high and menses does not happen until the placenta takes over.", "points": ["Correct hormone pattern in each phase", "Proliferative endometrium under estradiol, secretory under progesterone", "Corpus luteum regresses because LH is suppressed, causing the progesterone drop and menses", "hCG rescues the corpus luteum in pregnancy"]}, {"q": "A 19-year-old cross-country runner has not had a period for 8 months. (a) Explain how low energy availability leads to missed periods, naming the signals involved. (b) Predict her LH, FSH and estradiol levels and explain one long-term risk. (c) A doctor gives her GnRH through a pump in pulses every 90 minutes. Predict and explain what happens to her ovaries.", "answer": "(a) Low energy availability lowers leptin (and changes insulin, ghrelin and stress hormones). The hypothalamus reads this as starvation and lowers kisspeptin, which slows GnRH pulses. (b) With slow, weak GnRH pulses, LH and FSH are low, no dominant follicle forms, estradiol stays low, and she does not ovulate or menstruate. Low estradiol speeds bone breakdown relative to formation, so bone density falls, raising her risk of stress fractures and osteoporosis. (c) Pulsed GnRH replaces the missing hypothalamic signal. The pituitary, which works normally, releases LH and FSH in a normal pattern, follicles grow, estradiol rises, an LH surge occurs, and she ovulates. This shows the problem is in the hypothalamus, not the pituitary or ovaries. Constant GnRH would instead shut the pituitary down.", "points": ["Low energy, low leptin, low kisspeptin, slow GnRH pulses", "Low LH, low FSH, low estradiol; no ovulation", "Long-term bone loss from low estradiol", "Pulsed GnRH restores normal cycles, showing the defect is hypothalamic"]}]</script>
+</section>
+    </div>
+  </main>
+</div>
+<script>
+/* minimono.js — the house style's behavior. Include before </body>; no init.
+   1. Two panes or one. Full-screen shows both (left ¼ · right ¾). The page
+      goes to one pane when the window isn't full-screen, or when the person
+      hides the left pane (`, or the pane's own "Hide"). Hiding is
+      remembered. Force the layout with <html data-layout="split|single">.
+   2. In one-pane mode the "Menu" link (.menu-hint) is invisible until the
+      pointer enters the top-left zone (left quarter, top sixth); clicking it,
+      or `, opens the left pane as an overlay. Esc, a click outside, or
+      choosing a row closes it. With no pointer (touch), the link stays shown.
+      The overlay is the SAME .pane-l element, moved by a class — never a
+      copy, never rebuilt — so its scroll position and selection survive.
+   3. Safari: trackpad pinch-zoom is blocked; ⌘+ / ⌘− still work.          */
+(function () {
+  'use strict';
+  var html = document.documentElement;
+  var KEY = 'minimono:pane-hidden';
+  var hidden = false;
+  try { hidden = localStorage.getItem(KEY) === '1'; } catch (e) {}
+
+  /* 1. Two panes or one ---------------------------------------------------- */
+  function isFull() {
+    var forced = html.getAttribute('data-layout');
+    if (forced === 'split') return true;
+    if (forced === 'single') return false;
+    // Full-screen or maximized. At the top level, measure the window itself
+    // (outerWidth): ⌘+ zoom shrinks innerWidth but not the window. Embedded
+    // in a frame, the frame's own width is what's available.
+    var top = true;
+    try { top = window.top === window; } catch (e) { top = false; }
+    var w = top && outerWidth > 0 ? outerWidth : innerWidth;
+    return w >= screen.availWidth - 24;
+  }
+  function layout() {
+    var windowed = !isFull();
+    html.classList.toggle('is-windowed', windowed);
+    var single = windowed || hidden;
+    if (single !== html.classList.contains('is-single')) {
+      if (!single) close(true);
+      html.classList.toggle('is-single', single);
+    }
+  }
+  function setHidden(v) {
+    hidden = v;
+    try { localStorage.setItem(KEY, v ? '1' : '0'); } catch (e) {}
+    close(true);
+    layout();
+  }
+  var raf = 0;
+  addEventListener('resize', function () { if (!raf) raf = requestAnimationFrame(function () { raf = 0; layout(); }); });
+  new MutationObserver(layout).observe(html, { attributes: true, attributeFilter: ['data-layout'] });
+
+  /* 2. The overlay --------------------------------------------------------- */
+  var lastFocus = null;
+  function pane() { return document.querySelector('.pane-l'); }
+  function typing(el) {
+    if (!el || el === document.body) return false;
+    if (el.isContentEditable) return true;
+    if (el.tagName === 'TEXTAREA' || el.tagName === 'SELECT') return true;
+    return el.tagName === 'INPUT' && !/^(button|submit|reset|checkbox|radio|range|color|file|image)$/i.test(el.type);
+  }
+  function single() { return html.classList.contains('is-single'); }
+  function isOpen() { return html.classList.contains('menu-open'); }
+  function open(keyboard) {
+    if (!single() || isOpen()) return;
+    html.classList.remove('hint-on');
+    html.classList.add('menu-open');
+    lastFocus = document.activeElement;
+    if (keyboard) {                                   // keyboard: move focus in
+      var p = pane(), cur = p && (p.querySelector('[aria-current="true"]') || p.querySelector('a,button,input,[tabindex]'));
+      if (cur) cur.focus({ preventScroll: true });
+    }
+  }
+  function close(silent) {
+    if (!isOpen()) return;
+    html.classList.remove('menu-open');
+    var p = pane();
+    if (!silent && lastFocus && lastFocus.focus && lastFocus !== document.body) lastFocus.focus({ preventScroll: true });
+    else if (p && p.contains(document.activeElement)) document.activeElement.blur();
+    lastFocus = null;
+  }
+
+  // the top-left zone: left quarter of the width, top sixth of the height.
+  // Entering it shows the menu link; nothing opens until the link is clicked.
+  function inZone(x, y) { return x <= innerWidth / 4 && y <= innerHeight / 6; }
+  var hintTimer = 0;
+  function hint(on) {
+    clearTimeout(hintTimer);
+    if (on) { html.classList.add('hint-on'); return; }
+    hintTimer = setTimeout(function () { html.classList.remove('hint-on'); }, 200);
+  }
+  addEventListener('pointermove', function (e) {
+    if (e.pointerType !== 'mouse') return;
+    hint(single() && !isOpen() && inZone(e.clientX, e.clientY));
+  }, { passive: true });
+  document.addEventListener('mouseleave', function () { hint(false); });
+
+  addEventListener('keydown', function (e) {
+    // ` (backtick) on its own — left alone while typing in a field
+    if (e.key === '`' && !e.metaKey && !e.ctrlKey && !e.altKey && !typing(document.activeElement)) {
+      e.preventDefault();
+      if (html.classList.contains('is-windowed')) { isOpen() ? close() : open(true); }
+      else setHidden(!hidden);                        // full-screen: hide, or dock it again
+      return;
+    }
+    if (e.key === 'Escape' && isOpen()) { e.preventDefault(); close(); }
+  });
+  addEventListener('pointerdown', function (e) {
+    if (!isOpen()) return;
+    var p = pane();
+    if (p && !p.contains(e.target) && !(e.target.closest && e.target.closest('.menu-hint'))) close();
+  });
+  addEventListener('click', function (e) {
+    var t = e.target.closest ? e.target : e.target.parentElement;
+    if (t.closest('.menu-hint')) { e.preventDefault(); isOpen() ? close() : open(false); return; }
+    if (t.closest('.pane-hide')) {                    // docked: "Hide" · hidden overlay: "Keep open"
+      e.preventDefault(); setHidden(!hidden); return;
+    }
+    if (isOpen() && t.closest('.pane-l .row, .pane-l .mcq-nav a')) close();
+  });
+
+  /* Focus rings: only after Tab. Shift, arrows, Space and clicks never show one. */
+  addEventListener('keydown', function (e) { if (e.key === 'Tab') html.classList.add('kbd-nav'); }, true);
+  addEventListener('pointerdown', function () { html.classList.remove('kbd-nav'); }, true);
+
+  /* 3. Safari pinch-zoom ---------------------------------------------------- */
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (t) {
+    document.addEventListener(t, function (e) { e.preventDefault(); }, { passive: false });
+  });
+
+  layout();
+  window.Minimono = {
+    open: function () { open(true); }, close: close,
+    hide: function () { setHidden(true); }, show: function () { setHidden(false); },
+    relayout: layout
+  };
+})();
+
+</script>
+<script>
+/* smooth-scroll.js — Safari's keyboard scrolling, for every pane.
+   ---------------------------------------------------------------------------
+   A port of WebKit's keyboard-scroll physics (ScrollAnimationKeyboard.cpp,
+   KeyboardScroll.h, macOS constants) so Space, arrows, Page Up/Down and
+   Home/End glide and settle on a spring in every scroller — the page, and
+   each two-pane split pane on its own.
+
+     ↑ / ↓            tap: glide one line (40px) · hold: accelerate to
+                      1000px/s in 0.2s, cruise, then the spring carries the
+                      leftover momentum and settles
+     Space / ⇧Space   the same, with a page as the step (the visible height
+     PgDn / PgUp      less 40px of overlap, never less than 87.5% of it):
+                      tap glides at least a page, hold accelerates
+     Home / End       glide to the top / bottom (also ⌘↑ / ⌘↓ on a Mac)
+   Key repeats are ignored while a key is held, as in WebKit.
+
+   Which scroller moves: the one under the pointer, else the one that holds
+   focus, else the last one clicked, else the page.
+   Left alone: any control that uses these keys itself — text fields,
+   sliders, radio groups, selects, contenteditable, tabs, listboxes — and
+   Space on a button, link, checkbox or anything else Space activates. Any key with ⌥/⌃
+   (and ⌘ except ⌘↑/⌘↓) passes through.
+   Respects prefers-reduced-motion: the same steps, applied instantly.
+   No init call — include before </body>. ~3KB. Exposes window.SmoothScroll.  */
+(function () {
+  'use strict';
+  if (window.SmoothScroll) return;
+
+  /* WebKit macOS KeyboardScrollParameters */
+  var MASS = 1, STIFF = 175, DAMP = 20, MAX_VEL_MULT = 25, TIME_TO_MAX = 0.2;
+  var LINE = 40;                         /* Scrollbar::pixelsPerLineStep()          */
+  var PAGE_MIN_FRACTION = 0.875;         /* Scrollbar::minFractionToStepWhenPaging  */
+  var PAGE_OVERLAP = 40;                 /* Scrollbar::maxOverlapBetweenPages        */
+
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
+  var docEl = function () { return document.scrollingElement || document.documentElement; };
+
+  function canScroll(el) {
+    if (el === docEl()) return el.scrollHeight > el.clientHeight;
+    var s = getComputedStyle(el), o = s.overflowY;
+    return (o === 'auto' || o === 'scroll' || o === 'overlay') && el.scrollHeight > el.clientHeight + 1;
+  }
+  function scrollerFrom(node) {
+    for (var el = node; el && el.nodeType === 1; el = el.parentElement) {
+      if (el === document.body || el === document.documentElement) break;
+      if (canScroll(el)) return el;
+    }
+    return canScroll(docEl()) ? docEl() : null;
+  }
+
+  var hovered = null, clicked = null;
+  addEventListener('pointermove', function (e) { if (e.pointerType === 'mouse') hovered = e.target; }, { passive: true });
+  addEventListener('pointerdown', function (e) { clicked = e.target; }, { passive: true });
+  document.addEventListener('mouseleave', function () { hovered = null; });
+
+  function pickScroller() {
+    var a = document.activeElement;
+    return (hovered && scrollerFrom(hovered)) ||
+           (a && a !== document.body && scrollerFrom(a)) ||
+           (clicked && scrollerFrom(clicked)) ||
+           scrollerFrom(document.body);
+  }
+
+  // controls that use arrows / Page / Home / End themselves keep them
+  function ownsKeys(el) {
+    if (!el || el === document.body) return false;
+    if (el.isContentEditable) return true;
+    var t = el.tagName;
+    if (t === 'TEXTAREA' || t === 'SELECT') return true;
+    if (t === 'INPUT') return !/^(button|submit|reset|checkbox|color|file|image)$/i.test(el.type);
+    var r = el.getAttribute && el.getAttribute('role');
+    return !!r && /^(slider|spinbutton|radio|radiogroup|tab|tablist|listbox|option|menu|menubar|menuitem|combobox|grid|tree|treeitem|textbox)$/.test(r);
+  }
+  function spaceActivates(el) {
+    if (!el || el === document.body) return false;
+    if (/^(BUTTON|A|SUMMARY|INPUT)$/.test(el.tagName)) return true;
+    var r = el.getAttribute && el.getAttribute('role');
+    return !!r && /^(button|link|tab|checkbox|radio|switch|menuitem|option|slider)$/.test(r);
+  }
+
+  /* One animator per scroller ------------------------------------------- */
+  var anims = new WeakMap();
+  function Anim(el) {
+    this.el = el; this.pos = el.scrollTop; this.vel = 0;
+    this.held = null; this.ideal = this.pos; this.minTravel = this.pos;
+    this.raf = 0; this.last = 0;
+  }
+  Anim.prototype.max = function () { return this.el.scrollHeight - this.el.clientHeight; };
+  Anim.prototype.sync = function () {
+    // the user may have scrolled by wheel/trackpad since we last moved it
+    if (!this.raf) { this.pos = this.el.scrollTop; this.ideal = this.pos; this.vel = 0; }
+  };
+  Anim.prototype.run = function () {
+    if (this.raf) return;
+    var self = this; this.last = performance.now();
+    this.raf = requestAnimationFrame(function f(t) { self.step(t) ? (self.raf = requestAnimationFrame(f)) : (self.raf = 0); });
+  };
+  Anim.prototype.stop = function () { if (this.raf) cancelAnimationFrame(this.raf); this.raf = 0; this.vel = 0; this.held = null; };
+  Anim.prototype.write = function () {
+    var max = this.max();
+    if (this.pos <= 0 || this.pos >= max) {          // hit an edge: stop there, no overshoot
+      this.pos = Math.min(Math.max(this.pos, 0), max);
+      this.vel = 0; this.ideal = this.pos;
+      this.el.scrollTop = this.pos;
+      return false;
+    }
+    this.el.scrollTop = this.pos;
+    return true;
+  };
+  /* ScrollAnimationKeyboard::animateScroll */
+  Anim.prototype.step = function (t) {
+    var dt = (t - this.last) / 1000; this.last = t;
+    if (dt <= 0) return true;
+    if (dt > 0.05) dt = 0.05;                          // a stalled frame shouldn't fling
+    var force = 0, spring = true, ideal = this.ideal;
+    if (this.held) {
+      force = this.held.force; spring = false; ideal = this.pos;
+      if (Math.abs(this.vel) >= Math.abs(this.held.maxVel)) force = 0;
+    }
+    var disp = this.pos - ideal;
+    if (spring) force -= disp * STIFF + this.vel * DAMP;
+    this.vel += force / MASS * dt;
+    this.pos += this.vel * dt;
+    var inside = this.write();
+    if (spring && disp * (this.pos - ideal) < 0) { this.vel = 0; this.pos = ideal; this.el.scrollTop = ideal; }
+    if (!inside && !this.held) return false;
+    if (!this.held && this.vel * this.vel < 1 && Math.abs(this.pos - ideal) < 0.5) { this.vel = 0; return false; }
+    return true;
+  };
+  /* startKeyboardScroll — velocity carries over, like WebKit */
+  Anim.prototype.hold = function (dir, step) {
+    var maxVel = step * MAX_VEL_MULT * dir;
+    this.held = { dir: dir, maxVel: maxVel, force: maxVel * MASS / TIME_TO_MAX };
+    this.minTravel = this.pos + step * dir;
+    this.run();
+  };
+  /* stopKeyboardScrollAnimation */
+  Anim.prototype.release = function () {
+    if (!this.held) return;
+    var d = Math.sqrt(this.vel * this.vel * MASS / STIFF) * (this.vel < 0 ? -1 : 1);
+    var settle = this.pos + d;
+    this.ideal = this.held.dir > 0 ? Math.max(settle, this.minTravel) : Math.min(settle, this.minTravel);
+    this.ideal = Math.round(Math.min(Math.max(this.ideal, 0), this.max()));
+    this.held = null;
+    this.run();
+  };
+  /* a jump to a target (top / bottom, or the public API): spring there */
+  Anim.prototype.to = function (target) {
+    var base = this.raf && !this.held ? this.ideal : this.pos;
+    if (typeof target === 'function') target = target(base);
+    this.held = null;
+    this.ideal = Math.round(Math.min(Math.max(target, 0), this.max()));
+    this.run();
+  };
+
+  function anim(el) { var a = anims.get(el); if (!a) { a = new Anim(el); anims.set(el, a); } a.sync(); return a; }
+  function pageStep(el) {
+    var h = el === docEl() ? innerHeight : el.clientHeight;
+    return Math.max(h * PAGE_MIN_FRACTION, h - PAGE_OVERLAP);
+  }
+
+  var heldKey = null, heldAnim = null;
+  function releaseHeld() { if (heldAnim) heldAnim.release(); heldKey = heldAnim = null; }
+
+  addEventListener('keydown', function (e) {
+    if (e.defaultPrevented || e.altKey || e.ctrlKey) return;
+    var k = e.key, cmdArrow = e.metaKey && (k === 'ArrowUp' || k === 'ArrowDown');
+    if (e.metaKey && !cmdArrow) return;
+    if (!/^( |ArrowUp|ArrowDown|PageUp|PageDown|Home|End)$/.test(k)) return;
+    var act = document.activeElement;
+    if (ownsKeys(act)) return;
+    if (k === ' ' && spaceActivates(act)) return;
+    if ((k === 'ArrowUp' || k === 'ArrowDown') && e.shiftKey && !cmdArrow) return;   // leave selection alone
+
+    var el = pickScroller(); if (!el) return;
+    e.preventDefault();
+    var edge = cmdArrow || k === 'Home' || k === 'End';
+    if (!edge && (e.repeat || heldKey)) return;                // WebKit ignores repeats and other keys while one is held
+    var a = anim(el), page = pageStep(el);
+
+    if (reduce && reduce.matches) {                       // same steps, no animation
+      a.stop();
+      var dy = k === 'ArrowDown' ? LINE : k === 'ArrowUp' ? -LINE :
+               (k === ' ' && !e.shiftKey) || k === 'PageDown' ? page : page * -1;
+      if (k === 'Home' || (cmdArrow && k === 'ArrowUp')) el.scrollTop = 0;
+      else if (k === 'End' || (cmdArrow && k === 'ArrowDown')) el.scrollTop = el.scrollHeight;
+      else el.scrollTop += dy;
+      return;
+    }
+
+    if (edge) {
+      a.to(k === 'Home' || k === 'ArrowUp' ? 0 : a.max());
+    } else if (k === 'ArrowUp' || k === 'ArrowDown') {
+      heldKey = k; heldAnim = a; a.hold(k === 'ArrowDown' ? 1 : -1, LINE);
+    } else {
+      heldKey = k; heldAnim = a;
+      a.hold((k === ' ' && !e.shiftKey) || k === 'PageDown' ? 1 : -1, page);
+    }
+  });
+  addEventListener('keyup', function (e) { if (e.key === heldKey) releaseHeld(); });
+  addEventListener('blur', releaseHeld);
+  document.addEventListener('visibilitychange', function () { if (document.hidden) releaseHeld(); });
+  /* a wheel/trackpad scroll takes over from a gliding key scroll */
+  addEventListener('wheel', function (e) {
+    var el = scrollerFrom(e.target), a = el && anims.get(el);
+    if (a && a.raf && !a.held) a.stop();
+  }, { passive: true });
+
+  window.SmoothScroll = {
+    /* programmatic glide, e.g. SmoothScroll.to(pane, 0) to send a pane home */
+    to: function (el, y) { anim(el || docEl()).to(y); },
+    by: function (el, dy) { var a = anim(el || docEl()); a.to(function (b) { return b + dy; }); }
+  };
+})();
+
+</script>
+<script>
+/* quiz.js — multiple-choice questions, the house way. Include before </body>; no init.
+
+   Write each quiz as JSON inside a .mcq element. The page builds it once,
+   at load; answering only changes classes and text.
+
+     <section class="mcq" data-title="Chapter 5 practice">
+       <script type="application/json">[
+         { "q": "If \\(t = \\sqrt{\\dfrac{2h}{g}}\\), how much taller must the table be to double \\(t\\)?",
+           "options": ["\\(2\\times\\)", "\\(4\\times\\)", "\\(8\\times\\)"],
+           "answer": 1,                       (0-based index into options, or a letter)
+           "why": "\\(t \\propto \\sqrt{h}\\), so doubling \\(t\\) takes \\(4h\\)." }
+       ]<\/script>                         (written <\/script here so the file can be inlined)
+     </section>
+
+   Randomized, always: the question order and each question's options are
+   shuffled the first time the quiz opens, kept through reloads (so progress
+   and the letters you talk about stay put), and reshuffled on Start over.
+   Never refer to a letter or a position in a question, option or why.
+
+   Optional: an empty <nav class="mcq-nav"></nav> (the left pane of a quiz
+   page) becomes the question numbers: plain = unanswered, underlined =
+   right, struck through = wrong. Clicking one glides to that question.
+
+   Answer with a click, or press A–F or 1–6. Keys go to the question that
+   holds focus or sits under the pointer, else the first unanswered one on
+   screen. An answer shows Correct / Incorrect, marks the right option,
+   strikes a wrong pick, shows the why, and locks the question. A keyboard
+   answer glides on to the next unanswered question.
+
+   Copy answers is always there: plain text with each question, its
+   options, your answer or Skipped, and the right answer. Math stays LaTeX
+   ($…$) so it pastes cleanly into a chat.
+
+   MCQ.audit() lists anything that gives an answer away: the right option
+   longest or shortest, options of very different length, a hedge only on
+   the right one or an absolute only on the wrong ones, "all/none of the
+   above", duplicates, a missing why, a slash fraction. It must come back
+   empty before a quiz is published; the same list goes to the console.     */
+(function () {
+  'use strict';
+  if (window.MCQ) return;
+  var LETTERS = 'ABCDEF';
+  var quizzes = [];
+  var hoverQ = null;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
+
+  /* ── helpers ──────────────────────────────────────────────────────────── */
+  function make(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  // punctuation right after inline math moves inside it, so a line can't start with ", "
+  function glue(s) { return String(s).replace(/\\\)([.,;:!?])/g, '$1\\)'); }
+  function asPlain(s) { return String(s).replace(/\\\(|\\\)/g, '$').replace(/\\\[|\\\]/g, '$$$$'); }
+  function hash(s) { var h = 0; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); }
+  function newSeed() {
+    try { var a = new Uint32Array(1); crypto.getRandomValues(a); return a[0]; }
+    catch (e) { return (Math.random() * 4294967296) >>> 0; }
+  }
+  function rng(seed) {                                 // mulberry32: small, seedable, even
+    return function () {
+      seed = (seed + 0x6D2B79F5) | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function shuffled(n, rand) {                         // Fisher–Yates
+    var a = []; for (var i = 0; i < n; i++) a.push(i);
+    for (var j = n - 1; j > 0; j--) { var k = Math.floor(rand() * (j + 1)), t = a[j]; a[j] = a[k]; a[k] = t; }
+    return a;
+  }
+  function answerIndex(answer, n) {
+    if (typeof answer === 'number') return answer >= 0 && answer < n ? answer : 0;
+    var j = LETTERS.indexOf(String(answer).trim().toUpperCase());
+    return j >= 0 && j < n ? j : 0;
+  }
+  function scrollerOf(node) {
+    for (var e = node.parentElement; e && e !== document.body; e = e.parentElement) {
+      var o = getComputedStyle(e).overflowY;
+      if ((o === 'auto' || o === 'scroll') && e.scrollHeight > e.clientHeight) return e;
+    }
+    return document.scrollingElement || document.documentElement;
+  }
+  function glideTo(node) {
+    var sc = scrollerOf(node), page = sc === (document.scrollingElement || document.documentElement);
+    var top = node.getBoundingClientRect().top - (page ? 0 : sc.getBoundingClientRect().top);
+    var y = Math.max(0, sc.scrollTop + top - sc.clientHeight * 0.18);
+    if (reduce && reduce.matches) sc.scrollTop = y;
+    else if (window.SmoothScroll) SmoothScroll.to(sc, y);
+    else sc.scrollTo({ top: y, behavior: 'smooth' });
+  }
+  function shown(q) { return q.li.offsetParent !== null; }
+  function onScreen(q) { var r = q.li.getBoundingClientRect(); return r.bottom > 40 && r.top < innerHeight - 40; }
+  function copyText(btn, text, fallback) {
+    var label = btn.firstChild, was = label.nodeValue;
+    function done() { fallback.hidden = true; label.nodeValue = 'Copied'; setTimeout(function () { label.nodeValue = was; }, 1400); }
+    function fail() { fallback.value = text; fallback.hidden = false; fallback.focus(); fallback.select(); }
+    try { navigator.clipboard.writeText(text).then(done, fail); } catch (e) { fail(); }
+  }
+
+  /* ── the giveaway check ───────────────────────────────────────────────── */
+  var HEDGE = /\b(usually|often|generally|typically|mostly|may|might|can|sometimes|tends? to|about|roughly)\b/i;
+  var ABSOLUTE = /\b(always|never|only|all|none|every|completely|entirely|impossible|guaranteed)\b/i;
+  function words(s) {                                  // what a reader sees: LaTeX commands and delimiters out
+    return String(s).replace(/\\[a-zA-Z]+/g, ' ').replace(/[\\{}()\[\]^_$]/g, '').replace(/\s+/g, ' ').trim();
+  }
+  function auditOne(d, i) {
+    var out = [], n = (d.options || []).length, ans = answerIndex(d.answer, n);
+    var say = function (msg) { out.push({ question: i + 1, text: words(d.q).slice(0, 60), issue: msg }); };
+    if (n < 3) say('fewer than 3 options');
+    if (!d.why) say('no why');
+    var opts = (d.options || []).map(words), lens = opts.map(function (o) { return o.length; });
+    if (new Set((d.options || []).map(function (o) { return String(o).replace(/\s+/g, ' ').trim().toLowerCase(); })).size < n) say('two options are the same');
+    if (opts.some(function (o) { return /\b(all|none|both|neither) of (the|these) (above|options)\b/i.test(o); })) say('"all / none / both of the above"');
+    var max = Math.max.apply(null, lens), min = Math.min.apply(null, lens);
+    if (max > 12) {                                    // short answers (numbers, symbols) can't give much away by length
+      if (max / Math.max(min, 1) > 1.5) say('options differ a lot in length (' + min + '–' + max + ' characters)');
+      var others = lens.filter(function (_, j) { return j !== ans; });
+      var nextLong = Math.max.apply(null, others), nextShort = Math.min.apply(null, others);
+      if (lens[ans] > nextLong && lens[ans] >= nextLong * 1.15) say('the right answer is the longest option');
+      if (lens[ans] < nextShort && lens[ans] <= nextShort * 0.85) say('the right answer is the shortest option');
+    }
+    var wrong = opts.filter(function (_, j) { return j !== ans; });
+    if (HEDGE.test(opts[ans]) && !wrong.some(function (o) { return HEDGE.test(o); })) say('only the right answer hedges ("usually", "can"…)');
+    if (!ABSOLUTE.test(opts[ans]) && wrong.length && wrong.every(function (o) { return ABSOLUTE.test(o); })) say('only the wrong answers use absolutes ("always", "never"…)');
+    [d.q, d.why].concat(d.options || []).forEach(function (s) {
+      (String(s || '').match(/\\\(([\s\S]*?)\\\)|\\\[([\s\S]*?)\\\]/g) || []).forEach(function (m) {
+        if (m.indexOf('/') !== -1) say('slash fraction in math: ' + m.slice(0, 30));
+      });
+      if (/\b(?:[Oo]ption|[Aa]nswer(?: is)?|[Cc]hoice|[Ll]etter) [A-F]\b/.test(words(s))) say('refers to a letter, but options are shuffled');
+    });
+    return out;
+  }
+
+  /* ── one quiz ─────────────────────────────────────────────────────────── */
+  function build(root) {
+    var src = root.querySelector('script[type="application/json"]'), data;
+    try { data = JSON.parse(src.textContent); } catch (e) { return; }
+    if (!Array.isArray(data) || !data.length) return;
+    var title = root.getAttribute('data-title') || document.title;
+    var key = 'minimono:mcq2:' + hash(data.map(function (d) { return d.q + '\u0001' + (d.options || []).join('\u0001'); }).join('\n'));
+    var state = null;
+    try { state = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
+    if (!state || typeof state.seed !== 'number' || !Array.isArray(state.answers)) state = { seed: newSeed(), answers: [] };
+
+    var quiz = { root: root, data: data, qs: [], order: [], nav: null };
+    var list = make('ol', 'mcq-list');
+    var nav = document.querySelector(root.getAttribute('data-nav') || '.mcq-nav');  // one nav per test
+    if (nav && !nav.dataset.built) { nav.dataset.built = '1'; quiz.nav = nav; }
+    var base = quizzes.reduce(function (s, z) { return s + z.qs.length; }, 0);
+
+    // every element is made once, here; shuffling only moves them
+    data.forEach(function (d, i) {
+      var li = make('li', 'mcq-q');
+      li.id = 'mcq-' + (base + i + 1);
+      li.tabIndex = -1;                                 // holds focus between answers, so Space still scrolls
+      var num = make('span', 'mcq-n');
+      num.setAttribute('aria-hidden', 'true');
+      var body = make('div', 'mcq-body');
+      var text = make('div', 'mcq-text', glue(d.q));
+      var opts = make('div', 'mcq-opts');
+      opts.setAttribute('role', 'group');
+      var btns = (d.options || []).map(function (o) {
+        var b = make('button', 'mcq-opt');
+        b.type = 'button';
+        var l = make('span', 'mcq-l');
+        b._letter = l.appendChild(document.createTextNode(''));
+        b.append(l, make('span', 'mcq-t', glue(o)));
+        return b;
+      });
+      var fb = make('p', 'mcq-fb');
+      fb.hidden = true;
+      fb.setAttribute('aria-live', 'polite');
+      var fbt = fb.appendChild(document.createTextNode(''));
+      var why = make('p', 'mcq-why', glue(d.why || ''));
+      why.hidden = true;
+      body.append(text, opts, fb, why);
+      li.append(num, body);
+
+      var q = { quiz: quiz, i: i, d: d, li: li, num: num.appendChild(document.createTextNode('')), opts: opts, btns: btns,
+                fb: fb, fbt: fbt, why: why, ans: answerIndex(d.answer, btns.length), chosen: -1, perm: [], navA: null };
+      li._mcq = q;
+      btns.forEach(function (b, o) {                   // o = the option's index in the JSON
+        b.addEventListener('click', function (e) { choose(q, q.perm.indexOf(o), e.detail === 0); });   // detail 0 = Enter / Space
+      });
+      li.addEventListener('pointerenter', function () { hoverQ = q; });
+      li.addEventListener('pointerleave', function () { if (hoverQ === q) hoverQ = null; });
+      if (quiz.nav) {
+        var a = make('a', 'mcq-nav-n');
+        a.href = '#' + li.id;
+        q.navT = a.appendChild(document.createTextNode(''));
+        a.addEventListener('click', function (e) { e.preventDefault(); glideTo(li); li.focus({ preventScroll: true }); });
+        q.navA = a;
+      }
+      quiz.qs.push(q);
+    });
+
+    var bar = make('div', 'mcq-bar');
+    var copyB = make('button', 'btn mcq-copy', 'Copy answers');
+    copyB.type = 'button';
+    var resetB = make('button', 'btn mcq-reset', 'Start over');
+    resetB.type = 'button';
+    var score = make('span', 'mcq-score');
+    score.setAttribute('aria-live', 'polite');
+    var scoreT = score.appendChild(document.createTextNode(''));
+    var fallback = make('textarea', 'mcq-fallback');
+    fallback.readOnly = true;
+    fallback.hidden = true;
+    fallback.setAttribute('aria-label', 'Answers to copy');
+    bar.append(copyB, resetB, score);
+    root.append(list, bar, fallback);
+
+    // lay the questions and options out in the order the seed gives
+    function arrange(seed) {
+      var rand = rng(seed);
+      quiz.order = shuffled(quiz.qs.length, rand).map(function (i) { return quiz.qs[i]; });
+      quiz.qs.forEach(function (q) { q.perm = shuffled(q.btns.length, rand); });
+      quiz.order.forEach(function (q, p) {
+        list.append(q.li);
+        q.num.nodeValue = String(p + 1);
+        q.opts.setAttribute('aria-label', 'Question ' + (p + 1));
+        q.perm.forEach(function (o, j) { q.opts.append(q.btns[o]); q.btns[o]._letter.nodeValue = LETTERS[j]; });
+        if (q.navA) { quiz.nav.append(q.navA); q.navT.nodeValue = String(p + 1); }
+      });
+    }
+    function mark(q) {
+      var done = q.chosen >= 0, right = done && q.chosen === q.ans;
+      q.li.classList.toggle('is-done', done);
+      q.li.classList.toggle('is-wrong', done && !right);
+      q.btns.forEach(function (b, o) {
+        b.classList.toggle('is-chosen', done && o === q.chosen);
+        b.classList.toggle('is-answer', done && o === q.ans);
+        if (done) b.setAttribute('aria-disabled', 'true'); else b.removeAttribute('aria-disabled');
+      });
+      q.fbt.nodeValue = !done ? '' : right ? 'Correct.' : 'Incorrect. The answer is ' + LETTERS[q.perm.indexOf(q.ans)] + '.';
+      q.fb.hidden = !done;
+      q.why.hidden = !done || !q.d.why;
+      if (q.navA) { q.navA.classList.toggle('is-right', right); q.navA.classList.toggle('is-wrong', done && !right); }
+    }
+    function save() {
+      try { localStorage.setItem(key, JSON.stringify({ seed: state.seed, answers: quiz.qs.map(function (q) { return q.chosen; }) })); } catch (e) {}
+    }
+    function tally() {
+      var answered = 0, right = 0;
+      quiz.qs.forEach(function (q) { if (q.chosen >= 0) { answered++; if (q.chosen === q.ans) right++; } });
+      var left = quiz.qs.length - answered;
+      scoreT.nodeValue = !answered ? '' : right + ' of ' + answered + ' correct' + (left ? ' · ' + left + ' left' : '');
+      save();
+    }
+    function next(q) {
+      var p = quiz.order.indexOf(q);
+      var rest = quiz.order.slice(p + 1).concat(quiz.order.slice(0, p)).filter(function (x) { return x.chosen < 0; });
+      if (rest.length) { rest[0].li.focus({ preventScroll: true }); glideTo(rest[0].li); }
+      else { q.li.focus({ preventScroll: true }); glideTo(root.querySelector('.frq-q') || bar); }  // on to the FRQs
+    }
+    function choose(q, j, advance) {                   // j = position on screen
+      if (q.chosen >= 0 || j < 0 || j >= q.btns.length) return;   // answered questions stay locked
+      q.chosen = q.perm[j];
+      mark(q);
+      tally();
+      if (advance) next(q);
+      else q.li.focus({ preventScroll: true });        // off the button, so Space scrolls again
+    }
+    quiz.choose = choose;
+
+    copyB.addEventListener('click', function () {
+      var lines = [title, ''], answered = 0, right = 0;
+      quiz.order.forEach(function (q, p) {
+        lines.push((p + 1) + '. ' + asPlain(q.d.q));
+        q.perm.forEach(function (o, j) { lines.push('   ' + LETTERS[j] + '. ' + asPlain(q.d.options[o])); });
+        var A = LETTERS[q.perm.indexOf(q.ans)];
+        if (q.chosen < 0) lines.push('   Skipped. Answer: ' + A);
+        else {
+          answered++;
+          var C = LETTERS[q.perm.indexOf(q.chosen)];
+          if (q.chosen === q.ans) { right++; lines.push('   Your answer: ' + C + ' (correct)'); }
+          else lines.push('   Your answer: ' + C + ' (incorrect). Answer: ' + A);
+        }
+        lines.push('');
+      });
+      var skipped = quiz.qs.length - answered;
+      lines.push('Score: ' + right + ' of ' + quiz.qs.length + (skipped ? ' (' + skipped + ' skipped)' : ''));
+      copyText(copyB, lines.join('\n'), fallback);
+    });
+    resetB.addEventListener('click', function () {      // a fresh order: same elements, moved
+      quiz.qs.forEach(function (q) { q.chosen = -1; mark(q); });
+      state.seed = newSeed();
+      arrange(state.seed);
+      tally();
+      var first = quiz.order[0];
+      glideTo(first.li);
+      first.li.focus({ preventScroll: true });
+    });
+
+    arrange(state.seed);
+    quiz.qs.forEach(function (q, i) {                  // reopen where you left off
+      var s = state.answers[i];
+      if (typeof s === 'number' && s >= 0 && s < q.btns.length) { q.chosen = s; mark(q); }
+    });
+    tally();
+    quizzes.push(quiz);
+
+    var issues = data.reduce(function (acc, d, i) { return acc.concat(auditOne(d, i)); }, []);
+    if (issues.length && window.console) console.warn('quiz.js: ' + issues.length + ' question(s) give the answer away', issues);
+
+    var MJ = window.MathJax, targets = [root].concat(quiz.nav ? [quiz.nav] : []);
+    if (MJ && MJ.startup && MJ.startup.promise) MJ.startup.promise.then(function () { return MJ.typesetPromise(targets); }).catch(function () {});
+    else if (MJ && typeof MJ.typesetPromise === 'function') MJ.typesetPromise(targets).catch(function () {});
+  }
+
+  /* ── keys: A–F or 1–6 answer the current question ─────────────────────── */
+  function current() {
+    var a = document.activeElement, li = a && a.closest && a.closest('.mcq-q');
+    var q = li && li._mcq;
+    if (q && q.chosen < 0 && shown(q)) return q;
+    if (hoverQ && hoverQ.chosen < 0 && shown(hoverQ)) return hoverQ;
+    var lis = document.querySelectorAll('.mcq-q');      // page order = the shuffled order
+    for (var i = 0; i < lis.length; i++) {
+      var x = lis[i]._mcq;
+      if (x && x.chosen < 0 && shown(x) && onScreen(x)) return x;
+    }
+    return null;
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey || e.repeat || e.defaultPrevented) return;
+    var a = document.activeElement;
+    if (a && (a.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))) return;
+    var j = e.key.length === 1 ? LETTERS.indexOf(e.key.toUpperCase()) : -1;
+    if (j < 0 && /^[1-6]$/.test(e.key)) j = +e.key - 1;
+    if (j < 0) return;
+    var q = current();
+    if (!q || j >= q.btns.length) return;
+    e.preventDefault();
+    q.quiz.choose(q, j, true);
+  });
+
+  function init() {
+    document.querySelectorAll('.mcq').forEach(function (r) {
+      if (!r.dataset.built) { r.dataset.built = '1'; build(r); }
+    });
+  }
+  init();                                               // the quiz markup sits above this script
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+
+  window.MCQ = {
+    init: init,
+    // every giveaway in every quiz on the page; must be empty before publishing
+    audit: function () {
+      return quizzes.reduce(function (acc, z) {
+        return acc.concat(z.data.reduce(function (a2, d, i) { return a2.concat(auditOne(d, i)); }, []));
+      }, []);
+    },
+    _shuffle: function (n, seed) { return shuffled(n, rng(seed)); }   // for tests
+  };
+})();
+
+</script>
+<script>
+
+/* page.js — this page's own behavior: FRQs, switching between the two tests,
+   and holding the questions back until the math is drawn. Everything is made
+   once at load; switching and answering only change attributes and text.  */
+(function () {
+  'use strict';
+  var html = document.documentElement;
+  var pane = document.querySelector('.pane-r');
+  var tests = [].slice.call(document.querySelectorAll('.test'));
+  var rows = [].slice.call(document.querySelectorAll('.pane-l .row[data-test]'));
+  var navs = {}, mem = {}, cur = null;
+
+  function make(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function glue(s) { return String(s).replace(/\\\)([.,;:!?])/g, '$1\\)'); }
+  function asPlain(s) { return String(s).replace(/\\\(|\\\)/g, '$').replace(/\\\[|\\\]/g, '$$$$'); }
+  function glide(el) {
+    var top = el.getBoundingClientRect().top - pane.getBoundingClientRect().top;
+    var y = Math.max(0, pane.scrollTop + top - pane.clientHeight * 0.18);
+    if (window.SmoothScroll) SmoothScroll.to(pane, y); else pane.scrollTop = y;
+  }
+  function copy(btn, text, fallback) {
+    var label = btn.firstChild, was = label.nodeValue;
+    function done() { fallback.hidden = true; label.nodeValue = 'Copied'; setTimeout(function () { label.nodeValue = was; }, 1400); }
+    function fail() { fallback.value = text; fallback.hidden = false; fallback.focus(); fallback.select(); }
+    try { navigator.clipboard.writeText(text).then(done, fail); } catch (e) { fail(); }
+  }
+
+  tests.forEach(function (t) {
+    var root = t.querySelector('.mcq');
+    var nav = document.querySelector(root.getAttribute('data-nav'));
+    navs[t.id] = nav;
+    var data = JSON.parse(t.querySelector('script.frq-data').textContent);
+    var n0 = JSON.parse(root.querySelector('script[type="application/json"]').textContent).length;
+    var key = 'bipn:frq:' + t.getAttribute('data-key');
+    var saved = null;
+    try { saved = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
+    if (!saved || !Array.isArray(saved.text)) saved = { text: [], open: [] };
+
+    var list = make('ol', 'frq-list');
+    var items = data.map(function (d, i) {
+      var n = n0 + i + 1;
+      var li = make('li', 'frq-q');
+      li.id = t.id + '-frq-' + (i + 1);
+      li.tabIndex = -1;
+      var num = make('span', 'mcq-n', String(n));
+      num.setAttribute('aria-hidden', 'true');
+      var body = make('div', 'mcq-body');
+      var text = make('div', 'mcq-text', glue(d.q));
+      var box = make('textarea', 'frq-in');
+      box.id = li.id + '-in';
+      box.rows = 6;
+      box.spellcheck = false;
+      box.setAttribute('aria-label', 'Your answer to question ' + n);
+      box.value = saved.text[i] || '';
+      var act = make('div', 'frq-act');
+      var btn = make('button', 'btn frq-show');
+      btn.type = 'button';
+      var label = btn.appendChild(document.createTextNode('Show answer'));
+      act.append(btn);
+      var ans = make('div', 'frq-ans');
+      ans.append(make('p', null, glue(d.answer)));
+      if (d.points && d.points.length) {
+        var ul = make('ul', 'frq-pts');
+        d.points.forEach(function (p) { ul.append(make('li', null, glue(p))); });
+        ans.append(ul);
+      }
+      body.append(text, box, act, ans);
+      li.append(num, body);
+      list.append(li);
+      var it = { d: d, n: n, li: li, box: box, ans: ans, navA: null };
+      it.open = function (v) {
+        ans.hidden = !v;
+        label.nodeValue = v ? 'Hide answer' : 'Show answer';
+        btn.setAttribute('aria-expanded', v ? 'true' : 'false');
+      };
+      it.open(!!saved.open[i]);
+      btn.addEventListener('click', function () { it.open(ans.hidden); save(); });
+      box.addEventListener('input', save);
+      if (nav) {
+        var a = make('a', 'mcq-nav-n', String(n));
+        a.href = '#' + li.id;
+        a.addEventListener('click', function (e) { e.preventDefault(); glide(li); li.focus({ preventScroll: true }); });
+        it.navA = a;
+      }
+      return it;
+    });
+    function save() {
+      try {
+        localStorage.setItem(key, JSON.stringify({
+          text: items.map(function (x) { return x.box.value; }),
+          open: items.map(function (x) { return !x.ans.hidden; })
+        }));
+      } catch (e) {}
+    }
+    function navTail() { if (nav) items.forEach(function (x) { nav.append(x.navA); }); }
+
+    var bar = root.querySelector('.mcq-bar');
+    var fallback = root.querySelector('.mcq-fallback');
+    var reset = root.querySelector('.mcq-reset');
+    root.insertBefore(list, bar);
+    navTail();
+
+    var copyW = make('button', 'btn frq-copy');
+    copyW.type = 'button';
+    copyW.appendChild(document.createTextNode('Copy written answers'));
+    bar.insertBefore(copyW, reset);
+    copyW.addEventListener('click', function () {
+      var lines = [root.getAttribute('data-title') + ', written answers', ''];
+      items.forEach(function (x) {
+        lines.push(x.n + '. ' + asPlain(x.d.q));
+        lines.push('   Your answer: ' + (x.box.value.trim() || 'Skipped'));
+        lines.push('   Model answer: ' + asPlain(x.d.answer));
+        (x.d.points || []).forEach(function (p) { lines.push('   - ' + asPlain(p)); });
+        lines.push('');
+      });
+      copy(copyW, lines.join('\n'), fallback);
+    });
+    reset.addEventListener('click', function () {   // quiz.js reshuffles first; then clear the written answers
+      items.forEach(function (x) { x.box.value = ''; x.open(false); });
+      save();
+      navTail();
+    });
+  });
+
+  // the two tests already exist; switching only flips `hidden` and aria-current
+  function show(id) {
+    if (!/^test-\d+$/.test(id) || !document.getElementById(id)) id = tests[0].id;
+    if (cur === id) return;
+    if (cur) mem[cur] = pane.scrollTop;
+    tests.forEach(function (t) { t.hidden = t.id !== id; });
+    rows.forEach(function (r) { r.setAttribute('aria-current', r.getAttribute('data-test') === id ? 'true' : 'false'); });
+    Object.keys(navs).forEach(function (k) { if (navs[k]) navs[k].hidden = k !== id; });
+    cur = id;
+    pane.scrollTop = mem[id] || 0;
+  }
+  function fromHash() { show((location.hash || '').slice(1)); }
+  addEventListener('hashchange', fromHash);
+  fromHash();
+
+  // the questions wait behind the loading ring until MathJax has drawn them
+  window.__mathReady = function () { html.classList.remove('mj-wait'); };
+  setTimeout(window.__mathReady, 9000);
+})();
+
+</script>
+</body>
+</html>
